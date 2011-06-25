@@ -2,12 +2,16 @@
 #define CSU_CARD_H_
 
 #include "../action/action.h"
-#include "../game/game.h"
+//#include "../game/game.h"
+
+namespace Casino { namespace Uno { namespace Action {
+	class UnoAction;
+}}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
 
 using ::Casino::Uno::Action::UnoAction;
-using ::Casino::Uno::Game::UnoGame;
+//using ::Casino::Uno::Game::UnoGame;
 
 enum CARD_COLOR {
 	CARD_COLOR_RED,
@@ -35,7 +39,7 @@ enum CARD_VALUE {
 	CARD_VALUE_PLUSFOUR
 };
 
-class Card :public UnoAction
+class UnoCard :public UnoAction
 {
 public:
 	virtual bool isDisposeable() {

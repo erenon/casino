@@ -2,7 +2,11 @@
 #define CSU_ACTION_H_
 
 #include "../../common/action/action.h"
-#include "../game/game.h"
+//#include "../game/game.h"
+
+namespace Casino { namespace Uno { namespace Game {
+	class UnoGame;
+}}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
 
