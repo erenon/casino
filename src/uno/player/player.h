@@ -3,8 +3,12 @@
 
 #include "../../common/player/player.h"
 #include "../../uno/action/action.h"
-#include "../../uno/game/game.h"
+//#include "../../uno/game/game.h"
 #include <list>
+
+namespace Casino { namespace Uno { namespace Game {
+	class UnoGame;
+}}} //namespace
 
 namespace Casino { namespace Uno { namespace Player {
 
@@ -17,7 +21,7 @@ enum INFO_T {
 
 };
 
-class UnoPlayer /*:public Player*/
+class UnoPlayer
 {
 protected:
 	list<UnoAction*> hand;
