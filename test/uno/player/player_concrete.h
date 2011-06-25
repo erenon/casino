@@ -21,8 +21,8 @@ using ::Casino::Uno::Game::UnoGame;
 class UnoPlayerConcrete :public UnoPlayer
 {
 public:
-	 MOCK_METHOD1(pickAction, UnoAction*(UnoGame *game));
-	 MOCK_METHOD1(info, void(INFO_T type));
+	MOCK_METHOD1(pickAction, UnoAction*(UnoGame *game));
+	MOCK_METHOD1(info, void(INFO_T type));
 };
 
 }}}} //namespace
