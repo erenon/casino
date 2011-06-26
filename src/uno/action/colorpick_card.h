@@ -1,15 +1,15 @@
 #ifndef CSU_COLORPICK_CARD_H_
 #define CSU_COLORPICK_CARD_H_
 
-#include "card.h";
+#include "card.h"
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::Card;
+using ::Casino::Uno::Action::UnoCard;
 using ::Casino::Uno::Action::CARD_COLOR;
 using ::Casino::Uno::Action::CARD_VALUE;
 
-class ColorpickCard :public Card
+class ColorpickCard :public UnoCard
 {
 private:
 	CARD_COLOR color;
