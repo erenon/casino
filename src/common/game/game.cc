@@ -13,27 +13,18 @@ Game::Game(int max_player_count) :max_player_count(max_player_count) {
 			"Maximum player count must be equal or greater than 1"
 		);
 	}
-
-	player_count = 0;
-	players = new Player*[max_player_count];
 }
 
 void Game::joinPlayer(Player *player) {
-	if (player_count >= max_player_count) {
+	if (getPlayerCount() >= max_player_count) {
 		throw std::overflow_error("Game is full");
 	}
 
-	players[player_count] = player;
-	player_count++;
+	players.push_back(player);
 }
 
 int Game::getPlayerCount() {
-	return player_count;
+	return players.size();
 }
-
-Game::~Game() {
-	delete[] players;
-}
-
 
 }}} //namespace

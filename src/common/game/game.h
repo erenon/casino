@@ -2,6 +2,7 @@
 #define CSC_GAME_H_
 
 #include "../player/player.h"
+#include <list>
 
 namespace Casino { namespace Common { namespace Game {
 
@@ -11,13 +12,12 @@ class Game
 {
 protected:
 	int max_player_count;
-	int player_count;
-	Player** players;
+	std::list<Player *> players;
 public:
 	Game(int max_player_count);
 	virtual void joinPlayer(Player *player);
 	virtual int getPlayerCount();
-	virtual ~Game();
+	virtual ~Game() {};
 };
 
 }}} //namespace
