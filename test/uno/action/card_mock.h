@@ -13,6 +13,7 @@ using ::Casino::Uno::Game::UnoGame;
 
 class CardMock :public UnoCard
 {
+public:
 	MOCK_METHOD0(isDisposeable, bool());
 	MOCK_METHOD1(takeAction, void(UnoGame* game));
 };

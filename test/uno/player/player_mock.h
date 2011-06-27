@@ -23,9 +23,14 @@ class UnoPlayerMock :public UnoPlayer
 public:
 	MOCK_METHOD1(addAction, void(UnoAction *action));
 	MOCK_METHOD1(removeAction, void(UnoAction *action));
-	MOCK_METHOD0(getCardCount, int());
 	MOCK_METHOD1(pickAction, UnoAction*(UnoGame *game));
 	MOCK_METHOD1(info, void(INFO_T type));
+	MOCK_METHOD0(getCardCount, int());
+	MOCK_METHOD1(setUnoFlag, void(bool value));
+	MOCK_METHOD0(wrongUno, bool());
+	MOCK_METHOD0(isBlocked, bool());
+	MOCK_METHOD0(block, void());
+	MOCK_METHOD0(unblock, void());
 };
 
 }}}} //namespace
