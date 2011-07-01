@@ -127,7 +127,8 @@ void UnoGame::initStart() {
 }
 
 bool UnoGame::doesPlayerWin(UnoPlayer* player) {
-	return (player->getCardCount() == 0);
+	return (player->isBlocked() == false)
+		&& (player->getCardCount() == 0);
 }
 
 UnoGame::player_iterator UnoGame::getPreviousPlayer() {
@@ -159,6 +160,7 @@ void UnoGame::start() {
 	initStart();
 
 	current_player = players.begin();
+	bool first_move = true;
 
 	while(!doesPlayerWin(*current_player)) {
 		// check block
@@ -181,7 +183,12 @@ void UnoGame::start() {
 			deck.addCardToPlayed(static_cast<UnoCard*>(pickedAction));
 		}
 
-		checkUno(*getPreviousPlayer());
+		// check uno if not the first move of the first turn
+		if (!first_move) {
+			checkUno(*getPreviousPlayer());
+		} else {
+			first_move = false;
+		}
 
 		// lets play the next player
 		current_player = getNextPlayer();
