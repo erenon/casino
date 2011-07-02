@@ -22,14 +22,14 @@ using ::Casino::Uno::Action::SimpleCard;
 
 UnoGame::UnoGame(int max_player_count)
 	:Game(max_player_count),
-	 current_penality(0)/*,
-	 turn_direction_normal(true)*/
+	 current_penality(0)
 {
 
 }
 
 UnoGame::PlayerList::PlayerList()
-	:turn_direction_normal(true)
+	:turn_direction_normal(true),
+	 prev_player(NULL)
 {
 	current_player = players.begin();
 }
@@ -50,7 +50,7 @@ int UnoGame::PlayerList::size() {
 	return players.size();
 }
 
-UnoPlayer *UnoGame::PlayerList::getNextPlayer() {
+UnoGame::PlayerList::player_iterator UnoGame::PlayerList::determineNextPlayer() {
 	player_iterator next_player = current_player;
 
 	if (turn_direction_normal) {
@@ -66,40 +66,21 @@ UnoPlayer *UnoGame::PlayerList::getNextPlayer() {
 			// current player is at the beginning of the list
 			// prev player is at the end
 			next_player = players.end();
+			next_player--;
 		} else {
 			next_player--;
 		}
 	}
 
-	return *next_player;
+	return next_player;
 }
 
-/**
- * @todo currently doesn't take blocked players into
- * account, uno checking could be faulty.
- */
+UnoPlayer *UnoGame::PlayerList::getNextPlayer() {
+	return *determineNextPlayer();
+}
+
 UnoPlayer *UnoGame::PlayerList::getPreviousPlayer() {
-	player_iterator prev_player = current_player;
-
-	if (turn_direction_normal) {
-		if (prev_player == players.begin()) {
-			// current player is at the beginning of the list
-			// prev player is at the end
-			prev_player = players.end();
-		} else {
-			prev_player--;
-		}
-	} else {
-		prev_player++;
-
-		if (prev_player == players.end()) {
-			// current player is at the end of the list
-			// next player is the first player
-			prev_player = players.begin();
-		}
-	}
-
-	return *prev_player;
+	return prev_player;
 }
 
 UnoPlayer *UnoGame::PlayerList::getCurrentPlayer() {
@@ -107,16 +88,13 @@ UnoPlayer *UnoGame::PlayerList::getCurrentPlayer() {
 }
 
 UnoPlayer *UnoGame::PlayerList::next() {
-	if (turn_direction_normal) {
-		current_player++;
-	} else {
-		current_player--;
-	}
-
+	prev_player = *current_player;
+	current_player = determineNextPlayer();
 	return *current_player;
 }
 
 void UnoGame::PlayerList::reset() {
+	prev_player = NULL;
 	current_player = players.begin();
 }
 
@@ -264,21 +242,22 @@ void UnoGame::start() {
 		// check block
 		if (current_player->isBlocked()) { // unblock and continue
 			current_player->unblock();
-			continue;
-		}
+		} else {
 
-		// get players action
-		UnoAction* pickedAction = current_player->pickAction(this);
+			// get players action
+			UnoAction* pickedAction = current_player->pickAction(this);
 
-		// call actions action
-		pickedAction->takeAction(this);
+			// call actions action
+			pickedAction->takeAction(this);
 
-		/** @todo notify about played card */
+			/** @todo notify about played card */
 
-		// move card from hand to played cards
-		if (pickedAction->isDisposeable()) {
-			current_player->removeAction(pickedAction);
-			deck.addCardToPlayed(static_cast<UnoCard*>(pickedAction));
+			// move card from hand to played cards
+			if (pickedAction->isDisposeable()) {
+				current_player->removeAction(pickedAction);
+				deck.addCardToPlayed(static_cast<UnoCard*>(pickedAction));
+			}
+
 		}
 
 		// check uno if not the first move of the first turn

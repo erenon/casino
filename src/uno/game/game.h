@@ -24,6 +24,8 @@ protected:
 		bool turn_direction_normal;
 		typedef std::list<UnoPlayer *>::iterator player_iterator;
 		player_iterator current_player;
+		UnoPlayer* prev_player;
+		player_iterator determineNextPlayer();
 
 	public:
 		PlayerList();
