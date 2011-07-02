@@ -4,10 +4,13 @@
 #include "../player/player.h"
 #include "../action/card.h"
 #include "../action/action.h"
+#include "../action/simple_card.h"
 
 #include <algorithm>
 #include <stdexcept>
 #include <list>
+#include <deque>
+#include <typeinfo>
 
 namespace Casino { namespace Uno { namespace Game {
 
@@ -15,38 +18,126 @@ using ::Casino::Common::Game::Game;
 using ::Casino::Uno::Player::UnoPlayer;
 using ::Casino::Uno::Action::UnoCard;
 using ::Casino::Uno::Action::UnoAction;
+using ::Casino::Uno::Action::SimpleCard;
 
 UnoGame::UnoGame(int max_player_count)
 	:Game(max_player_count),
-	 current_penality(0),
-	 turn_direction_normal(true)
+	 current_penality(0)/*,
+	 turn_direction_normal(true)*/
 {
 
 }
 
-void UnoGame::joinPlayer(UnoPlayer *player) {
-	if (getPlayerCount() >= max_player_count) {
-		throw std::overflow_error("Game is full");
-	}
+UnoGame::PlayerList::PlayerList()
+	:turn_direction_normal(true)
+{
+	current_player = players.begin();
+}
 
+void UnoGame::PlayerList::joinPlayer(UnoPlayer* player) {
 	players.push_back(player);
 }
 
-void UnoGame::ActionStack::shuffle(std::vector<UnoCard *> toSuffle) {
+void UnoGame::joinPlayer(UnoPlayer *player) {
+	if (players.size() >= max_player_count) {
+		throw std::overflow_error("Game is full");
+	}
+
+	players.joinPlayer(player);
+}
+
+int UnoGame::PlayerList::size() {
+	return players.size();
+}
+
+UnoPlayer *UnoGame::PlayerList::getNextPlayer() {
+	player_iterator next_player = current_player;
+
+	if (turn_direction_normal) {
+		next_player++;
+
+		if (next_player == players.end()) {
+			// current player is at the end of the list
+			// next player is the first player
+			next_player = players.begin();
+		}
+	} else {
+		if (next_player == players.begin()) {
+			// current player is at the beginning of the list
+			// prev player is at the end
+			next_player = players.end();
+		} else {
+			next_player--;
+		}
+	}
+
+	return *next_player;
+}
+
+/**
+ * @todo currently doesn't take blocked players into
+ * account, uno checking could be faulty.
+ */
+UnoPlayer *UnoGame::PlayerList::getPreviousPlayer() {
+	player_iterator prev_player = current_player;
+
+	if (turn_direction_normal) {
+		if (prev_player == players.begin()) {
+			// current player is at the beginning of the list
+			// prev player is at the end
+			prev_player = players.end();
+		} else {
+			prev_player--;
+		}
+	} else {
+		prev_player++;
+
+		if (prev_player == players.end()) {
+			// current player is at the end of the list
+			// next player is the first player
+			prev_player = players.begin();
+		}
+	}
+
+	return *prev_player;
+}
+
+UnoPlayer *UnoGame::PlayerList::getCurrentPlayer() {
+	return *current_player;
+}
+
+UnoPlayer *UnoGame::PlayerList::next() {
+	if (turn_direction_normal) {
+		current_player++;
+	} else {
+		current_player--;
+	}
+
+	return *current_player;
+}
+
+void UnoGame::PlayerList::reset() {
+	current_player = players.begin();
+}
+
+void UnoGame::PlayerList::reverseTurn() {
+	turn_direction_normal = !turn_direction_normal;
+}
+
+void UnoGame::ActionStack::shuffle(std::deque<UnoCard *> toSuffle) {
 	std::random_shuffle(toSuffle.begin(), toSuffle.end());
 }
 
 void UnoGame::ActionStack::shufflePlayedIntoDeck() {
 	// keep last played
 	UnoCard *last_played = lastPlayedCard();
-	played.pop_back();
-
+	played.pop_front();
 
 	shuffle(played);
 
-	std::vector<UnoCard *>::iterator it;
+	std::deque<UnoCard *>::iterator it;
 	for (it = played.begin(); it != played.end(); it++) {
-		deck.push_back(*it);
+		addCard(*it);
 	}
 
 	played.clear();
@@ -62,7 +153,7 @@ void UnoGame::ActionStack::addCard(UnoCard *card) {
 }
 
 void UnoGame::ActionStack::addCardToPlayed(UnoCard *card) {
-	played.push_back(card);
+	played.push_front(card);
 }
 
 UnoCard* UnoGame::ActionStack::drawCard() {
@@ -74,13 +165,13 @@ UnoCard* UnoGame::ActionStack::drawCard() {
 		}
 	}
 
-	UnoCard* top_card = deck.back();
-	deck.pop_back();
+	UnoCard* top_card = deck.front();
+	deck.pop_front();
 	return top_card;
 }
 
 UnoCard *UnoGame::ActionStack::lastPlayedCard() {
-	return played.back();
+	return played.front();
 }
 
 void UnoGame::addCardToDeck(UnoCard *card) {
@@ -116,12 +207,34 @@ void UnoGame::initStart() {
 
 	deck.shuffleDeck();
 
-	/** @todo should play out the first card */
+	{	// play out first card
+		UnoCard* top_card;
+		// dummy class to compare
+		SimpleCard proper_first_card(
+			Casino::Uno::Action::CARD_COLOR_RED,
+			Casino::Uno::Action::CARD_VALUE_1
+		);
+		bool card_ok = false;
+
+		while (!card_ok) {
+			top_card = deck.drawCard();
+
+			if (typeid(*top_card) != typeid(proper_first_card)) {
+				//card ok, play out
+				deck.addCardToPlayed(top_card);
+				card_ok = true;
+			} else {
+				//!SimpleCard, take it back
+				deck.addCard(top_card);
+			}
+		}
+	}
 
 	std::list<UnoPlayer *>::iterator player;
 	for (int card_idx = 0; card_idx < initial_hand_count; card_idx++) {
-		for (player = players.begin(); player != players.end(); player++) {
-			(*player)->addAction(deck.drawCard());
+		players.reset();
+		for (int i = 0; i < players.size(); i++, players.next()) {
+			players.getCurrentPlayer()->addAction(deck.drawCard());
 		}
 	}
 }
@@ -129,22 +242,6 @@ void UnoGame::initStart() {
 bool UnoGame::doesPlayerWin(UnoPlayer* player) {
 	return (player->isBlocked() == false)
 		&& (player->getCardCount() == 0);
-}
-
-UnoGame::player_iterator UnoGame::getPreviousPlayer() {
-	if (turn_direction_normal) {
-		return current_player--;
-	} else {
-		return current_player++;
-	}
-}
-
-UnoGame::player_iterator UnoGame::getNextPlayer() {
-	if (turn_direction_normal) {
-		return current_player++;
-	} else {
-		return current_player--;
-	}
 }
 
 void UnoGame::checkUno(UnoPlayer* player) {
@@ -159,18 +256,19 @@ void UnoGame::checkUno(UnoPlayer* player) {
 void UnoGame::start() {
 	initStart();
 
-	current_player = players.begin();
+	players.reset();
+	UnoPlayer* current_player = players.getCurrentPlayer();
 	bool first_move = true;
 
-	while(!doesPlayerWin(*current_player)) {
+	while(!doesPlayerWin(current_player)) {
 		// check block
-		if ((*current_player)->isBlocked()) { // unblock and continue
-			(*current_player)->unblock();
+		if (current_player->isBlocked()) { // unblock and continue
+			current_player->unblock();
 			continue;
 		}
 
 		// get players action
-		UnoAction* pickedAction = (*current_player)->pickAction(this);
+		UnoAction* pickedAction = current_player->pickAction(this);
 
 		// call actions action
 		pickedAction->takeAction(this);
@@ -179,19 +277,19 @@ void UnoGame::start() {
 
 		// move card from hand to played cards
 		if (pickedAction->isDisposeable()) {
-			(*current_player)->removeAction(pickedAction);
+			current_player->removeAction(pickedAction);
 			deck.addCardToPlayed(static_cast<UnoCard*>(pickedAction));
 		}
 
 		// check uno if not the first move of the first turn
 		if (!first_move) {
-			checkUno(*getPreviousPlayer());
+			checkUno(players.getPreviousPlayer());
 		} else {
 			first_move = false;
 		}
 
 		// lets play the next player
-		current_player = getNextPlayer();
+		current_player = players.next();
 	}
 
 	/** @todo notify about win/game end */
@@ -202,11 +300,11 @@ UnoCard *UnoGame::lastPlayedCard() {
 }
 
 void UnoGame::blockNextPlayer() {
-	(*getNextPlayer())->block();
+	players.getNextPlayer()->block();
 }
 
 void UnoGame::reverseTurn() {
-	turn_direction_normal = !turn_direction_normal;
+	players.reverseTurn();
 }
 
 }}} //namespace

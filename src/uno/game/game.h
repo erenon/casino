@@ -4,8 +4,8 @@
 #include "../../common/game/game.h"
 #include "../player/player.h"
 #include "../action/card.h"
-#include <stack>
-#include <vector>
+#include <deque>
+#include <list>
 
 namespace Casino { namespace Uno { namespace Game {
 
@@ -17,18 +17,32 @@ class UnoGame :public Game
 {
 protected:
 	int current_penality;
-	std::list<UnoPlayer *> players;
 
-	typedef std::list<UnoPlayer *>::iterator player_iterator;
-	player_iterator current_player;
-	bool turn_direction_normal;
+	class PlayerList {
+	protected:
+		std::list<UnoPlayer *> players;
+		bool turn_direction_normal;
+		typedef std::list<UnoPlayer *>::iterator player_iterator;
+		player_iterator current_player;
+
+	public:
+		PlayerList();
+		void joinPlayer(UnoPlayer *player);
+		int size();
+		UnoPlayer *getNextPlayer();
+		UnoPlayer *getPreviousPlayer();
+		UnoPlayer *getCurrentPlayer();
+		UnoPlayer *next();
+		void reset();
+		void reverseTurn();
+	} players;
 
 	class ActionStack {
 	protected:
-		std::vector<UnoCard *> deck;
-		std::vector<UnoCard *> played;
+		std::deque<UnoCard *> deck;
+		std::deque<UnoCard *> played;
 
-		void shuffle(std::vector<UnoCard *> toSuffle);
+		void shuffle(std::deque<UnoCard *> toSuffle);
 		void shufflePlayedIntoDeck();
 	public:
 		void shuffleDeck();
@@ -41,8 +55,6 @@ protected:
 
 	void initStart();
 	bool doesPlayerWin(UnoPlayer* player);
-	player_iterator getPreviousPlayer();
-	player_iterator getNextPlayer();
 	void checkUno(UnoPlayer* player);
 
 public:
