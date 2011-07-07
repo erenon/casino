@@ -17,11 +17,18 @@ void UnoPlayer::addAction(UnoAction *action) {
 }
 
 void UnoPlayer::removeAction(UnoAction *action) {
-	hand.remove(action);
+	card_iterator it;
+
+	for (it = hand.begin(); it != hand.end(); it++) {
+		if (*it == action) {
+			hand.erase(it);
+			break;
+		}
+	}
 }
 
 int UnoPlayer::getCardCount() {
-	list<UnoAction*>::iterator it;
+	card_iterator it;
 	int count = 0;
 
 	for (it = hand.begin(); it != hand.end(); it++) {

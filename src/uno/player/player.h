@@ -4,7 +4,7 @@
 #include "../../common/player/player.h"
 #include "../../uno/action/action.h"
 //#include "../../uno/game/game.h"
-#include <list>
+#include <vector>
 
 namespace Casino { namespace Uno { namespace Game {
 	class UnoGame;
@@ -24,7 +24,8 @@ enum INFO_T {
 class UnoPlayer
 {
 protected:
-	list<UnoAction*> hand;
+	std::vector<UnoAction*> hand;
+	typedef std::vector<UnoAction*>::iterator card_iterator;
 	bool unoFlag;
 	bool blocked;
 public:
