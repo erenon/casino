@@ -11,15 +11,10 @@ using ::Casino::Uno::Action::CARD_VALUE;
 
 class BlockCard :public UnoCard
 {
-private:
-	CARD_COLOR color;
-	CARD_VALUE value;
 public:
 	BlockCard(CARD_COLOR color)
-		:color(color)
-	{
-		value = CARD_VALUE_BLOCK;
-	}
+		:UnoCard(color, CARD_VALUE_BLOCK)
+	{}
 
 	void takeAction(UnoGame* game) {
 		game->blockNextPlayer();

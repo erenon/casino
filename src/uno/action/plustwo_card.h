@@ -11,15 +11,10 @@ using ::Casino::Uno::Action::CARD_VALUE;
 
 class PlustwoCard :public UnoCard
 {
-private:
-	CARD_COLOR color;
-	CARD_VALUE value;
 public:
 	PlustwoCard(CARD_COLOR color)
-		:color(color)
-	{
-		value = CARD_VALUE_PLUSTWO;
-	}
+		:UnoCard(color, CARD_VALUE_PLUSTWO)
+	{}
 
 	void takeAction(UnoGame* game) {
 		game->increasePenality(2);

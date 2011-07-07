@@ -11,13 +11,9 @@ using ::Casino::Uno::Action::CARD_VALUE;
 
 class SimpleCard :public UnoCard
 {
-private:
-	CARD_COLOR color;
-	CARD_VALUE value;
 public:
 	SimpleCard(CARD_COLOR color, CARD_VALUE value)
-		:color(color),
-		 value(value)
+		:UnoCard(color, value)
 	{}
 
 	virtual void takeAction(UnoGame* game) {}

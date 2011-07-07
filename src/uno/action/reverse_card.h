@@ -11,15 +11,10 @@ using ::Casino::Uno::Action::CARD_VALUE;
 
 class ReverseCard :public UnoCard
 {
-private:
-	CARD_COLOR color;
-	CARD_VALUE value;
 public:
 	ReverseCard(CARD_COLOR color)
-		:color(color)
-	{
-		value = CARD_VALUE_REVERSE;
-	}
+		:UnoCard(color, CARD_VALUE_REVERSE)
+	{}
 
 	void takeAction(UnoGame* game) {
 		game->reverseTurn();

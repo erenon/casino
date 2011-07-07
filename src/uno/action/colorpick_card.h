@@ -11,9 +11,6 @@ using ::Casino::Uno::Action::CARD_VALUE;
 
 class ColorpickCard :public UnoCard
 {
-private:
-	CARD_COLOR color;
-	CARD_VALUE value;
 public:
 	ColorpickCard()
 	{
