@@ -24,7 +24,6 @@ class Player
 protected:
 	list<Action*> hand;
 public:
-	//Player();
 	virtual void addAction(Action *action);
 	virtual void removeAction(Action *action);
 	virtual int getActionCount();
