@@ -4,19 +4,26 @@
 #include "../../common/game/game.h"
 #include "../player/player.h"
 #include "../action/card.h"
+#include "../action/action.h"
+#include "../action/draw.h"
+
 #include <deque>
 #include <list>
+#include <string>
 
 namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Common::Game::Game;
 using ::Casino::Uno::Player::UnoPlayer;
 using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::Draw;
+using namespace ::Casino::Uno::Action;	//UnoAction, CARD_COLOR/VALUE
 
 class UnoGame :public Game
 {
 protected:
 	int current_penality;
+	Draw draw_action;
 
 	class PlayerList {
 	protected:
@@ -44,14 +51,17 @@ protected:
 		std::deque<UnoCard *> deck;
 		std::deque<UnoCard *> played;
 
-		void shuffle(std::deque<UnoCard *> toSuffle);
+		static ptrdiff_t getrandom(ptrdiff_t i);
+		void shuffle(std::deque<UnoCard *> &toShuffle);
 		void shufflePlayedIntoDeck();
 	public:
 		void shuffleDeck();
 		void addCard(UnoCard *card);
 		void addCardToPlayed(UnoCard *card);
 		UnoCard* drawCard();
-		UnoCard *lastPlayedCard();
+		//UnoCard *lastPlayedCard();
+		CARD_COLOR last_played_color;
+		CARD_VALUE last_played_value;
 		virtual ~ActionStack() {};
 	} deck;
 
@@ -71,8 +81,12 @@ public:
 	void start();
 
 	UnoCard *lastPlayedCard();
+	bool isValidMove(UnoAction* action, std::string &message);
 	void blockNextPlayer();
 	void reverseTurn();
+	void drawCards();
+	Draw *getDrawAction();
+	void setLastColor(CARD_COLOR color);
 };
 
 }}} //namespace

@@ -6,18 +6,22 @@
 #include "../action/action.h"
 #include "../action/simple_card.h"
 
-#include <algorithm>
 #include <stdexcept>
 #include <list>
 #include <deque>
 #include <typeinfo>
+
+//shuffle:
+#include <algorithm>
+#include <ctime>
+#include <cstdlib>
 
 namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Common::Game::Game;
 using ::Casino::Uno::Player::UnoPlayer;
 using ::Casino::Uno::Action::UnoCard;
-using ::Casino::Uno::Action::UnoAction;
+using namespace ::Casino::Uno::Action;	//UnoAction, CARD_COLOR/VALUE
 using ::Casino::Uno::Action::SimpleCard;
 
 UnoGame::UnoGame(int max_player_count)
@@ -102,14 +106,19 @@ void UnoGame::PlayerList::reverseTurn() {
 	turn_direction_normal = !turn_direction_normal;
 }
 
-void UnoGame::ActionStack::shuffle(std::deque<UnoCard *> toSuffle) {
-	std::random_shuffle(toSuffle.begin(), toSuffle.end());
+ptrdiff_t UnoGame::ActionStack::getrandom(ptrdiff_t i) {
+	return rand() % i;
+}
+
+void UnoGame::ActionStack::shuffle(std::deque<UnoCard *> &toShuffle) {
+	srand( unsigned( time(NULL)));
+ 	std::random_shuffle(toShuffle.begin(), toShuffle.end(), getrandom);
 }
 
 void UnoGame::ActionStack::shufflePlayedIntoDeck() {
 	// keep last played
-	UnoCard *last_played = lastPlayedCard();
-	played.pop_front();
+	/* UnoCard *last_played = lastPlayedCard();
+	played.pop_front(); */
 
 	shuffle(played);
 
@@ -119,7 +128,7 @@ void UnoGame::ActionStack::shufflePlayedIntoDeck() {
 	}
 
 	played.clear();
-	addCardToPlayed(last_played);
+	//addCardToPlayed(last_played);
 }
 
 void UnoGame::ActionStack::shuffleDeck() {
@@ -148,9 +157,9 @@ UnoCard* UnoGame::ActionStack::drawCard() {
 	return top_card;
 }
 
-UnoCard *UnoGame::ActionStack::lastPlayedCard() {
+/*UnoCard *UnoGame::ActionStack::lastPlayedCard() {
 	return played.front();
-}
+}*/
 
 void UnoGame::addCardToDeck(UnoCard *card) {
 	deck.addCard(card);
@@ -199,6 +208,8 @@ void UnoGame::initStart() {
 
 			if (typeid(*top_card) != typeid(proper_first_card)) {
 				//card ok, play out
+				deck.last_played_color = top_card->getColor();
+				deck.last_played_value = top_card->getValue();
 				deck.addCardToPlayed(top_card);
 				card_ok = true;
 			} else {
@@ -247,16 +258,20 @@ void UnoGame::start() {
 			// get players action
 			UnoAction* pickedAction = current_player->pickAction(this);
 
-			// call actions action
-			pickedAction->takeAction(this);
-
 			/** @todo notify about played card */
 
 			// move card from hand to played cards
 			if (pickedAction->isDisposeable()) {
 				current_player->removeAction(pickedAction);
-				deck.addCardToPlayed(static_cast<UnoCard*>(pickedAction));
+
+				UnoCard* played_card = static_cast<UnoCard*>(pickedAction);
+				deck.last_played_color = played_card->getColor();
+				deck.last_played_value = played_card->getValue();
+				deck.addCardToPlayed(played_card);
 			}
+
+			// call actions action
+			pickedAction->takeAction(this);
 
 		}
 
@@ -274,8 +289,52 @@ void UnoGame::start() {
 	/** @todo notify about win/game end */
 }
 
-UnoCard *UnoGame::lastPlayedCard() {
+/*UnoCard *UnoGame::lastPlayedCard() {
 	return deck.lastPlayedCard();
+}*/
+
+bool UnoGame::isValidMove(UnoAction* action, std::string &message) {
+	if (action == getDrawAction()) {
+		return true;
+	}
+
+	UnoCard *current = static_cast<UnoCard*>(action);
+
+	if (isPenality()) {
+		if (deck.last_played_value == CARD_VALUE_PLUSFOUR) {
+			if (current->getValue() == CARD_VALUE_PLUSFOUR) {
+				return true;
+			} else {
+				message = "Must play +4 or draw";
+				return false;
+			}
+		} else {
+			if (
+				current->getValue() == CARD_VALUE_PLUSFOUR ||
+				current->getValue() == CARD_VALUE_PLUSTWO
+			) {
+				return true;
+			} else {
+				message = "Must play +4 or +2 or draw";
+				return false;
+			}
+		}
+	} else {
+		if (current->getColor() == CARD_COLOR_BLACK) {
+			return true;
+		}
+
+		if (deck.last_played_color == current->getColor()) {
+			return true;
+		}
+
+		if (deck.last_played_value == current->getValue()) {
+			return true;
+		}
+
+		message = "The color or the figure must match";
+		return false;
+	}
 }
 
 void UnoGame::blockNextPlayer() {
@@ -284,6 +343,24 @@ void UnoGame::blockNextPlayer() {
 
 void UnoGame::reverseTurn() {
 	players.reverseTurn();
+}
+
+void UnoGame::drawCards() {
+	UnoPlayer *player = players.getCurrentPlayer();
+
+	if (isPenality()) {
+		dealPenality(player);
+	} else {
+		dealCard(player);
+	}
+}
+
+Draw *UnoGame::getDrawAction() {
+	return &draw_action;
+}
+
+void UnoGame::setLastColor(CARD_COLOR color) {
+	deck.last_played_color = color;
 }
 
 }}} //namespace
