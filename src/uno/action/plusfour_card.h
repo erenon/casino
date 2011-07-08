@@ -1,15 +1,15 @@
 #ifndef CSU_PLUSFOUR_CARD_H_
 #define CSU_PLUSFOUR_CARD_H_
 
-#include "card.h"
+#include "wild_card.h"
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::WildCard;
 using ::Casino::Uno::Action::CARD_COLOR;
 using ::Casino::Uno::Action::CARD_VALUE;
 
-class PlusfourCard :public UnoCard
+class PlusfourCard :public WildCard
 {
 public:
 	PlusfourCard()
@@ -20,6 +20,7 @@ public:
 
 	void takeAction(UnoGame* game) {
 		game->increasePenality(4);
+		WildCard::takeAction(game);
 	}
 };
 
