@@ -31,7 +31,11 @@ TEST(ConsoleUnoPlayer, PrintCards) {
 
 	player.listCards();
 
-	output.assert_eq("1. R8\n2. B4\n3. draw\n");
+	output.assert_eq(
+		"1. \E[37;41m\033[1m8\033[0m\E[0m\n"\
+		"2. \E[37;44m\033[1m4\033[0m\E[0m\n"\
+		"3. draw\n"
+	);
 }
 
 TEST(ConsoleUnoPlayer, ChooseCard) {

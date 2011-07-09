@@ -3,12 +3,15 @@
 #include <stdexcept>
 
 #include "../../../src/uno/game/game.h"
+#include "../../../src/uno/action/card.h"
+#include "../../../src/uno/action/simple_card.h"
 #include "../player/player_mock.h"
 #include "../action/card_mock.h"
 
 using ::Casino::Uno::Game::UnoGame;
 using ::Casino::Test::Uno::Player::UnoPlayerMock;
 using ::Casino::Test::Uno::Action::CardMock;
+using namespace ::Casino::Uno::Action;	//SimpleCard, CARD_COLOR/VALUE
 using ::testing::_;
 using ::testing::InSequence;
 using ::testing::Return;
@@ -60,10 +63,11 @@ TEST(UnoGame, DealCard) {
 //TEST(UnoGame, LastPlayedCard) {
 
 ACTION_P2(isLastPlayedCardValid, begin, end) {
-	ASSERT_TRUE(
-		begin <= arg0->lastPlayedCard()
-	&&  end >= arg0->lastPlayedCard()
-	);
+	SimpleCard c = arg0->lastPlayedCard();
+	ASSERT_NE(c.getColor(), CARD_COLOR_BLACK);
+	ASSERT_NE(c.getValue(), CARD_VALUE_BLOCK);
+	ASSERT_NE(c.getValue(), CARD_VALUE_REVERSE);
+	ASSERT_NE(c.getValue(), CARD_VALUE_PLUSTWO);
 }
 
 ACTION(BlockNextPlayer) {
@@ -71,7 +75,8 @@ ACTION(BlockNextPlayer) {
 }
 
 ACTION_P(isLastPlayedCardExactly, card) {
-	ASSERT_TRUE(card == arg0->lastPlayedCard());
+	ASSERT_EQ(card->getColor(), arg0->lastPlayedCard().getColor());
+	ASSERT_EQ(card->getValue(), arg0->lastPlayedCard().getValue());
 }
 
 ACTION(ReverseTurn) {
@@ -152,11 +157,13 @@ TEST(UnoGame, Gameplay) {
 
 		EXPECT_CALL(alice, pickAction(&game))
 			.WillOnce(DoAll(
-				// check whether the first autoplayed card was in the deck
+				// check whether the first autoplayed card is simple
 				isLastPlayedCardValid(&(cards[0]), &(cards[CARD_COUNT - 1])),
 				Return(&(cards[0]))
 			))
 			.RetiresOnSaturation();
+
+		PLAY_OUT_CARD(cards[0], alice);
 
 		EXPECT_CALL(cards[0], takeAction(&game))
 			.WillOnce(BlockNextPlayer())
@@ -165,7 +172,6 @@ TEST(UnoGame, Gameplay) {
 		EXPECT_CALL(bob, block())
 			.RetiresOnSaturation();
 
-		PLAY_OUT_CARD(cards[0], alice);
 
 		// bob - gets blocked
 		EXPECT_CALL(bob, isBlocked())
@@ -190,11 +196,12 @@ TEST(UnoGame, Gameplay) {
 			))
 			.RetiresOnSaturation();
 
+		PLAY_OUT_CARD(cards[1], charlie);
+
 		EXPECT_CALL(cards[1], takeAction(&game))
 			.WillOnce(ReverseTurn())
 			.RetiresOnSaturation();
 
-		PLAY_OUT_CARD(cards[1], charlie);
 		UNO_CHECK(bob);
 
 		// bob - revenge, +2 to alice
@@ -204,11 +211,12 @@ TEST(UnoGame, Gameplay) {
 			.WillOnce(Return(&(cards[2])))
 			.RetiresOnSaturation();
 
+		PLAY_OUT_CARD(cards[2], bob);
+
 		EXPECT_CALL(cards[2], takeAction(&game))
 			.WillOnce(plusTwoCardAction())
 			.RetiresOnSaturation();
 
-		PLAY_OUT_CARD(cards[2], bob);
 		UNO_CHECK(charlie);
 
 		// alice - draw two cards
@@ -218,6 +226,10 @@ TEST(UnoGame, Gameplay) {
 			.WillOnce(Return(&draw))
 			.RetiresOnSaturation();
 
+		EXPECT_CALL(draw, isDisposeable())
+			.WillOnce(Return(false))
+			.RetiresOnSaturation();
+
 		EXPECT_CALL(draw, takeAction(&game))
 			.WillOnce(drawTwoCards(&alice))
 			.RetiresOnSaturation();
@@ -225,10 +237,6 @@ TEST(UnoGame, Gameplay) {
 		EXPECT_CALL(alice, addAction(_))
 			.RetiresOnSaturation();
 		EXPECT_CALL(alice, addAction(_))
-			.RetiresOnSaturation();
-
-		EXPECT_CALL(draw, isDisposeable())
-			.WillOnce(Return(false))
 			.RetiresOnSaturation();
 
 		UNO_CHECK(bob);
