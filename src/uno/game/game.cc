@@ -289,9 +289,10 @@ void UnoGame::start() {
 	/** @todo notify about win/game end */
 }
 
-/*UnoCard *UnoGame::lastPlayedCard() {
-	return deck.lastPlayedCard();
-}*/
+SimpleCard UnoGame::lastPlayedCard() {
+	SimpleCard card(deck.last_played_color, deck.last_played_value);
+	return card;
+}
 
 bool UnoGame::isValidMove(UnoAction* action, std::string &message) {
 	if (action == getDrawAction()) {

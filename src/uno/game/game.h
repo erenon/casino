@@ -4,6 +4,7 @@
 #include "../../common/game/game.h"
 #include "../player/player.h"
 #include "../action/card.h"
+#include "../action/simple_card.h"
 #include "../action/action.h"
 #include "../action/draw.h"
 
@@ -15,9 +16,8 @@ namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Common::Game::Game;
 using ::Casino::Uno::Player::UnoPlayer;
-using ::Casino::Uno::Action::UnoCard;
-using ::Casino::Uno::Action::Draw;
-using namespace ::Casino::Uno::Action;	//UnoAction, CARD_COLOR/VALUE
+//UnoAction, CARD_COLOR/VALUE, Draw, UnoCard, SimpleCard
+using namespace ::Casino::Uno::Action;
 
 class UnoGame :public Game
 {
@@ -80,7 +80,7 @@ public:
 
 	void start();
 
-	UnoCard *lastPlayedCard();
+	SimpleCard lastPlayedCard();
 	bool isValidMove(UnoAction* action, std::string &message);
 	void blockNextPlayer();
 	void reverseTurn();
