@@ -4,25 +4,33 @@
 
 #include "uno/game/game.h"
 #include "uno/player/console_player.h"
+#include "uno/player/robot_easy_player.h"
 #include "uno/action/full_card_deck.h"
 
 using ::Casino::Uno::Game::UnoGame;
 using ::Casino::Uno::Player::ConsoleUnoPlayer;
+using ::Casino::Uno::Player::RobotEasyUnoPlayer;
 using ::Casino::Uno::Action::UnoFullCardDeck;
 
 int main(void) {
-	printf("casino main hello");
+	printf("===Casino Uno\n");
 
-	UnoGame game(2);
-	ConsoleUnoPlayer
-		alice(std::cin, std::cout),
-		bob(std::cin, std::cout);
+	UnoGame game(4);
+	ConsoleUnoPlayer alice(std::cin, std::cout);
+	RobotEasyUnoPlayer robots[3];
 	UnoFullCardDeck deck;
+
+	alice.setName("player");
+	robots[0].setName("robot 1");
+	robots[1].setName("robot 2");
+	robots[2].setName("robot 3");
 
 	deck.fillGameWithCards(&game);
 
 	game.joinPlayer(&alice);
-	game.joinPlayer(&bob);
+	game.joinPlayer(&(robots[0]));
+	game.joinPlayer(&(robots[1]));
+	game.joinPlayer(&(robots[2]));
 
 	game.start();
 
