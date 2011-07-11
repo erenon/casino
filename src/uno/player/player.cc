@@ -10,7 +10,21 @@ using ::Casino::Common::Player::Player;
 using ::Casino::Uno::Action::UnoAction;
 using std::list;
 
-UnoPlayer::UnoPlayer() :unoFlag(false), blocked(false) {}
+UnoPlayer::UnoPlayer() :name("player"), unoFlag(false), blocked(false) {}
+
+UnoPlayer::UnoPlayer(const char *name)
+	:unoFlag(false), blocked(false)
+{
+	setName(name);
+}
+
+void UnoPlayer::setName(const char *name) {
+	this->name = name;
+}
+
+std::string UnoPlayer::getName() {
+	return name;
+}
 
 void UnoPlayer::addAction(UnoAction *action) {
 	hand.push_back(action);
