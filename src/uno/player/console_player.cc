@@ -172,7 +172,9 @@ CARD_COLOR ConsoleUnoPlayer::chooseColor() {
 }
 
 UnoAction* ConsoleUnoPlayer::pickAction(UnoGame *game) {
-	println("==Your turn");
+	out << std::endl << "==" << this->getName() << "'s turn" << std::endl;
+	SimpleCard last_card = game->lastPlayedCard();
+	out << "-Last card was: " << &last_card << std::endl;
 	println("-Your cards:");
 	listCards();
 
@@ -196,7 +198,6 @@ UnoAction* ConsoleUnoPlayer::pickAction(UnoGame *game) {
 		}
 	}
 
-	/** @todo add color picking */
 	if (card_index != getCardCount()
 	&& static_cast<UnoCard*>(picked)->getColor() == CARD_COLOR_BLACK) {
 		CARD_COLOR new_color = chooseColor();
@@ -206,8 +207,64 @@ UnoAction* ConsoleUnoPlayer::pickAction(UnoGame *game) {
 	return picked;
 }
 
-void ConsoleUnoPlayer::info(INFO_T type) {
+void ConsoleUnoPlayer::notify(Event::EVENT event_type, void* event) {
+	switch (event_type) {
+	case Event::EVENT_GAME_START:
+		println("==The Game has begun.");
+		out << "-First card: "
+			<< reinterpret_cast<Event::game_start*>(event)->first_card
+			<< std::endl;
+		break;
 
+	case Event::EVENT_CARD_PLAYED:
+	{
+		Event::card_played* e = reinterpret_cast<Event::card_played*>(event);
+		out << e->played_by->getName()
+			<< " played "
+			<< e->played_card
+			<< std::endl;
+	}
+		break;
+
+	case Event::EVENT_GAME_END:
+	{
+		Event::game_end* e = reinterpret_cast<Event::game_end*>(event);
+		out << e->winner->getName()
+			<< " wins"
+			<< std::endl;
+	}
+		break;
+
+	case Event::EVENT_COLORPICK:
+	{
+		Event::colorpick* e = reinterpret_cast<Event::colorpick*>(event);
+		out << e->picked_by->getName()
+			<< " picked color ";
+
+		switch (e->color) {
+		case CARD_COLOR_RED:
+			out << "red";
+			break;
+		case CARD_COLOR_GREEN:
+			out << "green";
+			break;
+		case CARD_COLOR_BLUE:
+			out << "blue";
+			break;
+		case CARD_COLOR_YELLOW:
+			out << "yellow";
+			break;
+		default:
+			out << "??";
+		}
+
+		out << std::endl;
+	}
+		break;
+
+	default:
+		out << "[!] Unknown event.." << std::endl;
+	}
 }
 
 }}} //namespace
