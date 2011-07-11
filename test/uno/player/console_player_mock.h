@@ -5,6 +5,7 @@
 
 #include "../../../src/uno/player/console_player.h"
 #include "../../../src/uno/action/action.h"
+#include "../../../src/uno/event/event.h"
 
 #include <iostream>
 
@@ -16,8 +17,8 @@ namespace Casino { namespace Test { namespace Uno { namespace Player {
 
 using ::Casino::Uno::Player::ConsoleUnoPlayer;
 using ::Casino::Uno::Action::UnoAction;
-using ::Casino::Uno::Player::INFO_T;
 using ::Casino::Uno::Game::UnoGame;
+namespace Event = ::Casino::Uno::Event;
 
 class ConsoleUnoPlayerMock :public ConsoleUnoPlayer
 {
@@ -26,7 +27,7 @@ public:
 		:ConsoleUnoPlayer(in, out)
 	{}
 	MOCK_METHOD1(pickAction, UnoAction*(UnoGame *game));
-	MOCK_METHOD1(info, void(INFO_T type));
+	MOCK_METHOD2(notify, void(Event::EVENT event_type, void* event));
 	void listCards() {
 		ConsoleUnoPlayer::listCards();
 	}
