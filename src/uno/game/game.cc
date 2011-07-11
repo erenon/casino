@@ -97,6 +97,24 @@ UnoPlayer *UnoGame::PlayerList::next() {
 	return *current_player;
 }
 
+void UnoGame::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
+	player_iterator it;
+
+	for (it = players.begin(); it != players.end(); it++) {
+		(*it)->notify(event_type, event);
+	}
+}
+
+void UnoGame::PlayerList::notifyOthers(Event::EVENT event_type, void* event, UnoPlayer* player) {
+	player_iterator it;
+
+	for (it = players.begin(); it != players.end(); it++) {
+		if (*it != player) {
+			(*it)->notify(event_type, event);
+		}
+	}
+}
+
 void UnoGame::PlayerList::reset() {
 	prev_player = NULL;
 	current_player = players.begin();
@@ -145,7 +163,7 @@ void UnoGame::ActionStack::addCardToPlayed(UnoCard *card) {
 
 UnoCard* UnoGame::ActionStack::drawCard() {
 	if (deck.size() == 0) {
-		if (played.size() > 1) { //must keep the top card
+		if (played.size() > 0) {
 			shufflePlayedIntoDeck();
 		} else {
 			throw std::length_error("No card in deck");
@@ -206,7 +224,7 @@ void UnoGame::initStart() {
 		while (!card_ok) {
 			top_card = deck.drawCard();
 
-			if (typeid(*top_card) != typeid(proper_first_card)) {
+			if (typeid(*top_card) == typeid(proper_first_card)) {
 				//card ok, play out
 				deck.last_played_color = top_card->getColor();
 				deck.last_played_value = top_card->getValue();
@@ -245,6 +263,16 @@ void UnoGame::checkUno(UnoPlayer* player) {
 void UnoGame::start() {
 	initStart();
 
+	{
+		Event::game_start event;
+		SimpleCard first_card = lastPlayedCard();
+		event.first_card = &first_card;
+		players.notifyAll(
+			Event::EVENT_GAME_START,
+			reinterpret_cast<void*>(&event)
+		);
+	}
+
 	players.reset();
 	UnoPlayer* current_player = players.getCurrentPlayer();
 	bool first_move = true;
@@ -258,8 +286,6 @@ void UnoGame::start() {
 			// get players action
 			UnoAction* pickedAction = current_player->pickAction(this);
 
-			/** @todo notify about played card */
-
 			// move card from hand to played cards
 			if (pickedAction->isDisposeable()) {
 				current_player->removeAction(pickedAction);
@@ -268,6 +294,18 @@ void UnoGame::start() {
 				deck.last_played_color = played_card->getColor();
 				deck.last_played_value = played_card->getValue();
 				deck.addCardToPlayed(played_card);
+
+				{ //notify about played card
+					Event::card_played event;
+					SimpleCard played_card = lastPlayedCard();
+					event.played_card = &played_card;
+					event.played_by = current_player;
+					players.notifyOthers(
+						Event::EVENT_CARD_PLAYED,
+						reinterpret_cast<void*>(&event),
+						current_player
+					);
+				}
 			}
 
 			// call actions action
@@ -286,7 +324,14 @@ void UnoGame::start() {
 		current_player = players.next();
 	}
 
-	/** @todo notify about win/game end */
+	{ // notify about win/game end
+		Event::game_end event;
+		event.winner = current_player;
+		players.notifyAll(
+			Event::EVENT_GAME_END,
+			reinterpret_cast<void*>(&event)
+		);
+	}
 }
 
 SimpleCard UnoGame::lastPlayedCard() {
@@ -362,6 +407,15 @@ Draw *UnoGame::getDrawAction() {
 
 void UnoGame::setLastColor(CARD_COLOR color) {
 	deck.last_played_color = color;
+
+	Event::colorpick event;
+	event.picked_by = players.getCurrentPlayer();
+	event.color = color;
+	players.notifyOthers(
+		Event::EVENT_COLORPICK,
+		reinterpret_cast<void*>(&event),
+		players.getCurrentPlayer()
+	);
 }
 
 }}} //namespace

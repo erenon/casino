@@ -44,6 +44,8 @@ protected:
 		UnoPlayer *next();
 		void reset();
 		void reverseTurn();
+		void notifyAll(Event::EVENT event_type, void* event);
+		void notifyOthers(Event::EVENT event_type, void* event, UnoPlayer* player);
 	} players;
 
 	class ActionStack {
