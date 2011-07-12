@@ -262,8 +262,66 @@ void ConsoleUnoPlayer::notify(Event::EVENT event_type, void* event) {
 	}
 		break;
 
+	case Event::EVENT_DRAW_CARD:
+	{
+		Event::draw_card* e = reinterpret_cast<Event::draw_card*>(event);
+		out << e->player->getName() << " draws " << e->card_count << " card";
+		if (e->card_count > 1) {
+			out << "s";
+		}
+		out << std::endl;
+
+		break;
+	}
+
+	case Event::EVENT_GETS_BLOCKED:
+	{
+		Event::gets_blocked* e = reinterpret_cast<Event::gets_blocked*>(event);
+		if (e->gets_blocked == this) {
+			out << "You got blocked by " << e->blocked_by->getName() << std::endl;
+		} else if (e->blocked_by == this) {
+			out << "You blocked " << e->gets_blocked->getName() << std::endl;
+		} else {
+			out << e->blocked_by->getName() << " blocked " << e->gets_blocked->getName() << std::endl;
+		}
+
+		break;
+	}
+
+	case Event::EVENT_UNO_SAID:
+	{
+		Event::uno_said* e = reinterpret_cast<Event::uno_said*>(event);
+		if (e->said_by == this) {
+			if (e->type == Event::uno_said::GOOD) {
+
+			} else if (e->type == Event::uno_said::BAD) {
+				out << "You said uno at the wrong time. " \
+					   "Say uno if you have only one card left " \
+					   "by typing uno after the choosed card index" << std::endl;
+			} else if (e->type == Event::uno_said::FORGOTTEN) {
+				out << "You forgot to say uno " \
+					   "Say uno if you have only one card left " \
+					   "by typing uno after the choosed card index" << std::endl;
+			}
+		} else {
+			if (e->type == Event::uno_said::GOOD) {
+				out << e->said_by->getName()
+					<< " is on UNO" << std::endl;
+			} else if (e->type == Event::uno_said::BAD) {
+				out << e->said_by->getName()
+					<< " said uno too soon" << std::endl;
+			} else if (e->type == Event::uno_said::FORGOTTEN) {
+				out << e->said_by->getName()
+					<< " forgot to say uno" << std::endl;
+			}
+		}
+
+		break;
+	}
+
 	default:
-		out << "[!] Unknown event.." << std::endl;
+		out << "[!] Unknown event... Event type id: "
+			<< event_type << std::endl;
 	}
 }
 
