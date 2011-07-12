@@ -21,7 +21,9 @@ enum EVENT {
 	EVENT_DRAW_CARD,
 	EVENT_COLORPICK,
 	EVENT_GAME_START,
-	EVENT_GAME_END
+	EVENT_GAME_END,
+	EVENT_UNO_SAID,
+	EVENT_GETS_BLOCKED
 };
 
 struct card_played {
@@ -45,6 +47,21 @@ struct game_start {
 
 struct game_end {
 	UnoPlayer* winner;
+};
+
+struct uno_said {
+	enum TYPE {
+		GOOD,
+		BAD,
+		FORGOTTEN
+	};
+	UnoPlayer* said_by;
+	TYPE type;
+};
+
+struct gets_blocked {
+	UnoPlayer* gets_blocked;
+	UnoPlayer* blocked_by;
 };
 
 }}} //namespace
