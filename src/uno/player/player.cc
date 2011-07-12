@@ -66,11 +66,15 @@ void UnoPlayer::setUnoFlag(bool value) {
  *
  * @return true, if player should be punished
  */
-bool UnoPlayer::wrongUno() {
+/*bool UnoPlayer::wrongUno() {
 	return (
 		(getCardCount() == 1 && unoFlag == false)
 	||  (getCardCount() != 1 && unoFlag == true)
 	);
+}*/
+
+bool UnoPlayer::getUnoFlag() {
+	return unoFlag;
 }
 
 bool UnoPlayer::isBlocked() {

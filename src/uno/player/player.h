@@ -38,7 +38,8 @@ public:
 	virtual void notify(EVENT event_type, void* event) = 0;
 	virtual int getCardCount();
 	virtual void setUnoFlag(bool value);
-	virtual bool wrongUno();
+	//virtual bool wrongUno();
+	virtual bool getUnoFlag();
 	virtual bool isBlocked();
 	virtual void block();
 	virtual void unblock();
