@@ -248,16 +248,44 @@ void UnoGame::initStart() {
 
 bool UnoGame::doesPlayerWin(UnoPlayer* player) {
 	return (player->isBlocked() == false)
-		&& (player->getCardCount() == 0);
+		&& (player->getCardCount() == 0)
+		&& (isPenality() == false);
 }
 
 void UnoGame::checkUno(UnoPlayer* player) {
-	if (player->wrongUno()) {
+	/*if (player->wrongUno()) {
+		dealCard(player);
+		dealCard(player);
+	}*/
+	bool should_say = (player->getCardCount() == 1);
+	bool said = player->getUnoFlag();
+
+	if (should_say != said) {
 		dealCard(player);
 		dealCard(player);
 	}
 
-	player->setUnoFlag(false);
+	if (should_say || said) {
+		Event::uno_said event;
+		event.said_by = player;
+
+		if (should_say == true && said == true) {
+			event.type = Event::uno_said::GOOD;
+		} else if (should_say == false && said == true) {
+			event.type = Event::uno_said::BAD;
+		} else if (should_say == true && said == false) {
+			event.type = Event::uno_said::FORGOTTEN;
+		}
+
+		players.notifyAll(
+			Event::EVENT_UNO_SAID,
+			reinterpret_cast<void*>(&event)
+		);
+	}
+
+	if (said) {
+		player->setUnoFlag(false);
+	}
 }
 
 void UnoGame::start() {
@@ -306,6 +334,18 @@ void UnoGame::start() {
 						current_player
 					);
 				}
+			} else {
+				//it's a draw
+				//player draws the current penality or a single card
+				int card_count = (isPenality()) ? current_penality : 1;
+				Event::draw_card event;
+				event.player = current_player;
+				event.card_count = card_count;
+				players.notifyOthers(
+					Event::EVENT_DRAW_CARD,
+					reinterpret_cast<void*>(&event),
+					current_player
+				);
 			}
 
 			// call actions action
@@ -385,6 +425,17 @@ bool UnoGame::isValidMove(UnoAction* action, std::string &message) {
 
 void UnoGame::blockNextPlayer() {
 	players.getNextPlayer()->block();
+
+	{
+		Event::gets_blocked event;
+		event.gets_blocked = players.getNextPlayer();
+		event.blocked_by = players.getCurrentPlayer();
+
+		players.notifyAll(
+			Event::EVENT_GETS_BLOCKED,
+			reinterpret_cast<void*>(&event)
+		);
+	}
 }
 
 void UnoGame::reverseTurn() {
