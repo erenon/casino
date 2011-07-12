@@ -5,6 +5,7 @@
 #include "../../../src/uno/game/game.h"
 #include "../../../src/uno/action/card.h"
 #include "../../../src/uno/action/simple_card.h"
+#include "../../../src/uno/event/event.h"
 #include "../player/player_mock.h"
 #include "../action/card_mock.h"
 
@@ -12,10 +13,10 @@ using ::Casino::Uno::Game::UnoGame;
 using ::Casino::Test::Uno::Player::UnoPlayerMock;
 using ::Casino::Test::Uno::Action::CardMock;
 using namespace ::Casino::Uno::Action;	//SimpleCard, CARD_COLOR/VALUE
+namespace Event = ::Casino::Uno::Event;
 using ::testing::_;
 using ::testing::InSequence;
 using ::testing::Return;
-//using ::testing::Invoke;
 using ::testing::DoAll;
 
 TEST(UnoGame, Penality) {
@@ -62,7 +63,7 @@ TEST(UnoGame, DealCard) {
 
 //TEST(UnoGame, LastPlayedCard) {
 
-ACTION_P2(isLastPlayedCardValid, begin, end) {
+ACTION(isFirstCardValid) {
 	SimpleCard c = arg0->lastPlayedCard();
 	ASSERT_NE(c.getColor(), CARD_COLOR_BLACK);
 	ASSERT_NE(c.getValue(), CARD_VALUE_BLOCK);
@@ -106,32 +107,96 @@ ACTION_P(drawTwoCards, player) {
 			.WillOnce(Return(false))		\
 			.RetiresOnSaturation();			\
 
-#define PLAY_OUT_CARD(CARD, PLY)			\
+#define PLAY_OUT_CARD(CARD, PLY, OTHER1, OTHER2)\
 		EXPECT_CALL(CARD, isDisposeable())	\
 			.WillOnce(Return(true))			\
 			.RetiresOnSaturation();			\
 											\
 		EXPECT_CALL(PLY, removeAction(&(CARD)))	\
 			.RetiresOnSaturation();			\
-
-#define UNO_CHECK(PLY)						\
-		EXPECT_CALL(PLY, wrongUno())		\
-			.WillOnce(Return(false))		\
+											\
+		EXPECT_CALL(OTHER1, notify(Event::EVENT_CARD_PLAYED, _)) \
 			.RetiresOnSaturation();			\
 											\
-		EXPECT_CALL(PLY, setUnoFlag(false))	\
+		EXPECT_CALL(OTHER2, notify(Event::EVENT_CARD_PLAYED, _)) \
 			.RetiresOnSaturation();			\
+
+#define UNO_CHECK(PLY)						\
+		EXPECT_CALL(PLY, getCardCount())	\
+			.WillOnce(Return(5))			\
+			.RetiresOnSaturation();			\
+											\
+		EXPECT_CALL(PLY, getUnoFlag())		\
+			.WillOnce(Return(false))		\
+			.RetiresOnSaturation();			\
+
+ACTION_P2(checkBlockNotify, blocker, blocked) {
+	Event::gets_blocked* e = reinterpret_cast<Event::gets_blocked*>(arg1);
+	ASSERT_EQ(blocker, e->blocked_by);
+	ASSERT_EQ(blocked, e->gets_blocked);
+}
+
+#define EXPECT_NOTIFY_BLOCK(BLOCKER, BLOCKED, NOT1, NOT2, NOT3) \
+		EXPECT_CALL(NOT1, notify(Event::EVENT_GETS_BLOCKED, _)) \
+			.WillOnce(checkBlockNotify(&BLOCKER, &BLOCKED))		\
+			.RetiresOnSaturation();								\
+		EXPECT_CALL(NOT2, notify(Event::EVENT_GETS_BLOCKED, _)) \
+			.WillOnce(checkBlockNotify(&BLOCKER, &BLOCKED))		\
+			.RetiresOnSaturation();								\
+		EXPECT_CALL(NOT3, notify(Event::EVENT_GETS_BLOCKED, _)) \
+			.WillOnce(checkBlockNotify(&BLOCKER, &BLOCKED))		\
+			.RetiresOnSaturation();								\
+
+ACTION_P2(checkDrawNotify, draws, count) {
+	Event::draw_card* e = reinterpret_cast<Event::draw_card*>(arg1);
+	ASSERT_EQ(draws, e->player);
+	ASSERT_EQ(count, e->card_count);
+}
+
+#define EXPECT_NOTIFY_DRAW(DRAWS, COUNT, NOT1, NOT2)			\
+		EXPECT_CALL(NOT1, notify(Event::EVENT_DRAW_CARD, _))	\
+			.WillOnce(checkDrawNotify(&DRAWS, COUNT))			\
+			.RetiresOnSaturation();								\
+		EXPECT_CALL(NOT2, notify(Event::EVENT_DRAW_CARD, _))	\
+			.WillOnce(checkDrawNotify(&DRAWS, COUNT))			\
+			.RetiresOnSaturation();								\
+
+ACTION_P(checkGameEndNotify, winner) {
+	Event::game_end* e = reinterpret_cast<Event::game_end*>(arg1);
+	ASSERT_EQ(winner, e->winner);
+}
+
+#define EXPECT_NOTIFY_END(WINNER, NOT1, NOT2, NOT3)				\
+		EXPECT_CALL(NOT1, notify(Event::EVENT_GAME_END, _))		\
+			.WillOnce(checkGameEndNotify(&WINNER))				\
+			.RetiresOnSaturation();								\
+		EXPECT_CALL(NOT2, notify(Event::EVENT_GAME_END, _))		\
+			.WillOnce(checkGameEndNotify(&WINNER))				\
+			.RetiresOnSaturation();								\
+		EXPECT_CALL(NOT3, notify(Event::EVENT_GAME_END, _))		\
+			.WillOnce(checkGameEndNotify(&WINNER))				\
+			.RetiresOnSaturation();								\
 
 TEST(UnoGame, Gameplay) {
 	UnoGame game(3);
 	UnoPlayerMock alice, bob, charlie;
 	CardMock cards[CARD_COUNT];
+	SimpleCard first_card(CARD_COLOR_RED, CARD_VALUE_6);
 	CardMock draw;
 
 	game.joinPlayer(&alice);
 	game.joinPlayer(&bob);
 	game.joinPlayer(&charlie);
 
+	{	//game start
+		Event::EVENT start = Event::EVENT_GAME_START;
+		EXPECT_CALL(alice, notify(start, _))
+			.RetiresOnSaturation();
+		EXPECT_CALL(bob, notify(start, _))
+			.RetiresOnSaturation();
+		EXPECT_CALL(charlie, notify(start, _))
+			.RetiresOnSaturation();
+	}
 
 	{	// deal initial hands
 		InSequence s;
@@ -158,12 +223,12 @@ TEST(UnoGame, Gameplay) {
 		EXPECT_CALL(alice, pickAction(&game))
 			.WillOnce(DoAll(
 				// check whether the first autoplayed card is simple
-				isLastPlayedCardValid(&(cards[0]), &(cards[CARD_COUNT - 1])),
+				isFirstCardValid(),
 				Return(&(cards[0]))
 			))
 			.RetiresOnSaturation();
 
-		PLAY_OUT_CARD(cards[0], alice);
+		PLAY_OUT_CARD(cards[0], alice, bob, charlie);
 
 		EXPECT_CALL(cards[0], takeAction(&game))
 			.WillOnce(BlockNextPlayer())
@@ -172,6 +237,7 @@ TEST(UnoGame, Gameplay) {
 		EXPECT_CALL(bob, block())
 			.RetiresOnSaturation();
 
+		EXPECT_NOTIFY_BLOCK(alice, bob, alice, bob, charlie);
 
 		// bob - gets blocked
 		EXPECT_CALL(bob, isBlocked())
@@ -196,7 +262,7 @@ TEST(UnoGame, Gameplay) {
 			))
 			.RetiresOnSaturation();
 
-		PLAY_OUT_CARD(cards[1], charlie);
+		PLAY_OUT_CARD(cards[1], charlie, alice, bob);
 
 		EXPECT_CALL(cards[1], takeAction(&game))
 			.WillOnce(ReverseTurn())
@@ -211,7 +277,7 @@ TEST(UnoGame, Gameplay) {
 			.WillOnce(Return(&(cards[2])))
 			.RetiresOnSaturation();
 
-		PLAY_OUT_CARD(cards[2], bob);
+		PLAY_OUT_CARD(cards[2], bob, alice, charlie);
 
 		EXPECT_CALL(cards[2], takeAction(&game))
 			.WillOnce(plusTwoCardAction())
@@ -229,6 +295,8 @@ TEST(UnoGame, Gameplay) {
 		EXPECT_CALL(draw, isDisposeable())
 			.WillOnce(Return(false))
 			.RetiresOnSaturation();
+
+		EXPECT_NOTIFY_DRAW(alice, 2, bob, charlie);
 
 		EXPECT_CALL(draw, takeAction(&game))
 			.WillOnce(drawTwoCards(&alice))
@@ -249,11 +317,14 @@ TEST(UnoGame, Gameplay) {
 		EXPECT_CALL(charlie, getCardCount())
 			.WillOnce(Return(0))
 			.RetiresOnSaturation();
+
+		EXPECT_NOTIFY_END(charlie, alice, bob, charlie);
 	}
 
 	for (int i = 0; i < CARD_COUNT; i++) {
 		game.addCardToDeck(&(cards[i]));
 	}
+	game.addCardToDeck(&first_card);
 	game.start();
 }
 
@@ -261,3 +332,6 @@ TEST(UnoGame, Gameplay) {
 #undef START_TURN
 #undef PLAY_OUT_CARD
 #undef UNO_CHECK
+#undef EXPECT_NOTIFY_BLOCK
+#undef EXPECT_NOTIFY_DRAW
+#undef EXPECT_NOTIFY_END

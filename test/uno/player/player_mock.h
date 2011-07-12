@@ -28,7 +28,8 @@ public:
 	MOCK_METHOD2(notify, void(Event::EVENT event_type, void* event));
 	MOCK_METHOD0(getCardCount, int());
 	MOCK_METHOD1(setUnoFlag, void(bool value));
-	MOCK_METHOD0(wrongUno, bool());
+	//MOCK_METHOD0(wrongUno, bool());
+	MOCK_METHOD0(getUnoFlag, bool());
 	MOCK_METHOD0(isBlocked, bool());
 	MOCK_METHOD0(block, void());
 	MOCK_METHOD0(unblock, void());
