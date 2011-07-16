@@ -24,14 +24,24 @@ JavascriptUnoPlayer::JavascriptUnoPlayer(Handle<Object> jsplayer) {
 	this->jsplayer = Persistent<Object>::New(jsplayer);
 }
 
+Local<Function> JavascriptUnoPlayer::getCallback(const char* cbname) {
+	HandleScope scope;
+	Local<Function> cb = Local<Function>::Cast(
+		jsplayer->Get(String::New(cbname))
+	);
+
+	if (!cb->IsFunction()) {
+		throw "callback not found";
+	}
+
+	return scope.Close(cb);
+}
 /**
  * @todo handle invalid move
  */
 UnoAction* JavascriptUnoPlayer::pickAction(UnoGame *game) {
 	HandleScope scope;
-	Local<Function> pickAction_cb = Local<Function>::Cast(
-		jsplayer->GetPrototype()->ToObject()->Get(String::New("pickAction"))
-	);
+	Local<Function> pickAction_cb = getCallback("pickAction");
 
 	Handle<Value> picked_index;
 
@@ -148,9 +158,7 @@ Local<Object> JavascriptUnoPlayer::createPlayerObject(UnoPlayer* player) {
 void JavascriptUnoPlayer::notify(EVENT event_type, void* event) {
 	HandleScope scope;
 
-	Local<Function> notify_cb = Local<Function>::Cast(
-		jsplayer->GetPrototype()->ToObject()->Get(String::New("notify"))
-	);
+	Local<Function> notify_cb = getCallback("notify");
 
 	Local<Object> jsevent = Object::New();
 	const char* jstype = "";
@@ -297,6 +305,19 @@ void JavascriptUnoPlayer::notify(EVENT event_type, void* event) {
 		jsevent->Set(
 			String::NewSymbol("type"),
 			String::NewSymbol(type)
+		);
+
+		break;
+	}
+
+	case Event::EVENT_PLAYER_JOINED:
+	{
+		jstype = "player_joined";
+		Event::player_joined* e = reinterpret_cast<Event::player_joined*>(event);
+
+		jsevent->Set(
+			String::NewSymbol("player"),
+			createPlayerObject(e->player)
 		);
 
 		break;

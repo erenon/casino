@@ -23,7 +23,8 @@ enum EVENT {
 	EVENT_GAME_START,
 	EVENT_GAME_END,
 	EVENT_UNO_SAID,
-	EVENT_GETS_BLOCKED
+	EVENT_GETS_BLOCKED,
+	EVENT_PLAYER_JOINED
 };
 
 struct card_played {
@@ -62,6 +63,10 @@ struct uno_said {
 struct gets_blocked {
 	UnoPlayer* gets_blocked;
 	UnoPlayer* blocked_by;
+};
+
+struct player_joined {
+	UnoPlayer* player;
 };
 
 }}} //namespace

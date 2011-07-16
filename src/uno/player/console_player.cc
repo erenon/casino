@@ -319,6 +319,13 @@ void ConsoleUnoPlayer::notify(Event::EVENT event_type, void* event) {
 		break;
 	}
 
+	case Event::EVENT_PLAYER_JOINED:
+	{
+		Event::player_joined* e = reinterpret_cast<Event::player_joined*>(event);
+		out << e->player->getName() << " joined to the game" << std::endl;
+		break;
+	}
+
 	default:
 		out << "[!] Unknown event... Event type id: "
 			<< event_type << std::endl;

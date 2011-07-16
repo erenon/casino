@@ -25,9 +25,10 @@ class JavascriptUnoPlayer :public UnoPlayer
 {
 public:
 	JavascriptUnoPlayer(Handle<Object> jsplayer);
+	virtual Local<Function> getCallback(const char* cbname);
 	virtual UnoAction* pickAction(UnoGame *game);
-	Local<Object> createCardObject(UnoCard* card);
-	Local<Object> createPlayerObject(UnoPlayer* player);
+	virtual Local<Object> createCardObject(UnoCard* card);
+	virtual Local<Object> createPlayerObject(UnoPlayer* player);
 	virtual void notify(EVENT event_type, void* event);
 
 protected:

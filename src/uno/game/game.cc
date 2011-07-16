@@ -48,6 +48,17 @@ void UnoGame::joinPlayer(UnoPlayer *player) {
 	}
 
 	players.joinPlayer(player);
+
+
+	{ //notify about joined player
+		Event::player_joined event;
+		event.player = player;
+		players.notifyOthers(
+			Event::EVENT_PLAYER_JOINED,
+			reinterpret_cast<void*>(&event),
+			player
+		);
+	}
 }
 
 int UnoGame::PlayerList::size() {

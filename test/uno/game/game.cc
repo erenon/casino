@@ -130,6 +130,16 @@ ACTION_P(drawTwoCards, player) {
 			.WillOnce(Return(false))		\
 			.RetiresOnSaturation();			\
 
+ACTION_P(checkJoinNotify, joined) {
+	Event::player_joined* e = reinterpret_cast<Event::player_joined*>(arg1);
+	ASSERT_EQ(joined, e->player);
+}
+
+#define EXPECT_NOTIFY_JOIN(JOINED, NOT)							\
+		EXPECT_CALL(NOT, notify(Event::EVENT_PLAYER_JOINED, _))	\
+			.WillOnce(checkJoinNotify(&JOINED))					\
+			.RetiresOnSaturation();
+
 ACTION_P2(checkBlockNotify, blocker, blocked) {
 	Event::gets_blocked* e = reinterpret_cast<Event::gets_blocked*>(arg1);
 	ASSERT_EQ(blocker, e->blocked_by);
@@ -183,6 +193,14 @@ TEST(UnoGame, Gameplay) {
 	CardMock cards[CARD_COUNT];
 	SimpleCard first_card(CARD_COLOR_RED, CARD_VALUE_6);
 	CardMock draw;
+
+	{	// players join
+		InSequence s;
+
+		EXPECT_NOTIFY_JOIN(bob, alice);
+		EXPECT_NOTIFY_JOIN(charlie, alice);
+		EXPECT_NOTIFY_JOIN(charlie, bob);
+	}
 
 	game.joinPlayer(&alice);
 	game.joinPlayer(&bob);
