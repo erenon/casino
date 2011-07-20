@@ -1,24 +1,15 @@
 #include "game.h"
 
-#include "../../common/game/game.h"
 #include "../player/player.h"
 #include "../action/card.h"
 #include "../action/action.h"
 #include "../action/simple_card.h"
 
 #include <stdexcept>
-#include <list>
-#include <deque>
 #include <typeinfo>
-
-//shuffle:
-#include <algorithm>
-#include <ctime>
-#include <cstdlib>
 
 namespace Casino { namespace Uno { namespace Game {
 
-using ::Casino::Common::Game::Game;
 using ::Casino::Uno::Player::UnoPlayer;
 using ::Casino::Uno::Action::UnoCard;
 using namespace ::Casino::Uno::Action;	//UnoAction, CARD_COLOR/VALUE
@@ -26,20 +17,10 @@ using ::Casino::Uno::Action::SimpleCard;
 
 UnoGame::UnoGame(int max_player_count)
 	:Game(max_player_count),
-	 current_penality(0)
+	 current_penality(0),
+	 previous_nonblocked_player(NULL)
 {
 
-}
-
-UnoGame::PlayerList::PlayerList()
-	:turn_direction_normal(true),
-	 prev_player(NULL)
-{
-	current_player = players.begin();
-}
-
-void UnoGame::PlayerList::joinPlayer(UnoPlayer* player) {
-	players.push_back(player);
 }
 
 void UnoGame::joinPlayer(UnoPlayer *player) {
@@ -61,134 +42,48 @@ void UnoGame::joinPlayer(UnoPlayer *player) {
 	}
 }
 
-int UnoGame::PlayerList::size() {
-	return players.size();
-}
+void UnoGame::checkUno() {
+	//no previous player was registered, it's the first move
+	if (previous_nonblocked_player == NULL) {
+		return;
+	}
 
-UnoGame::PlayerList::player_iterator UnoGame::PlayerList::determineNextPlayer() {
-	player_iterator next_player = current_player;
+	UnoPlayer* player = previous_nonblocked_player;
 
-	if (turn_direction_normal) {
-		next_player++;
+	bool should_say = (player->getCardCount() == 1);
+	bool said = player->getUnoFlag();
 
-		if (next_player == players.end()) {
-			// current player is at the end of the list
-			// next player is the first player
-			next_player = players.begin();
+	if (should_say != said) {
+		dealCard(player);
+		dealCard(player);
+	}
+
+	if (should_say || said) {
+		Event::uno_said event;
+		event.said_by = player;
+
+		if (should_say == true && said == true) {
+			event.type = Event::uno_said::GOOD;
+		} else if (should_say == false && said == true) {
+			event.type = Event::uno_said::BAD;
+		} else if (should_say == true && said == false) {
+			event.type = Event::uno_said::FORGOTTEN;
 		}
-	} else {
-		if (next_player == players.begin()) {
-			// current player is at the beginning of the list
-			// prev player is at the end
-			next_player = players.end();
-			next_player--;
-		} else {
-			next_player--;
-		}
+
+		players.notifyAll(
+			Event::EVENT_UNO_SAID,
+			reinterpret_cast<void*>(&event)
+		);
 	}
 
-	return next_player;
-}
-
-UnoPlayer *UnoGame::PlayerList::getNextPlayer() {
-	return *determineNextPlayer();
-}
-
-UnoPlayer *UnoGame::PlayerList::getPreviousPlayer() {
-	return prev_player;
-}
-
-UnoPlayer *UnoGame::PlayerList::getCurrentPlayer() {
-	return *current_player;
-}
-
-UnoPlayer *UnoGame::PlayerList::next() {
-	prev_player = *current_player;
-	current_player = determineNextPlayer();
-	return *current_player;
-}
-
-void UnoGame::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
-	player_iterator it;
-
-	for (it = players.begin(); it != players.end(); it++) {
-		(*it)->notify(event_type, event);
+	if (said) {
+		player->setUnoFlag(false);
 	}
 }
 
-void UnoGame::PlayerList::notifyOthers(Event::EVENT event_type, void* event, UnoPlayer* player) {
-	player_iterator it;
-
-	for (it = players.begin(); it != players.end(); it++) {
-		if (*it != player) {
-			(*it)->notify(event_type, event);
-		}
-	}
+void UnoGame::registerNonblockedPlayer(UnoPlayer* player) {
+	previous_nonblocked_player = player;
 }
-
-void UnoGame::PlayerList::reset() {
-	prev_player = NULL;
-	current_player = players.begin();
-}
-
-void UnoGame::PlayerList::reverseTurn() {
-	turn_direction_normal = !turn_direction_normal;
-}
-
-ptrdiff_t UnoGame::ActionStack::getrandom(ptrdiff_t i) {
-	return rand() % i;
-}
-
-void UnoGame::ActionStack::shuffle(std::deque<UnoCard *> &toShuffle) {
-	srand( unsigned( time(NULL)));
- 	std::random_shuffle(toShuffle.begin(), toShuffle.end(), getrandom);
-}
-
-void UnoGame::ActionStack::shufflePlayedIntoDeck() {
-	// keep last played
-	/* UnoCard *last_played = lastPlayedCard();
-	played.pop_front(); */
-
-	shuffle(played);
-
-	std::deque<UnoCard *>::iterator it;
-	for (it = played.begin(); it != played.end(); it++) {
-		addCard(*it);
-	}
-
-	played.clear();
-	//addCardToPlayed(last_played);
-}
-
-void UnoGame::ActionStack::shuffleDeck() {
-	shuffle(deck);
-}
-
-void UnoGame::ActionStack::addCard(UnoCard *card) {
-	deck.push_back(card);
-}
-
-void UnoGame::ActionStack::addCardToPlayed(UnoCard *card) {
-	played.push_front(card);
-}
-
-UnoCard* UnoGame::ActionStack::drawCard() {
-	if (deck.size() == 0) {
-		if (played.size() > 0) {
-			shufflePlayedIntoDeck();
-		} else {
-			throw std::length_error("No card in deck");
-		}
-	}
-
-	UnoCard* top_card = deck.front();
-	deck.pop_front();
-	return top_card;
-}
-
-/*UnoCard *UnoGame::ActionStack::lastPlayedCard() {
-	return played.front();
-}*/
 
 void UnoGame::addCardToDeck(UnoCard *card) {
 	deck.addCard(card);
@@ -263,42 +158,6 @@ bool UnoGame::doesPlayerWin(UnoPlayer* player) {
 		&& (isPenality() == false);
 }
 
-void UnoGame::checkUno(UnoPlayer* player) {
-	/*if (player->wrongUno()) {
-		dealCard(player);
-		dealCard(player);
-	}*/
-	bool should_say = (player->getCardCount() == 1);
-	bool said = player->getUnoFlag();
-
-	if (should_say != said) {
-		dealCard(player);
-		dealCard(player);
-	}
-
-	if (should_say || said) {
-		Event::uno_said event;
-		event.said_by = player;
-
-		if (should_say == true && said == true) {
-			event.type = Event::uno_said::GOOD;
-		} else if (should_say == false && said == true) {
-			event.type = Event::uno_said::BAD;
-		} else if (should_say == true && said == false) {
-			event.type = Event::uno_said::FORGOTTEN;
-		}
-
-		players.notifyAll(
-			Event::EVENT_UNO_SAID,
-			reinterpret_cast<void*>(&event)
-		);
-	}
-
-	if (said) {
-		player->setUnoFlag(false);
-	}
-}
-
 void UnoGame::start() {
 	initStart();
 
@@ -314,7 +173,7 @@ void UnoGame::start() {
 
 	players.reset();
 	UnoPlayer* current_player = players.getCurrentPlayer();
-	bool first_move = true;
+	//bool first_move = true;
 
 	while(!doesPlayerWin(current_player)) {
 		// check block
@@ -362,13 +221,9 @@ void UnoGame::start() {
 			// call actions action
 			pickedAction->takeAction(this);
 
-		}
-
-		// check uno if not the first move of the first turn
-		if (!first_move) {
-			checkUno(players.getPreviousPlayer());
-		} else {
-			first_move = false;
+			// check for forgotten/bad uno, register this move
+			checkUno();
+			registerNonblockedPlayer(current_player);
 		}
 
 		// lets play the next player

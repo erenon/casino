@@ -22,9 +22,6 @@ using namespace ::Casino::Uno::Action;
 class UnoGame :public Game
 {
 protected:
-	int current_penality;
-	Draw draw_action;
-
 	class PlayerList {
 	protected:
 		std::list<UnoPlayer *> players;
@@ -67,9 +64,16 @@ protected:
 		virtual ~ActionStack() {};
 	} deck;
 
+	int current_penality;
+	Draw draw_action;
+
+	UnoPlayer* previous_nonblocked_player;
+	void checkUno();
+	void registerNonblockedPlayer(UnoPlayer* player);
+
 	void initStart();
 	bool doesPlayerWin(UnoPlayer* player);
-	void checkUno(UnoPlayer* player);
+
 
 public:
 	UnoGame(int max_player_count);
