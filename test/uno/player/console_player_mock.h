@@ -10,7 +10,7 @@
 #include <iostream>
 
 namespace Casino { namespace Uno { namespace Game {
-	class UnoGame;
+	class Game;
 }}}; //namespace
 
 namespace Casino { namespace Test { namespace Uno { namespace Player {

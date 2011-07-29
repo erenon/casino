@@ -20,7 +20,7 @@ using ::testing::Return;
 using ::testing::DoAll;
 using ::testing::NiceMock;
 
-TEST(Game, Penalty) {
+TEST(UnoGame, Penalty) {
 	Game game(1);
 	PlayerMock player;
 	CardMock card_a, card_b;
@@ -48,7 +48,7 @@ TEST(Game, Penalty) {
 	ASSERT_FALSE(game.isPenalty());
 }
 
-TEST(Game, DealCard) {
+TEST(UnoGame, DealCard) {
 	Game game(1);
 	PlayerMock player;
 	CardMock card_a;
@@ -186,7 +186,7 @@ ACTION_P(checkGameEndNotify, winner) {
 			.WillOnce(checkGameEndNotify(&WINNER))				\
 			.RetiresOnSaturation();								\
 
-TEST(Game, Gameplay) {
+TEST(UnoGame, Gameplay) {
 	Game game(3);
 	PlayerMock alice, bob, charlie;
 	CardMock cards[CARD_COUNT];
@@ -352,7 +352,7 @@ TEST(Game, Gameplay) {
  *
  * @bug
  */
-TEST(Game, BlockAndOneCard) {
+TEST(UnoGame, BlockAndOneCard) {
 	Game game(2);
 	NiceMock<PlayerMock> alice, bob;
 	CardMock cards[CARD_COUNT];

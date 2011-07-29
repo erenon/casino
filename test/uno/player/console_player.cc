@@ -14,7 +14,7 @@ using ::Casino::Uno::Action::SimpleCard;
 using ::Casino::Test::Common::OstreamMock;
 using ::Casino::Test::Common::IstreamMock;
 
-TEST(ConsoleUnoPlayer, PrintCards) {
+TEST(UnoConsolePlayer, PrintCards) {
 	OstreamMock output("Test/print_card_output");
 
 	ConsolePlayerMock player(std::cin, output);
@@ -38,7 +38,7 @@ TEST(ConsoleUnoPlayer, PrintCards) {
 	);
 }
 
-TEST(ConsoleUnoPlayer, ChooseCard) {
+TEST(UnoConsolePlayer, ChooseCard) {
 	OstreamMock output("Test/choose_card_output");
 	IstreamMock input("test/uno/player/choose_card_input");
 
