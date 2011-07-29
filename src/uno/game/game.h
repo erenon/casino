@@ -14,7 +14,7 @@
 
 namespace Casino { namespace Uno { namespace Game {
 
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 using ::Casino::Uno::Action::Action;
 //CARD_COLOR/VALUE, Draw, Card, SimpleCard
 using namespace ::Casino::Uno::Action;
@@ -24,25 +24,25 @@ class Game :public ::Casino::Common::Game::Game
 protected:
 	class PlayerList {
 	protected:
-		std::list<UnoPlayer *> players;
+		std::list<Player *> players;
 		bool turn_direction_normal;
-		typedef std::list<UnoPlayer *>::iterator player_iterator;
+		typedef std::list<Player *>::iterator player_iterator;
 		player_iterator current_player;
-		UnoPlayer* prev_player;
+		Player* prev_player;
 		player_iterator determineNextPlayer();
 
 	public:
 		PlayerList();
-		void joinPlayer(UnoPlayer *player);
+		void joinPlayer(Player *player);
 		int size();
-		UnoPlayer *getNextPlayer();
-		UnoPlayer *getPreviousPlayer();
-		UnoPlayer *getCurrentPlayer();
-		UnoPlayer *next();
+		Player *getNextPlayer();
+		Player *getPreviousPlayer();
+		Player *getCurrentPlayer();
+		Player *next();
 		void reset();
 		void reverseTurn();
 		void notifyAll(Event::EVENT event_type, void* event);
-		void notifyOthers(Event::EVENT event_type, void* event, UnoPlayer* player);
+		void notifyOthers(Event::EVENT event_type, void* event, Player* player);
 	} players;
 
 	class ActionStack {
@@ -67,22 +67,22 @@ protected:
 	int current_penalty;
 	Draw draw_action;
 
-	UnoPlayer* previous_nonblocked_player;
+	Player* previous_nonblocked_player;
 	void checkUno();
-	void registerNonblockedPlayer(UnoPlayer* player);
+	void registerNonblockedPlayer(Player* player);
 
 	void initStart();
-	bool doesPlayerWin(UnoPlayer* player);
+	bool doesPlayerWin(Player* player);
 
 
 public:
 	Game(int max_player_count);
-	virtual void joinPlayer(UnoPlayer *player);
+	virtual void joinPlayer(Player *player);
 	void addCardToDeck(Card *card);
 	bool isPenalty();
 	void increasePenality(int addition);
-	void dealPenality(UnoPlayer* player);
-	void dealCard(UnoPlayer* player);
+	void dealPenality(Player* player);
+	void dealCard(Player* player);
 
 	void start();
 

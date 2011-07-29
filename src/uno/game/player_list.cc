@@ -6,7 +6,7 @@
 
 namespace Casino { namespace Uno { namespace Game {
 
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 
 Game::PlayerList::PlayerList()
 	:turn_direction_normal(true),
@@ -15,7 +15,7 @@ Game::PlayerList::PlayerList()
 	current_player = players.begin();
 }
 
-void Game::PlayerList::joinPlayer(UnoPlayer* player) {
+void Game::PlayerList::joinPlayer(Player* player) {
 	players.push_back(player);
 }
 
@@ -48,19 +48,19 @@ Game::PlayerList::player_iterator Game::PlayerList::determineNextPlayer() {
 	return next_player;
 }
 
-UnoPlayer *Game::PlayerList::getNextPlayer() {
+Player *Game::PlayerList::getNextPlayer() {
 	return *determineNextPlayer();
 }
 
-UnoPlayer *Game::PlayerList::getPreviousPlayer() {
+Player *Game::PlayerList::getPreviousPlayer() {
 	return prev_player;
 }
 
-UnoPlayer *Game::PlayerList::getCurrentPlayer() {
+Player *Game::PlayerList::getCurrentPlayer() {
 	return *current_player;
 }
 
-UnoPlayer *Game::PlayerList::next() {
+Player *Game::PlayerList::next() {
 	prev_player = *current_player;
 	current_player = determineNextPlayer();
 	return *current_player;
@@ -74,7 +74,7 @@ void Game::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
 	}
 }
 
-void Game::PlayerList::notifyOthers(Event::EVENT event_type, void* event, UnoPlayer* player) {
+void Game::PlayerList::notifyOthers(Event::EVENT event_type, void* event, Player* player) {
 	player_iterator it;
 
 	for (it = players.begin(); it != players.end(); it++) {

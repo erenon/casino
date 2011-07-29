@@ -10,12 +10,12 @@ namespace Casino { namespace Uno { namespace Game {
 
 namespace Casino { namespace Uno { namespace Player {
 
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 using ::Casino::Uno::Game::Game;
 //Card, SimpleCard, WildCard, CARD_COLOR, CARD_VALUE
 using namespace ::Casino::Uno::Action;
 
-class RobotEasyUnoPlayer :public UnoPlayer
+class RobotEasyUnoPlayer :public Player
 {
 protected:
 	//std::ostream& out;

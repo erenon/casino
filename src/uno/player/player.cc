@@ -1,36 +1,30 @@
 #include "player.h"
 
-//#include "../../common/player/player.h"
-//#include "../../common/action/action.h"
-#include <list>
-
 namespace Casino { namespace Uno { namespace Player {
 
-using ::Casino::Common::Player::Player;
 using ::Casino::Uno::Action::Action;
-using std::list;
 
-UnoPlayer::UnoPlayer() :name("player"), unoFlag(false), blocked(false) {}
+Player::Player() :name("player"), unoFlag(false), blocked(false) {}
 
-UnoPlayer::UnoPlayer(const char *name)
+Player::Player(const char *name)
 	:unoFlag(false), blocked(false)
 {
 	setName(name);
 }
 
-void UnoPlayer::setName(const char *name) {
+void Player::setName(const char *name) {
 	this->name = name;
 }
 
-std::string UnoPlayer::getName() {
+std::string Player::getName() {
 	return name;
 }
 
-void UnoPlayer::addAction(Action *action) {
+void Player::addAction(Action *action) {
 	hand.push_back(action);
 }
 
-void UnoPlayer::removeAction(Action *action) {
+void Player::removeAction(Action *action) {
 	card_iterator it;
 
 	for (it = hand.begin(); it != hand.end(); it++) {
@@ -41,7 +35,7 @@ void UnoPlayer::removeAction(Action *action) {
 	}
 }
 
-int UnoPlayer::getCardCount() {
+int Player::getCardCount() {
 	card_iterator it;
 	int count = 0;
 
@@ -54,7 +48,7 @@ int UnoPlayer::getCardCount() {
 	return count;
 }
 
-void UnoPlayer::setUnoFlag(bool value) {
+void Player::setUnoFlag(bool value) {
 	unoFlag = value;
 }
 
@@ -66,26 +60,26 @@ void UnoPlayer::setUnoFlag(bool value) {
  *
  * @return true, if player should be punished
  */
-/*bool UnoPlayer::wrongUno() {
+/*bool Player::wrongUno() {
 	return (
 		(getCardCount() == 1 && unoFlag == false)
 	||  (getCardCount() != 1 && unoFlag == true)
 	);
 }*/
 
-bool UnoPlayer::getUnoFlag() {
+bool Player::getUnoFlag() {
 	return unoFlag;
 }
 
-bool UnoPlayer::isBlocked() {
+bool Player::isBlocked() {
 	return blocked;
 }
 
-void UnoPlayer::block() {
+void Player::block() {
 	blocked = true;
 }
 
-void UnoPlayer::unblock() {
+void Player::unblock() {
 	blocked = false;
 }
 

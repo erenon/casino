@@ -10,7 +10,7 @@
 
 namespace Casino { namespace Uno { namespace Game {
 
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 //Action, Card, SimpleCard, CARD_COLOR/VALUE
 using namespace ::Casino::Uno::Action;
 
@@ -22,7 +22,7 @@ Game::Game(int max_player_count)
 
 }
 
-void Game::joinPlayer(UnoPlayer *player) {
+void Game::joinPlayer(Player *player) {
 	if (players.size() >= max_player_count) {
 		throw std::overflow_error("Game is full");
 	}
@@ -47,7 +47,7 @@ void Game::checkUno() {
 		return;
 	}
 
-	UnoPlayer* player = previous_nonblocked_player;
+	Player* player = previous_nonblocked_player;
 
 	bool should_say = (player->getCardCount() == 1);
 	bool said = player->getUnoFlag();
@@ -80,7 +80,7 @@ void Game::checkUno() {
 	}
 }
 
-void Game::registerNonblockedPlayer(UnoPlayer* player) {
+void Game::registerNonblockedPlayer(Player* player) {
 	previous_nonblocked_player = player;
 }
 
@@ -96,7 +96,7 @@ void Game::increasePenality(int addition) {
 	current_penalty += addition;
 }
 
-void Game::dealPenality(UnoPlayer* player) {
+void Game::dealPenality(Player* player) {
 	for (int i = 0; i < current_penalty; i++) {
 		dealCard(player);
 	}
@@ -104,7 +104,7 @@ void Game::dealPenality(UnoPlayer* player) {
 	current_penalty = 0;
 }
 
-void Game::dealCard(UnoPlayer* player) {
+void Game::dealCard(Player* player) {
 	Card* top_card = deck.drawCard();
 	player->addAction(top_card);
 }
@@ -144,7 +144,7 @@ void Game::initStart() {
 		}
 	}
 
-	std::list<UnoPlayer *>::iterator player;
+	std::list<Player *>::iterator player;
 	for (int card_idx = 0; card_idx < initial_hand_count; card_idx++) {
 		players.reset();
 		for (int i = 0; i < players.size(); i++, players.next()) {
@@ -163,7 +163,7 @@ void Game::initStart() {
 	}
 }
 
-bool Game::doesPlayerWin(UnoPlayer* player) {
+bool Game::doesPlayerWin(Player* player) {
 	return (player->isBlocked() == false)
 		&& (player->getCardCount() == 0)
 		&& (isPenalty() == false);
@@ -173,7 +173,7 @@ void Game::start() {
 	initStart();
 
 	players.reset();
-	UnoPlayer* current_player = players.getCurrentPlayer();
+	Player* current_player = players.getCurrentPlayer();
 	//bool first_move = true;
 
 	while(!doesPlayerWin(current_player)) {
@@ -310,7 +310,7 @@ void Game::reverseTurn() {
 }
 
 void Game::drawCards() {
-	UnoPlayer *player = players.getCurrentPlayer();
+	Player *player = players.getCurrentPlayer();
 
 	if (isPenalty()) {
 		dealPenality(player);

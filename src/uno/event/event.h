@@ -4,7 +4,7 @@
 #include "../action/card.h"
 
 namespace Casino { namespace Uno { namespace Player {
-	class UnoPlayer;
+	class Player;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
@@ -13,7 +13,7 @@ namespace Casino { namespace Uno { namespace Action {
 
 namespace Casino { namespace Uno { namespace Event {
 
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 using ::Casino::Uno::Action::Card;
 
 enum EVENT {
@@ -28,17 +28,17 @@ enum EVENT {
 };
 
 struct card_played {
-	UnoPlayer* played_by;
+	Player* played_by;
 	Card* played_card;
 };
 
 struct draw_card {
-	UnoPlayer* player;
+	Player* player;
 	int card_count;
 };
 
 struct colorpick {
-	UnoPlayer* picked_by;
+	Player* picked_by;
 	Casino::Uno::Action::CARD_COLOR color;
 };
 
@@ -47,7 +47,7 @@ struct game_start {
 };
 
 struct game_end {
-	UnoPlayer* winner;
+	Player* winner;
 };
 
 struct uno_said {
@@ -56,17 +56,17 @@ struct uno_said {
 		BAD,
 		FORGOTTEN
 	};
-	UnoPlayer* said_by;
+	Player* said_by;
 	TYPE type;
 };
 
 struct gets_blocked {
-	UnoPlayer* gets_blocked;
-	UnoPlayer* blocked_by;
+	Player* gets_blocked;
+	Player* blocked_by;
 };
 
 struct player_joined {
-	UnoPlayer* player;
+	Player* player;
 };
 
 }}} //namespace

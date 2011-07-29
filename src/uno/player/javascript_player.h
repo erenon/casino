@@ -17,11 +17,11 @@ namespace Casino { namespace Uno { namespace Game {
 namespace Casino { namespace Uno { namespace Player {
 
 using namespace v8;
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 using ::Casino::Uno::Action::Action;
 using namespace ::Casino::Uno::Event;
 
-class JavascriptPlayer :public UnoPlayer
+class JavascriptPlayer :public Player
 {
 public:
 	JavascriptPlayer(Handle<Object> jsplayer);
@@ -29,7 +29,7 @@ public:
 	virtual Action* pickAction(Game *game);
 	static Handle<Value> pickActionAfter(const Arguments &args);
 	virtual Local<Object> createCardObject(Card* card);
-	virtual Local<Object> createPlayerObject(UnoPlayer* player);
+	virtual Local<Object> createPlayerObject(Player* player);
 	virtual void notify(EVENT event_type, void* event);
 
 protected:

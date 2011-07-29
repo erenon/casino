@@ -14,13 +14,13 @@ namespace Casino { namespace Uno { namespace Game {
 
 namespace Casino { namespace Uno { namespace Player {
 
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 using ::Casino::Uno::Game::Game;
 //Card, SimpleCard, WildCard, CARD_COLOR, CARD_VALUE
 using namespace ::Casino::Uno::Action;
 namespace Event = ::Casino::Uno::Event;
 
-class ConsolePlayer :public UnoPlayer
+class ConsolePlayer :public Player
 {
 protected:
 	std::istream& in;
