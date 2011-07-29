@@ -1,9 +1,9 @@
 digraph G {
     is_draw;
     is_draw -> valid [label="y"];
-    is_draw -> is_penality [label="n"];
-    is_penality -> "is_prev_+4" [label="y"];
-    is_penality -> is_black [label="n"];
+    is_draw -> is_penalty [label="n"];
+    is_penalty -> "is_prev_+4" [label="y"];
+    is_penalty -> is_black [label="n"];
     is_black -> valid [label="y"];
     is_black -> color_match [label="n"];
     "is_prev_+4" -> "is_current_+4" [label="y"];

@@ -20,7 +20,7 @@ using ::testing::Return;
 using ::testing::DoAll;
 using ::testing::NiceMock;
 
-TEST(UnoGame, Penality) {
+TEST(UnoGame, Penalty) {
 	UnoGame game(1);
 	UnoPlayerMock player;
 	CardMock card_a, card_b;
@@ -29,14 +29,14 @@ TEST(UnoGame, Penality) {
 	game.addCardToDeck(&card_a);
 	game.addCardToDeck(&card_b);
 
-	// no penality as the game starts
-	ASSERT_FALSE(game.isPenality());
+	// no penalty as the game starts
+	ASSERT_FALSE(game.isPenalty());
 
-	// add some penality
+	// add some penalty
 	game.increasePenality(2);
 
-	// penality increased
-	ASSERT_TRUE(game.isPenality());
+	// penalty increased
+	ASSERT_TRUE(game.isPenalty());
 
 	// player gets cards
 	EXPECT_CALL(player, addAction(&card_a));
@@ -44,8 +44,8 @@ TEST(UnoGame, Penality) {
 
 	game.dealPenality(&player);
 
-	// after deal, no penality is present
-	ASSERT_FALSE(game.isPenality());
+	// after deal, no penalty is present
+	ASSERT_FALSE(game.isPenalty());
 }
 
 TEST(UnoGame, DealCard) {
@@ -347,7 +347,7 @@ TEST(UnoGame, Gameplay) {
 
 /**
  * If player with one gets blocked,
- * shouldn't get any penality
+ * shouldn't get any penalty
  * becouse of forgotten uno.
  *
  * @bug

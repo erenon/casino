@@ -17,7 +17,7 @@ using ::Casino::Uno::Action::SimpleCard;
 
 UnoGame::UnoGame(int max_player_count)
 	:Game(max_player_count),
-	 current_penality(0),
+	 current_penalty(0),
 	 previous_nonblocked_player(NULL)
 {
 
@@ -89,20 +89,20 @@ void UnoGame::addCardToDeck(UnoCard *card) {
 	deck.addCard(card);
 }
 
-bool UnoGame::isPenality() {
-	return (current_penality > 0);
+bool UnoGame::isPenalty() {
+	return (current_penalty > 0);
 }
 
 void UnoGame::increasePenality(int addition) {
-	current_penality += addition;
+	current_penalty += addition;
 }
 
 void UnoGame::dealPenality(UnoPlayer* player) {
-	for (int i = 0; i < current_penality; i++) {
+	for (int i = 0; i < current_penalty; i++) {
 		dealCard(player);
 	}
 
-	current_penality = 0;
+	current_penalty = 0;
 }
 
 void UnoGame::dealCard(UnoPlayer* player) {
@@ -167,7 +167,7 @@ void UnoGame::initStart() {
 bool UnoGame::doesPlayerWin(UnoPlayer* player) {
 	return (player->isBlocked() == false)
 		&& (player->getCardCount() == 0)
-		&& (isPenality() == false);
+		&& (isPenalty() == false);
 }
 
 void UnoGame::start() {
@@ -208,8 +208,8 @@ void UnoGame::start() {
 				}
 			} else {
 				//it's a draw
-				//player draws the current penality or a single card
-				int card_count = (isPenality()) ? current_penality : 1;
+				//player draws the current penalty or a single card
+				int card_count = (isPenalty()) ? current_penalty : 1;
 				Event::draw_card event;
 				event.player = current_player;
 				event.card_count = card_count;
@@ -254,7 +254,7 @@ bool UnoGame::isValidMove(UnoAction* action, std::string &message) {
 
 	UnoCard *current = static_cast<UnoCard*>(action);
 
-	if (isPenality()) {
+	if (isPenalty()) {
 		if (deck.last_played_value == CARD_VALUE_PLUSFOUR) {
 			if (current->getValue() == CARD_VALUE_PLUSFOUR) {
 				return true;
@@ -313,7 +313,7 @@ void UnoGame::reverseTurn() {
 void UnoGame::drawCards() {
 	UnoPlayer *player = players.getCurrentPlayer();
 
-	if (isPenality()) {
+	if (isPenalty()) {
 		dealPenality(player);
 	} else {
 		dealCard(player);

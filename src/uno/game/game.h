@@ -64,7 +64,7 @@ protected:
 		virtual ~ActionStack() {};
 	} deck;
 
-	int current_penality;
+	int current_penalty;
 	Draw draw_action;
 
 	UnoPlayer* previous_nonblocked_player;
@@ -79,7 +79,7 @@ public:
 	UnoGame(int max_player_count);
 	virtual void joinPlayer(UnoPlayer *player);
 	void addCardToDeck(UnoCard *card);
-	bool isPenality();
+	bool isPenalty();
 	void increasePenality(int addition);
 	void dealPenality(UnoPlayer* player);
 	void dealCard(UnoPlayer* player);
