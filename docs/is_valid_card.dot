@@ -1,0 +1,19 @@
+digraph G {
+    is_draw;
+    is_draw -> valid [label="y"];
+    is_draw -> is_penality [label="n"];
+    is_penality -> "is_prev_+4" [label="y"];
+    is_penality -> is_black [label="n"];
+    is_black -> valid [label="y"];
+    is_black -> color_match [label="n"];
+    "is_prev_+4" -> "is_current_+4" [label="y"];
+    "is_prev_+4" -> "is_current_+x" [label="n"];
+    "is_current_+4" -> valid [label="y"];
+    "is_current_+4" -> invalid [label="n"];
+    "is_current_+x" -> valid [label="y"];
+    "is_current_+x" -> invalid [label="n"];
+    color_match -> valid [label="y"];
+    color_match -> value_match [label="n"];
+    value_match -> valid [label="y"];
+    value_match -> invalid [label="n"];
+}
