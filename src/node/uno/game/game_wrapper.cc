@@ -140,6 +140,15 @@ Handle<Value> GameWrapper::Start(const Arguments &args) {
 	return scope.Close(Boolean::New(true));
 }
 
+Handle<Value> GameWrapper::IsValidMove(const Arguments &args) {
+	HandleScope scope;
+	//GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
+
+	bool isValid = true;
+
+	return scope.Close(Boolean::New(isValid));
+}
+
 Handle<Value> GameWrapper::Dispose(const Arguments &args) {
 	HandleScope scope;
 	GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
@@ -154,5 +163,8 @@ Handle<Value> GameWrapper::Dispose(const Arguments &args) {
 
 	return scope.Close(Undefined());
 }
+
+#undef REQ_INT_ARG
+#undef REQ_OBJ_ARG
 
 }}}} //namespace

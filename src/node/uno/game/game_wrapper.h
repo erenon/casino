@@ -29,31 +29,9 @@ public:
     static Handle<Value> JoinPlayer(const Arguments &args);
     static Handle<Value> AddBot(const Arguments &args);
     static Handle<Value> Start(const Arguments &args);
+    static Handle<Value> IsValidMove(const Arguments &args);
     static Handle<Value> Dispose(const Arguments &args);
 
-//    static Handle<Value> CreateGame(const Arguments &args) {
-//    	REQ_INT_ARG(0);
-//
-//        Handle<ObjectTemplate> game_template = ObjectTemplate::New();
-//        game_template->SetInternalFieldCount(1);
-//
-//
-//        /*game_template->SetAccessor(
-//            String::New("status"),
-//            RegistryWrapper::getStatus,
-//            RegistryWrapper::setStatus
-//        );*/
-//
-//        Local<Object> obj = game_template->NewInstance();
-//
-//        UnoGame* game = new UnoGame(args[0]->Int32Value());
-//        obj->SetInternalField(0, External::New(game));
-//
-//        /*NODE_SET_METHOD(obj, "get", Get);
-//        NODE_SET_METHOD(obj, "set", Set);*/
-//
-//        return obj;
-//    }
 protected:
     UnoGame* game;
     UnoFullCardDeck* deck;
