@@ -21,10 +21,10 @@ using ::Casino::Uno::Player::UnoPlayer;
 using ::Casino::Uno::Action::Action;
 using namespace ::Casino::Uno::Event;
 
-class JavascriptUnoPlayer :public UnoPlayer
+class JavascriptPlayer :public UnoPlayer
 {
 public:
-	JavascriptUnoPlayer(Handle<Object> jsplayer);
+	JavascriptPlayer(Handle<Object> jsplayer);
 	virtual Local<Function> getCallback(const char* cbname);
 	virtual Action* pickAction(Game *game);
 	static Handle<Value> pickActionAfter(const Arguments &args);
