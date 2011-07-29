@@ -6,16 +6,16 @@
 
 namespace Casino { namespace Test { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoAction;
-using ::Casino::Uno::Game::UnoGame;
+using ::Casino::Uno::Action::Action;
+using ::Casino::Uno::Game::Game;
 
-class UndisposableMock :public UnoAction
+class UndisposableMock :public Action
 {
 	bool isDisposeable() {
 		return false;
 	}
 
-	void takeAction(UnoGame* game) {}
+	void takeAction(Game* game) {}
 };
 
 }}}} //namespace

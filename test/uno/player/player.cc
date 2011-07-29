@@ -5,12 +5,12 @@
 #include "../action/disposeable_mock.h"
 #include "../action/undisposeable_mock.h"
 
-using ::Casino::Test::Uno::Player::UnoPlayerConcrete;
+using ::Casino::Test::Uno::Player::PlayerConcrete;
 using ::Casino::Test::Uno::Action::DisposableMock;
 using ::Casino::Test::Uno::Action::UndisposableMock;
 
 TEST(UnoPlayer, getCardCount) {
-	UnoPlayerConcrete player;
+	PlayerConcrete player;
 	DisposableMock dis_a, dis_b, dis_c;
 	UndisposableMock undis_a, undis_b, undis_c;
 

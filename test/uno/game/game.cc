@@ -9,8 +9,8 @@
 #include "../player/player_mock.h"
 #include "../action/card_mock.h"
 
-using ::Casino::Uno::Game::UnoGame;
-using ::Casino::Test::Uno::Player::UnoPlayerMock;
+using ::Casino::Uno::Game::Game;
+using ::Casino::Test::Uno::Player::PlayerMock;
 using ::Casino::Test::Uno::Action::CardMock;
 using namespace ::Casino::Uno::Action;	//SimpleCard, CARD_COLOR/VALUE
 namespace Event = ::Casino::Uno::Event;
@@ -20,9 +20,9 @@ using ::testing::Return;
 using ::testing::DoAll;
 using ::testing::NiceMock;
 
-TEST(UnoGame, Penalty) {
-	UnoGame game(1);
-	UnoPlayerMock player;
+TEST(Game, Penalty) {
+	Game game(1);
+	PlayerMock player;
 	CardMock card_a, card_b;
 
 	// add cards to deck (game)
@@ -48,9 +48,9 @@ TEST(UnoGame, Penalty) {
 	ASSERT_FALSE(game.isPenalty());
 }
 
-TEST(UnoGame, DealCard) {
-	UnoGame game(1);
-	UnoPlayerMock player;
+TEST(Game, DealCard) {
+	Game game(1);
+	PlayerMock player;
 	CardMock card_a;
 
 	game.addCardToDeck(&card_a);
@@ -186,9 +186,9 @@ ACTION_P(checkGameEndNotify, winner) {
 			.WillOnce(checkGameEndNotify(&WINNER))				\
 			.RetiresOnSaturation();								\
 
-TEST(UnoGame, Gameplay) {
-	UnoGame game(3);
-	UnoPlayerMock alice, bob, charlie;
+TEST(Game, Gameplay) {
+	Game game(3);
+	PlayerMock alice, bob, charlie;
 	CardMock cards[CARD_COUNT];
 	SimpleCard first_card(CARD_COLOR_RED, CARD_VALUE_6);
 	CardMock draw;
@@ -352,9 +352,9 @@ TEST(UnoGame, Gameplay) {
  *
  * @bug
  */
-TEST(UnoGame, BlockAndOneCard) {
-	UnoGame game(2);
-	NiceMock<UnoPlayerMock> alice, bob;
+TEST(Game, BlockAndOneCard) {
+	Game game(2);
+	NiceMock<PlayerMock> alice, bob;
 	CardMock cards[CARD_COUNT];
 	SimpleCard first_card(CARD_COLOR_BLUE, CARD_VALUE_4);
 	CardMock draw;

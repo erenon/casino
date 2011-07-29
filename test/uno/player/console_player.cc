@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-using ::Casino::Test::Uno::Player::ConsoleUnoPlayerMock;
+using ::Casino::Test::Uno::Player::ConsolePlayerMock;
 using ::Casino::Uno::Action::SimpleCard;
 using ::Casino::Test::Common::OstreamMock;
 using ::Casino::Test::Common::IstreamMock;
@@ -17,7 +17,7 @@ using ::Casino::Test::Common::IstreamMock;
 TEST(ConsoleUnoPlayer, PrintCards) {
 	OstreamMock output("Test/print_card_output");
 
-	ConsoleUnoPlayerMock player(std::cin, output);
+	ConsolePlayerMock player(std::cin, output);
 	SimpleCard
 		a(::Casino::Uno::Action::CARD_COLOR_RED,
 		  ::Casino::Uno::Action::CARD_VALUE_8),
@@ -48,7 +48,7 @@ TEST(ConsoleUnoPlayer, ChooseCard) {
 		b(::Casino::Uno::Action::CARD_COLOR_BLUE,
 		  ::Casino::Uno::Action::CARD_VALUE_4);
 
-	ConsoleUnoPlayerMock player(input, output);
+	ConsolePlayerMock player(input, output);
 
 	player.addAction(&a);
 	player.addAction(&b);

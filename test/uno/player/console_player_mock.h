@@ -15,24 +15,24 @@ namespace Casino { namespace Uno { namespace Game {
 
 namespace Casino { namespace Test { namespace Uno { namespace Player {
 
-using ::Casino::Uno::Player::ConsoleUnoPlayer;
-using ::Casino::Uno::Action::UnoAction;
-using ::Casino::Uno::Game::UnoGame;
+using ::Casino::Uno::Player::ConsolePlayer;
+using ::Casino::Uno::Action::Action;
+using ::Casino::Uno::Game::Game;
 namespace Event = ::Casino::Uno::Event;
 
-class ConsoleUnoPlayerMock :public ConsoleUnoPlayer
+class ConsolePlayerMock :public ConsolePlayer
 {
 public:
-	ConsoleUnoPlayerMock(std::istream& in, std::ostream& out)
-		:ConsoleUnoPlayer(in, out)
+	ConsolePlayerMock(std::istream& in, std::ostream& out)
+		:ConsolePlayer(in, out)
 	{}
-	MOCK_METHOD1(pickAction, UnoAction*(UnoGame *game));
+	MOCK_METHOD1(pickAction, Action*(Game *game));
 	MOCK_METHOD2(notify, void(Event::EVENT event_type, void* event));
 	void listCards() {
-		ConsoleUnoPlayer::listCards();
+		ConsolePlayer::listCards();
 	}
 	int chooseCard() {
-		return ConsoleUnoPlayer::chooseCard();
+		return ConsolePlayer::chooseCard();
 	}
 };
 

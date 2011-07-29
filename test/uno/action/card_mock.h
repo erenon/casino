@@ -8,14 +8,14 @@
 
 namespace Casino { namespace Test { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoCard;
-using ::Casino::Uno::Game::UnoGame;
+using ::Casino::Uno::Action::Card;
+using ::Casino::Uno::Game::Game;
 
-class CardMock :public UnoCard
+class CardMock :public Card
 {
 public:
 	MOCK_METHOD0(isDisposeable, bool());
-	MOCK_METHOD1(takeAction, void(UnoGame* game));
+	MOCK_METHOD1(takeAction, void(Game* game));
 };
 
 }}}} //namespace
