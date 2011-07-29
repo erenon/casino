@@ -18,6 +18,7 @@ using ::testing::_;
 using ::testing::InSequence;
 using ::testing::Return;
 using ::testing::DoAll;
+using ::testing::NiceMock;
 
 TEST(UnoGame, Penality) {
 	UnoGame game(1);
@@ -60,8 +61,6 @@ TEST(UnoGame, DealCard) {
 	// deck is empty
 	ASSERT_THROW(game.dealCard(&player), std::length_error);
 }
-
-//TEST(UnoGame, LastPlayedCard) {
 
 ACTION(isFirstCardValid) {
 	SimpleCard c = arg0->lastPlayedCard();
@@ -338,6 +337,74 @@ TEST(UnoGame, Gameplay) {
 
 		EXPECT_NOTIFY_END(charlie, alice, bob, charlie);
 	}
+
+	for (int i = 0; i < CARD_COUNT; i++) {
+		game.addCardToDeck(&(cards[i]));
+	}
+	game.addCardToDeck(&first_card);
+	game.start();
+}
+
+/**
+ * If player with one gets blocked,
+ * shouldn't get any penality
+ * becouse of forgotten uno.
+ *
+ * @bug
+ */
+TEST(UnoGame, BlockAndOneCard) {
+	UnoGame game(2);
+	NiceMock<UnoPlayerMock> alice, bob;
+	CardMock cards[CARD_COUNT];
+	SimpleCard first_card(CARD_COLOR_BLUE, CARD_VALUE_4);
+	CardMock draw;
+
+	game.joinPlayer(&alice);
+	game.joinPlayer(&bob);
+
+	InSequence s;
+
+	{	// deal initial hands
+		const int initial_hand_size = 7;
+		for (int i = 0; i < initial_hand_size; i++) {
+			EXPECT_CALL(alice, addAction(_))
+				.RetiresOnSaturation();
+			EXPECT_CALL(bob, addAction(_))
+				.RetiresOnSaturation();
+		}
+	}
+
+	EXPECT_CALL(alice, pickAction(&game))
+		.WillOnce(Return(&(cards[0])));
+
+	EXPECT_CALL(cards[0], takeAction(&game))
+		.WillOnce(BlockNextPlayer());
+
+	EXPECT_CALL(bob, block());
+
+	// bob - gets blocked
+	EXPECT_CALL(bob, isBlocked())
+		.Times(2)
+		.WillOnce(Return(true))
+		.WillOnce(Return(true))
+		.RetiresOnSaturation();
+
+	EXPECT_CALL(alice, pickAction(&game))
+		.WillOnce(Return(&(cards[1])));
+
+	EXPECT_CALL(cards[1], takeAction(&game));
+
+	EXPECT_CALL(bob, getCardCount())
+		.WillOnce(Return(1));
+
+	EXPECT_CALL(bob, getUnoFlag())
+		.WillOnce(Return(false));
+
+	EXPECT_CALL(bob, addAction(_))
+		.Times(0);
+
+	EXPECT_CALL(alice, getCardCount())
+		.WillOnce(Return(0));
 
 	for (int i = 0; i < CARD_COUNT; i++) {
 		game.addCardToDeck(&(cards[i]));

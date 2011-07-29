@@ -112,6 +112,8 @@ void UnoGame::dealCard(UnoPlayer* player) {
 
 /**
  * Shuffle cards and deal initial hands
+ *
+ * @todo replace typeid -> color/value getter
  */
 void UnoGame::initStart() {
 	const int initial_hand_count = 7;
@@ -150,16 +152,6 @@ void UnoGame::initStart() {
 			players.getCurrentPlayer()->addAction(deck.drawCard());
 		}
 	}
-}
-
-bool UnoGame::doesPlayerWin(UnoPlayer* player) {
-	return (player->isBlocked() == false)
-		&& (player->getCardCount() == 0)
-		&& (isPenality() == false);
-}
-
-void UnoGame::start() {
-	initStart();
 
 	{
 		Event::game_start event;
@@ -170,6 +162,16 @@ void UnoGame::start() {
 			reinterpret_cast<void*>(&event)
 		);
 	}
+}
+
+bool UnoGame::doesPlayerWin(UnoPlayer* player) {
+	return (player->isBlocked() == false)
+		&& (player->getCardCount() == 0)
+		&& (isPenality() == false);
+}
+
+void UnoGame::start() {
+	initStart();
 
 	players.reset();
 	UnoPlayer* current_player = players.getCurrentPlayer();
