@@ -18,7 +18,7 @@ namespace Casino { namespace Uno { namespace Player {
 
 using namespace v8;
 using ::Casino::Uno::Player::UnoPlayer;
-using ::Casino::Uno::Action::UnoAction;
+using ::Casino::Uno::Action::Action;
 using namespace ::Casino::Uno::Event;
 
 class JavascriptUnoPlayer :public UnoPlayer
@@ -26,7 +26,7 @@ class JavascriptUnoPlayer :public UnoPlayer
 public:
 	JavascriptUnoPlayer(Handle<Object> jsplayer);
 	virtual Local<Function> getCallback(const char* cbname);
-	virtual UnoAction* pickAction(UnoGame *game);
+	virtual Action* pickAction(UnoGame *game);
 	static Handle<Value> pickActionAfter(const Arguments &args);
 	virtual Local<Object> createCardObject(UnoCard* card);
 	virtual Local<Object> createPlayerObject(UnoPlayer* player);

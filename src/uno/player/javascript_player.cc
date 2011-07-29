@@ -13,7 +13,7 @@ namespace Casino { namespace Uno { namespace Player {
 
 using namespace v8;
 using ::Casino::Uno::Player::UnoPlayer;
-using ::Casino::Uno::Action::UnoAction;
+using ::Casino::Uno::Action::Action;
 using ::Casino::Uno::Action::UnoCard;
 using namespace ::Casino::Uno::Action;
 namespace Event = ::Casino::Uno::Event;
@@ -45,7 +45,7 @@ Local<Function> JavascriptUnoPlayer::getCallback(const char* cbname) {
 /**
  * @todo handle invalid move
  */
-UnoAction* JavascriptUnoPlayer::pickAction(UnoGame *game) {
+Action* JavascriptUnoPlayer::pickAction(UnoGame *game) {
 	HandleScope scope;
 	Local<Function> pickAction_cb = getCallback("pickAction");
 
@@ -61,7 +61,7 @@ UnoAction* JavascriptUnoPlayer::pickAction(UnoGame *game) {
 		}
 	}
 
-	UnoAction* picked = NULL;
+	Action* picked = NULL;
 
 	if (picked_index->IsInt32()) {
 		picked = hand[picked_index->Int32Value()];

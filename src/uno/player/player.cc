@@ -7,7 +7,7 @@
 namespace Casino { namespace Uno { namespace Player {
 
 using ::Casino::Common::Player::Player;
-using ::Casino::Uno::Action::UnoAction;
+using ::Casino::Uno::Action::Action;
 using std::list;
 
 UnoPlayer::UnoPlayer() :name("player"), unoFlag(false), blocked(false) {}
@@ -26,11 +26,11 @@ std::string UnoPlayer::getName() {
 	return name;
 }
 
-void UnoPlayer::addAction(UnoAction *action) {
+void UnoPlayer::addAction(Action *action) {
 	hand.push_back(action);
 }
 
-void UnoPlayer::removeAction(UnoAction *action) {
+void UnoPlayer::removeAction(Action *action) {
 	card_iterator it;
 
 	for (it = hand.begin(); it != hand.end(); it++) {

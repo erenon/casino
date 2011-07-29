@@ -171,7 +171,7 @@ CARD_COLOR ConsoleUnoPlayer::chooseColor() {
 	return color;
 }
 
-UnoAction* ConsoleUnoPlayer::pickAction(UnoGame *game) {
+Action* ConsoleUnoPlayer::pickAction(UnoGame *game) {
 	out << std::endl << "==" << this->getName() << "'s turn" << std::endl;
 	SimpleCard last_card = game->lastPlayedCard();
 	out << "-Last card was: " << &last_card << std::endl;
@@ -180,7 +180,7 @@ UnoAction* ConsoleUnoPlayer::pickAction(UnoGame *game) {
 
 	out << "-Choose a card: ";
 	int card_index;
-	UnoAction* picked;
+	Action* picked;
 	bool valid = false;
 	while (!valid) {
 		card_index = chooseCard();

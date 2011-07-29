@@ -31,7 +31,7 @@ protected:
 	virtual CARD_COLOR chooseColor();
 public:
 	ConsoleUnoPlayer(std::istream& in, std::ostream& out);
-	virtual UnoAction* pickAction(UnoGame *game);
+	virtual Action* pickAction(UnoGame *game);
 	virtual void notify(Event::EVENT event_type, void* event);
 };
 

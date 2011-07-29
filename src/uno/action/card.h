@@ -4,12 +4,12 @@
 #include "../action/action.h"
 
 namespace Casino { namespace Uno { namespace Action {
-	class UnoAction;
+	class Action;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoAction;
+using ::Casino::Uno::Action::Action;
 
 enum CARD_COLOR {
 	CARD_COLOR_RED,
@@ -37,7 +37,7 @@ enum CARD_VALUE {
 	CARD_VALUE_PLUSFOUR
 };
 
-class UnoCard :public UnoAction
+class UnoCard :public Action
 {
 protected:
 	CARD_COLOR color;

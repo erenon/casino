@@ -81,7 +81,7 @@ bool RobotEasyUnoPlayer::compareCardValue(UnoCard* a, UnoCard* b) {
 }
 
 
-UnoAction*  RobotEasyUnoPlayer::pickAction(UnoGame *game) {
+Action*  RobotEasyUnoPlayer::pickAction(UnoGame *game) {
 	std::vector<UnoCard*> valid_moves;
 	card_iterator card;
 	std::string dummy_str;
@@ -98,7 +98,7 @@ UnoAction*  RobotEasyUnoPlayer::pickAction(UnoGame *game) {
 	}
 
 	std::sort(valid_moves.begin(), valid_moves.end(), compareCardValue);
-	UnoAction* picked = valid_moves.front();
+	Action* picked = valid_moves.front();
 
 	if (static_cast<UnoCard*>(picked)->getColor() == CARD_COLOR_BLACK) {
 		CARD_COLOR new_color = chooseColor();

@@ -16,7 +16,8 @@ namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Common::Game::Game;
 using ::Casino::Uno::Player::UnoPlayer;
-//UnoAction, CARD_COLOR/VALUE, Draw, UnoCard, SimpleCard
+using ::Casino::Uno::Action::Action;
+//CARD_COLOR/VALUE, Draw, UnoCard, SimpleCard
 using namespace ::Casino::Uno::Action;
 
 class UnoGame :public Game
@@ -87,7 +88,7 @@ public:
 	void start();
 
 	SimpleCard lastPlayedCard();
-	bool isValidMove(UnoAction* action, std::string &message);
+	bool isValidMove(Action* action, std::string &message);
 	void blockNextPlayer();
 	void reverseTurn();
 	void drawCards();

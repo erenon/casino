@@ -1,19 +1,15 @@
 #ifndef CSU_ACTION_H_
 #define CSU_ACTION_H_
 
-#include "../../common/action/action.h"
-//#include "../game/game.h"
-
 namespace Casino { namespace Uno { namespace Game {
 	class UnoGame;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Common::Action::Action;
 using ::Casino::Uno::Game::UnoGame;
 
-class UnoAction :public Action
+class Action //:public Action
 {
 public:
 	virtual bool isDisposeable() = 0;

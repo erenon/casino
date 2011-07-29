@@ -24,7 +24,7 @@ protected:
 	static bool compareCardValue(UnoCard* a, UnoCard* b);
 public:
 	RobotEasyUnoPlayer(/*std::ostream& out*/);
-	virtual UnoAction* pickAction(UnoGame *game);
+	virtual Action* pickAction(UnoGame *game);
 	virtual void notify(::Casino::Uno::Event::EVENT event_type, void* event) {}
 };
 

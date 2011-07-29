@@ -9,10 +9,10 @@ namespace Casino { namespace Uno { namespace Game {
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoAction;
+using ::Casino::Uno::Action::Action;
 using ::Casino::Uno::Game::UnoGame;
 
-class Draw :public UnoAction
+class Draw :public Action
 {
 public:
 	bool isDisposeable();

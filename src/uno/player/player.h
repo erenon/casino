@@ -14,7 +14,7 @@ namespace Casino { namespace Uno { namespace Game {
 namespace Casino { namespace Uno { namespace Player {
 
 using ::Casino::Common::Player::Player;
-using ::Casino::Uno::Action::UnoAction;
+using ::Casino::Uno::Action::Action;
 using ::Casino::Uno::Game::UnoGame;
 using namespace ::Casino::Uno::Event;
 using std::list;
@@ -23,8 +23,8 @@ class UnoPlayer
 {
 protected:
 	std::string name;
-	std::vector<UnoAction*> hand;
-	typedef std::vector<UnoAction*>::iterator card_iterator;
+	std::vector<Action*> hand;
+	typedef std::vector<Action*>::iterator card_iterator;
 	bool unoFlag;
 	bool blocked;
 public:
@@ -32,9 +32,9 @@ public:
 	UnoPlayer(const char *name);
 	virtual void setName(const char *name);
 	virtual std::string getName();
-	virtual void addAction(UnoAction *action);
-	virtual void removeAction(UnoAction *action);
-	virtual UnoAction* pickAction(UnoGame *game) = 0;
+	virtual void addAction(Action *action);
+	virtual void removeAction(Action *action);
+	virtual Action* pickAction(UnoGame *game) = 0;
 	virtual void notify(EVENT event_type, void* event) = 0;
 	virtual int getCardCount();
 	virtual void setUnoFlag(bool value);

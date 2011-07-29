@@ -11,7 +11,7 @@
 namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Uno::Player::UnoPlayer;
-//UnoAction, UnoCard, SimpleCard, CARD_COLOR/VALUE
+//Action, UnoCard, SimpleCard, CARD_COLOR/VALUE
 using namespace ::Casino::Uno::Action;
 
 UnoGame::UnoGame(int max_player_count)
@@ -183,7 +183,7 @@ void UnoGame::start() {
 		} else {
 
 			// get players action
-			UnoAction* pickedAction = current_player->pickAction(this);
+			Action* pickedAction = current_player->pickAction(this);
 
 			// move card from hand to played cards
 			if (pickedAction->isDisposeable()) {
@@ -246,7 +246,7 @@ SimpleCard UnoGame::lastPlayedCard() {
 	return card;
 }
 
-bool UnoGame::isValidMove(UnoAction* action, std::string &message) {
+bool UnoGame::isValidMove(Action* action, std::string &message) {
 	if (action == getDrawAction()) {
 		return true;
 	}
