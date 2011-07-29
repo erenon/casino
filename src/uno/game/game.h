@@ -14,13 +14,12 @@
 
 namespace Casino { namespace Uno { namespace Game {
 
-using ::Casino::Common::Game::Game;
 using ::Casino::Uno::Player::UnoPlayer;
 using ::Casino::Uno::Action::Action;
-//CARD_COLOR/VALUE, Draw, UnoCard, SimpleCard
+//CARD_COLOR/VALUE, Draw, Card, SimpleCard
 using namespace ::Casino::Uno::Action;
 
-class UnoGame :public Game
+class Game :public ::Casino::Common::Game::Game
 {
 protected:
 	class PlayerList {
@@ -48,18 +47,18 @@ protected:
 
 	class ActionStack {
 	protected:
-		std::deque<UnoCard *> deck;
-		std::deque<UnoCard *> played;
+		std::deque<Card *> deck;
+		std::deque<Card *> played;
 
 		static ptrdiff_t getrandom(ptrdiff_t i);
-		void shuffle(std::deque<UnoCard *> &toShuffle);
+		void shuffle(std::deque<Card *> &toShuffle);
 		void shufflePlayedIntoDeck();
 	public:
 		void shuffleDeck();
-		void addCard(UnoCard *card);
-		void addCardToPlayed(UnoCard *card);
-		UnoCard* drawCard();
-		//UnoCard *lastPlayedCard();
+		void addCard(Card *card);
+		void addCardToPlayed(Card *card);
+		Card* drawCard();
+		//Card *lastPlayedCard();
 		CARD_COLOR last_played_color;
 		CARD_VALUE last_played_value;
 		virtual ~ActionStack() {};
@@ -77,9 +76,9 @@ protected:
 
 
 public:
-	UnoGame(int max_player_count);
+	Game(int max_player_count);
 	virtual void joinPlayer(UnoPlayer *player);
-	void addCardToDeck(UnoCard *card);
+	void addCardToDeck(Card *card);
 	bool isPenalty();
 	void increasePenality(int addition);
 	void dealPenality(UnoPlayer* player);

@@ -2,18 +2,18 @@
 #define CSU_ACTION_H_
 
 namespace Casino { namespace Uno { namespace Game {
-	class UnoGame;
+	class Game;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Game::UnoGame;
+using ::Casino::Uno::Game::Game;
 
 class Action //:public Action
 {
 public:
 	virtual bool isDisposeable() = 0;
-	virtual void takeAction(UnoGame* game) = 0;
+	virtual void takeAction(Game* game) = 0;
 };
 
 }}} //namespace

@@ -12,21 +12,21 @@
 
 namespace Casino { namespace Uno { namespace Game {
 
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::Card;
 
-ptrdiff_t UnoGame::ActionStack::getrandom(ptrdiff_t i) {
+ptrdiff_t Game::ActionStack::getrandom(ptrdiff_t i) {
 	return rand() % i;
 }
 
-void UnoGame::ActionStack::shuffle(std::deque<UnoCard *> &toShuffle) {
+void Game::ActionStack::shuffle(std::deque<Card *> &toShuffle) {
 	srand( unsigned( time(NULL)));
  	std::random_shuffle(toShuffle.begin(), toShuffle.end(), getrandom);
 }
 
-void UnoGame::ActionStack::shufflePlayedIntoDeck() {
+void Game::ActionStack::shufflePlayedIntoDeck() {
 	shuffle(played);
 
-	std::deque<UnoCard *>::iterator it;
+	std::deque<Card *>::iterator it;
 	for (it = played.begin(); it != played.end(); it++) {
 		addCard(*it);
 	}
@@ -34,19 +34,19 @@ void UnoGame::ActionStack::shufflePlayedIntoDeck() {
 	played.clear();
 }
 
-void UnoGame::ActionStack::shuffleDeck() {
+void Game::ActionStack::shuffleDeck() {
 	shuffle(deck);
 }
 
-void UnoGame::ActionStack::addCard(UnoCard *card) {
+void Game::ActionStack::addCard(Card *card) {
 	deck.push_back(card);
 }
 
-void UnoGame::ActionStack::addCardToPlayed(UnoCard *card) {
+void Game::ActionStack::addCardToPlayed(Card *card) {
 	played.push_front(card);
 }
 
-UnoCard* UnoGame::ActionStack::drawCard() {
+Card* Game::ActionStack::drawCard() {
 	if (deck.size() == 0) {
 		if (played.size() > 0) {
 			shufflePlayedIntoDeck();
@@ -55,7 +55,7 @@ UnoCard* UnoGame::ActionStack::drawCard() {
 		}
 	}
 
-	UnoCard* top_card = deck.front();
+	Card* top_card = deck.front();
 	deck.pop_front();
 	return top_card;
 }

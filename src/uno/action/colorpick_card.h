@@ -18,7 +18,7 @@ public:
 		value = CARD_VALUE_COLORPICK;
 	}
 
-	void takeAction(UnoGame* game) {
+	void takeAction(Game* game) {
 		WildCard::takeAction(game);
 	}
 };

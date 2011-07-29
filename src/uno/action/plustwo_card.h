@@ -5,18 +5,18 @@
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::Card;
 using ::Casino::Uno::Action::CARD_COLOR;
 using ::Casino::Uno::Action::CARD_VALUE;
 
-class PlustwoCard :public UnoCard
+class PlustwoCard :public Card
 {
 public:
 	PlustwoCard(CARD_COLOR color)
-		:UnoCard(color, CARD_VALUE_PLUSTWO)
+		:Card(color, CARD_VALUE_PLUSTWO)
 	{}
 
-	void takeAction(UnoGame* game) {
+	void takeAction(Game* game) {
 		game->increasePenality(2);
 	}
 };

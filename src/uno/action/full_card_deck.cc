@@ -11,8 +11,8 @@
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Game::UnoGame;
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Game::Game;
+using ::Casino::Uno::Action::Card;
 using ::Casino::Uno::Action::CARD_COLOR;
 using ::Casino::Uno::Action::CARD_VALUE;
 
@@ -23,12 +23,12 @@ using ::Casino::Uno::Action::PlustwoCard;
 using ::Casino::Uno::Action::PlusfourCard;
 using ::Casino::Uno::Action::ColorpickCard;
 
-void UnoFullCardDeck::add(UnoCard *card) {
+void FullCardDeck::add(Card *card) {
 	deck.push_back(card);
 	game->addCardToDeck(card);
 }
 
-void UnoFullCardDeck::fillGameWithCards(UnoGame* g) {
+void FullCardDeck::fillGameWithCards(Game* g) {
 	game = g;
 
 	CARD_COLOR colors[] = {
@@ -80,8 +80,8 @@ void UnoFullCardDeck::fillGameWithCards(UnoGame* g) {
 	}
 }
 
-UnoFullCardDeck::~UnoFullCardDeck() {
-	std::list<UnoCard *>::iterator it;
+FullCardDeck::~FullCardDeck() {
+	std::list<Card *>::iterator it;
 
 	for (it = deck.begin(); it != deck.end(); it++) {
 		delete *it;

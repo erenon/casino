@@ -10,7 +10,7 @@ void WildCard::setColor(CARD_COLOR color) {
 	choosen_color = color;
 }
 
-void WildCard::takeAction(UnoGame* game) {
+void WildCard::takeAction(Game* game) {
 	game->setLastColor(choosen_color);
 }
 

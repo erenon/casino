@@ -5,18 +5,18 @@
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::Card;
 using ::Casino::Uno::Action::CARD_COLOR;
 using ::Casino::Uno::Action::CARD_VALUE;
 
-class BlockCard :public UnoCard
+class BlockCard :public Card
 {
 public:
 	BlockCard(CARD_COLOR color)
-		:UnoCard(color, CARD_VALUE_BLOCK)
+		:Card(color, CARD_VALUE_BLOCK)
 	{}
 
-	void takeAction(UnoGame* game) {
+	void takeAction(Game* game) {
 		game->blockNextPlayer();
 	}
 };

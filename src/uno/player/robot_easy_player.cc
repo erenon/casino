@@ -10,7 +10,7 @@
 
 namespace Casino { namespace Uno { namespace Player {
 
-//UnoCard, CARD_VALUE, WildCard
+//Card, CARD_VALUE, WildCard
 using namespace ::Casino::Uno::Action;
 
 RobotEasyUnoPlayer::RobotEasyUnoPlayer() {}
@@ -29,7 +29,7 @@ CARD_COLOR  RobotEasyUnoPlayer::chooseColor() {
 
 	card_iterator card;
 	for (card = hand.begin(); card != hand.end(); card++) {
-		colors[static_cast<UnoCard*>(*card)->getColor()]++;
+		colors[static_cast<Card*>(*card)->getColor()]++;
 	}
 
 	CARD_COLOR picked = CARD_COLOR_RED;
@@ -46,7 +46,7 @@ CARD_COLOR  RobotEasyUnoPlayer::chooseColor() {
 	return picked;
 }
 
-bool RobotEasyUnoPlayer::compareCardValue(UnoCard* a, UnoCard* b) {
+bool RobotEasyUnoPlayer::compareCardValue(Card* a, Card* b) {
 	CARD_VALUE values[] = {
 		CARD_VALUE_0,
 		CARD_VALUE_1,
@@ -81,14 +81,14 @@ bool RobotEasyUnoPlayer::compareCardValue(UnoCard* a, UnoCard* b) {
 }
 
 
-Action*  RobotEasyUnoPlayer::pickAction(UnoGame *game) {
-	std::vector<UnoCard*> valid_moves;
+Action*  RobotEasyUnoPlayer::pickAction(Game *game) {
+	std::vector<Card*> valid_moves;
 	card_iterator card;
 	std::string dummy_str;
 
 	for (card = hand.begin(); card != hand.end(); card++) {
 		if (game->isValidMove(*card, dummy_str)) {
-			valid_moves.push_back(static_cast<UnoCard*>(*card));
+			valid_moves.push_back(static_cast<Card*>(*card));
 		}
 	}
 
@@ -100,7 +100,7 @@ Action*  RobotEasyUnoPlayer::pickAction(UnoGame *game) {
 	std::sort(valid_moves.begin(), valid_moves.end(), compareCardValue);
 	Action* picked = valid_moves.front();
 
-	if (static_cast<UnoCard*>(picked)->getColor() == CARD_COLOR_BLACK) {
+	if (static_cast<Card*>(picked)->getColor() == CARD_COLOR_BLACK) {
 		CARD_COLOR new_color = chooseColor();
 		static_cast<WildCard*>(picked)->setColor(new_color);
 	}

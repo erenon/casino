@@ -5,18 +5,18 @@
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::Card;
 using ::Casino::Uno::Action::CARD_COLOR;
 using ::Casino::Uno::Action::CARD_VALUE;
 
-class ReverseCard :public UnoCard
+class ReverseCard :public Card
 {
 public:
 	ReverseCard(CARD_COLOR color)
-		:UnoCard(color, CARD_VALUE_REVERSE)
+		:Card(color, CARD_VALUE_REVERSE)
 	{}
 
-	void takeAction(UnoGame* game) {
+	void takeAction(Game* game) {
 		game->reverseTurn();
 	}
 };

@@ -4,19 +4,19 @@
 #include "../action/action.h"
 
 namespace Casino { namespace Uno { namespace Game {
-	class UnoGame;
+	class Game;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
 
 using ::Casino::Uno::Action::Action;
-using ::Casino::Uno::Game::UnoGame;
+using ::Casino::Uno::Game::Game;
 
 class Draw :public Action
 {
 public:
 	bool isDisposeable();
-	void takeAction(UnoGame* game);
+	void takeAction(Game* game);
 };
 
 }}} //namespace

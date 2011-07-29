@@ -11,7 +11,7 @@
 
 
 namespace Casino { namespace Uno { namespace Game {
-	class UnoGame;
+	class Game;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Player {
@@ -26,9 +26,9 @@ class JavascriptUnoPlayer :public UnoPlayer
 public:
 	JavascriptUnoPlayer(Handle<Object> jsplayer);
 	virtual Local<Function> getCallback(const char* cbname);
-	virtual Action* pickAction(UnoGame *game);
+	virtual Action* pickAction(Game *game);
 	static Handle<Value> pickActionAfter(const Arguments &args);
-	virtual Local<Object> createCardObject(UnoCard* card);
+	virtual Local<Object> createCardObject(Card* card);
 	virtual Local<Object> createPlayerObject(UnoPlayer* player);
 	virtual void notify(EVENT event_type, void* event);
 

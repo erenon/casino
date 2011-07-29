@@ -8,22 +8,22 @@ namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Uno::Player::UnoPlayer;
 
-UnoGame::PlayerList::PlayerList()
+Game::PlayerList::PlayerList()
 	:turn_direction_normal(true),
 	 prev_player(NULL)
 {
 	current_player = players.begin();
 }
 
-void UnoGame::PlayerList::joinPlayer(UnoPlayer* player) {
+void Game::PlayerList::joinPlayer(UnoPlayer* player) {
 	players.push_back(player);
 }
 
-int UnoGame::PlayerList::size() {
+int Game::PlayerList::size() {
 	return players.size();
 }
 
-UnoGame::PlayerList::player_iterator UnoGame::PlayerList::determineNextPlayer() {
+Game::PlayerList::player_iterator Game::PlayerList::determineNextPlayer() {
 	player_iterator next_player = current_player;
 
 	if (turn_direction_normal) {
@@ -48,25 +48,25 @@ UnoGame::PlayerList::player_iterator UnoGame::PlayerList::determineNextPlayer() 
 	return next_player;
 }
 
-UnoPlayer *UnoGame::PlayerList::getNextPlayer() {
+UnoPlayer *Game::PlayerList::getNextPlayer() {
 	return *determineNextPlayer();
 }
 
-UnoPlayer *UnoGame::PlayerList::getPreviousPlayer() {
+UnoPlayer *Game::PlayerList::getPreviousPlayer() {
 	return prev_player;
 }
 
-UnoPlayer *UnoGame::PlayerList::getCurrentPlayer() {
+UnoPlayer *Game::PlayerList::getCurrentPlayer() {
 	return *current_player;
 }
 
-UnoPlayer *UnoGame::PlayerList::next() {
+UnoPlayer *Game::PlayerList::next() {
 	prev_player = *current_player;
 	current_player = determineNextPlayer();
 	return *current_player;
 }
 
-void UnoGame::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
+void Game::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
 	player_iterator it;
 
 	for (it = players.begin(); it != players.end(); it++) {
@@ -74,7 +74,7 @@ void UnoGame::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
 	}
 }
 
-void UnoGame::PlayerList::notifyOthers(Event::EVENT event_type, void* event, UnoPlayer* player) {
+void Game::PlayerList::notifyOthers(Event::EVENT event_type, void* event, UnoPlayer* player) {
 	player_iterator it;
 
 	for (it = players.begin(); it != players.end(); it++) {
@@ -84,12 +84,12 @@ void UnoGame::PlayerList::notifyOthers(Event::EVENT event_type, void* event, Uno
 	}
 }
 
-void UnoGame::PlayerList::reset() {
+void Game::PlayerList::reset() {
 	prev_player = NULL;
 	current_player = players.begin();
 }
 
-void UnoGame::PlayerList::reverseTurn() {
+void Game::PlayerList::reverseTurn() {
 	turn_direction_normal = !turn_direction_normal;
 }
 

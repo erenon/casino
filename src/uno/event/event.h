@@ -8,13 +8,13 @@ namespace Casino { namespace Uno { namespace Player {
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Action {
-	class UnoCard;
+	class Card;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Event {
 
 using ::Casino::Uno::Player::UnoPlayer;
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::Card;
 
 enum EVENT {
 	EVENT_CARD_PLAYED,
@@ -29,7 +29,7 @@ enum EVENT {
 
 struct card_played {
 	UnoPlayer* played_by;
-	UnoCard* played_card;
+	Card* played_card;
 };
 
 struct draw_card {
@@ -43,7 +43,7 @@ struct colorpick {
 };
 
 struct game_start {
-	UnoCard* first_card;
+	Card* first_card;
 };
 
 struct game_end {

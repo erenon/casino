@@ -19,7 +19,7 @@ void ConsoleUnoPlayer::println(const char* str) {
 	out << str << std::endl;
 }
 
-std::ostream& operator<<(std::ostream& out, UnoCard *card) {
+std::ostream& operator<<(std::ostream& out, Card *card) {
 
 	// print color
 	switch (card->getColor()) {
@@ -89,7 +89,7 @@ void ConsoleUnoPlayer::listCards() {
 	for (it = hand.begin(); it != hand.end(); it++, i++) {
 		out << i << ". ";
 		//print card
-		out << static_cast<UnoCard*>(*it);
+		out << static_cast<Card*>(*it);
 		out << std::endl;
 	}
 	out << i << ". draw" << std::endl;
@@ -171,7 +171,7 @@ CARD_COLOR ConsoleUnoPlayer::chooseColor() {
 	return color;
 }
 
-Action* ConsoleUnoPlayer::pickAction(UnoGame *game) {
+Action* ConsoleUnoPlayer::pickAction(Game *game) {
 	out << std::endl << "==" << this->getName() << "'s turn" << std::endl;
 	SimpleCard last_card = game->lastPlayedCard();
 	out << "-Last card was: " << &last_card << std::endl;
@@ -199,7 +199,7 @@ Action* ConsoleUnoPlayer::pickAction(UnoGame *game) {
 	}
 
 	if (card_index != getCardCount()
-	&& static_cast<UnoCard*>(picked)->getColor() == CARD_COLOR_BLACK) {
+	&& static_cast<Card*>(picked)->getColor() == CARD_COLOR_BLACK) {
 		CARD_COLOR new_color = chooseColor();
 		static_cast<WildCard*>(picked)->setColor(new_color);
 	}

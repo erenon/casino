@@ -14,7 +14,7 @@ namespace Casino { namespace Uno { namespace Player {
 using namespace v8;
 using ::Casino::Uno::Player::UnoPlayer;
 using ::Casino::Uno::Action::Action;
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Action::Card;
 using namespace ::Casino::Uno::Action;
 namespace Event = ::Casino::Uno::Event;
 
@@ -89,7 +89,7 @@ Handle<Value> pickActionAfter(const Arguments &args) {
 	return Undefined();
 }
 
-Local<Object> JavascriptUnoPlayer::createCardObject(UnoCard* card) {
+Local<Object> JavascriptUnoPlayer::createCardObject(Card* card) {
 	HandleScope scope;
 	Local<Object> jscard = Object::New();
 

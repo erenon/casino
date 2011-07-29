@@ -18,7 +18,7 @@ public:
 		value = CARD_VALUE_PLUSFOUR;
 	}
 
-	void takeAction(UnoGame* game) {
+	void takeAction(Game* game) {
 		game->increasePenality(4);
 		WildCard::takeAction(game);
 	}

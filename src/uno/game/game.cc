@@ -11,18 +11,18 @@
 namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Uno::Player::UnoPlayer;
-//Action, UnoCard, SimpleCard, CARD_COLOR/VALUE
+//Action, Card, SimpleCard, CARD_COLOR/VALUE
 using namespace ::Casino::Uno::Action;
 
-UnoGame::UnoGame(int max_player_count)
-	:Game(max_player_count),
+Game::Game(int max_player_count)
+	:Casino::Common::Game::Game(max_player_count),
 	 current_penalty(0),
 	 previous_nonblocked_player(NULL)
 {
 
 }
 
-void UnoGame::joinPlayer(UnoPlayer *player) {
+void Game::joinPlayer(UnoPlayer *player) {
 	if (players.size() >= max_player_count) {
 		throw std::overflow_error("Game is full");
 	}
@@ -41,7 +41,7 @@ void UnoGame::joinPlayer(UnoPlayer *player) {
 	}
 }
 
-void UnoGame::checkUno() {
+void Game::checkUno() {
 	//no previous player was registered, it's the first move
 	if (previous_nonblocked_player == NULL) {
 		return;
@@ -80,23 +80,23 @@ void UnoGame::checkUno() {
 	}
 }
 
-void UnoGame::registerNonblockedPlayer(UnoPlayer* player) {
+void Game::registerNonblockedPlayer(UnoPlayer* player) {
 	previous_nonblocked_player = player;
 }
 
-void UnoGame::addCardToDeck(UnoCard *card) {
+void Game::addCardToDeck(Card *card) {
 	deck.addCard(card);
 }
 
-bool UnoGame::isPenalty() {
+bool Game::isPenalty() {
 	return (current_penalty > 0);
 }
 
-void UnoGame::increasePenality(int addition) {
+void Game::increasePenality(int addition) {
 	current_penalty += addition;
 }
 
-void UnoGame::dealPenality(UnoPlayer* player) {
+void Game::dealPenality(UnoPlayer* player) {
 	for (int i = 0; i < current_penalty; i++) {
 		dealCard(player);
 	}
@@ -104,8 +104,8 @@ void UnoGame::dealPenality(UnoPlayer* player) {
 	current_penalty = 0;
 }
 
-void UnoGame::dealCard(UnoPlayer* player) {
-	UnoCard* top_card = deck.drawCard();
+void Game::dealCard(UnoPlayer* player) {
+	Card* top_card = deck.drawCard();
 	player->addAction(top_card);
 }
 
@@ -114,13 +114,13 @@ void UnoGame::dealCard(UnoPlayer* player) {
  *
  * @todo replace typeid -> color/value getter
  */
-void UnoGame::initStart() {
+void Game::initStart() {
 	const int initial_hand_count = 7;
 
 	deck.shuffleDeck();
 
 	{	// play out first card
-		UnoCard* top_card;
+		Card* top_card;
 		// dummy class to compare
 		SimpleCard proper_first_card(
 			Casino::Uno::Action::CARD_COLOR_RED,
@@ -163,13 +163,13 @@ void UnoGame::initStart() {
 	}
 }
 
-bool UnoGame::doesPlayerWin(UnoPlayer* player) {
+bool Game::doesPlayerWin(UnoPlayer* player) {
 	return (player->isBlocked() == false)
 		&& (player->getCardCount() == 0)
 		&& (isPenalty() == false);
 }
 
-void UnoGame::start() {
+void Game::start() {
 	initStart();
 
 	players.reset();
@@ -189,7 +189,7 @@ void UnoGame::start() {
 			if (pickedAction->isDisposeable()) {
 				current_player->removeAction(pickedAction);
 
-				UnoCard* played_card = static_cast<UnoCard*>(pickedAction);
+				Card* played_card = static_cast<Card*>(pickedAction);
 				deck.last_played_color = played_card->getColor();
 				deck.last_played_value = played_card->getValue();
 				deck.addCardToPlayed(played_card);
@@ -241,17 +241,17 @@ void UnoGame::start() {
 	}
 }
 
-SimpleCard UnoGame::lastPlayedCard() {
+SimpleCard Game::lastPlayedCard() {
 	SimpleCard card(deck.last_played_color, deck.last_played_value);
 	return card;
 }
 
-bool UnoGame::isValidMove(Action* action, std::string &message) {
+bool Game::isValidMove(Action* action, std::string &message) {
 	if (action == getDrawAction()) {
 		return true;
 	}
 
-	UnoCard *current = static_cast<UnoCard*>(action);
+	Card *current = static_cast<Card*>(action);
 
 	if (isPenalty()) {
 		if (deck.last_played_value == CARD_VALUE_PLUSFOUR) {
@@ -290,7 +290,7 @@ bool UnoGame::isValidMove(Action* action, std::string &message) {
 	}
 }
 
-void UnoGame::blockNextPlayer() {
+void Game::blockNextPlayer() {
 	players.getNextPlayer()->block();
 
 	{
@@ -305,11 +305,11 @@ void UnoGame::blockNextPlayer() {
 	}
 }
 
-void UnoGame::reverseTurn() {
+void Game::reverseTurn() {
 	players.reverseTurn();
 }
 
-void UnoGame::drawCards() {
+void Game::drawCards() {
 	UnoPlayer *player = players.getCurrentPlayer();
 
 	if (isPenalty()) {
@@ -319,11 +319,11 @@ void UnoGame::drawCards() {
 	}
 }
 
-Draw *UnoGame::getDrawAction() {
+Draw *Game::getDrawAction() {
 	return &draw_action;
 }
 
-void UnoGame::setLastColor(CARD_COLOR color) {
+void Game::setLastColor(CARD_COLOR color) {
 	deck.last_played_color = color;
 
 	Event::colorpick event;

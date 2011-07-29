@@ -7,18 +7,18 @@
 
 namespace Casino { namespace Uno { namespace Action {
 
-using ::Casino::Uno::Game::UnoGame;
-using ::Casino::Uno::Action::UnoCard;
+using ::Casino::Uno::Game::Game;
+using ::Casino::Uno::Action::Card;
 
-class UnoFullCardDeck
+class FullCardDeck
 {
 protected:
-	std::list<UnoCard *> deck;
-	UnoGame* game;
-	void add(UnoCard *);
+	std::list<Card *> deck;
+	Game* game;
+	void add(Card *);
 public:
-	void fillGameWithCards(UnoGame* g);
-	~UnoFullCardDeck();
+	void fillGameWithCards(Game* g);
+	~FullCardDeck();
 };
 
 }}} //namespace

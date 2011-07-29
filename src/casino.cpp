@@ -7,18 +7,18 @@
 #include "uno/player/robot_easy_player.h"
 #include "uno/action/full_card_deck.h"
 
-using ::Casino::Uno::Game::UnoGame;
+using ::Casino::Uno::Game::Game;
 using ::Casino::Uno::Player::ConsoleUnoPlayer;
 using ::Casino::Uno::Player::RobotEasyUnoPlayer;
-using ::Casino::Uno::Action::UnoFullCardDeck;
+using ::Casino::Uno::Action::FullCardDeck;
 
 int main(void) {
 	printf("===Casino Uno\n");
 
-	UnoGame game(4);
+	Game game(4);
 	ConsoleUnoPlayer alice(std::cin, std::cout);
 	RobotEasyUnoPlayer robots[3];
-	UnoFullCardDeck deck;
+	FullCardDeck deck;
 
 	alice.setName("player");
 	robots[0].setName("robot 1");

@@ -1,7 +1,7 @@
 #ifndef CSU_CARD_H_
 #define CSU_CARD_H_
 
-#include "../action/action.h"
+#include "action.h"
 
 namespace Casino { namespace Uno { namespace Action {
 	class Action;
@@ -37,14 +37,14 @@ enum CARD_VALUE {
 	CARD_VALUE_PLUSFOUR
 };
 
-class UnoCard :public Action
+class Card :public Action
 {
 protected:
 	CARD_COLOR color;
 	CARD_VALUE value;
 public:
-	UnoCard() {}
-	UnoCard(CARD_COLOR color, CARD_VALUE value)
+	Card() {}
+	Card(CARD_COLOR color, CARD_VALUE value)
 		:color(color),
 		 value(value)
 	{}

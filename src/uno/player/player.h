@@ -8,14 +8,14 @@
 #include <string>
 
 namespace Casino { namespace Uno { namespace Game {
-	class UnoGame;
+	class Game;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Player {
 
 using ::Casino::Common::Player::Player;
 using ::Casino::Uno::Action::Action;
-using ::Casino::Uno::Game::UnoGame;
+using ::Casino::Uno::Game::Game;
 using namespace ::Casino::Uno::Event;
 using std::list;
 
@@ -34,7 +34,7 @@ public:
 	virtual std::string getName();
 	virtual void addAction(Action *action);
 	virtual void removeAction(Action *action);
-	virtual Action* pickAction(UnoGame *game) = 0;
+	virtual Action* pickAction(Game *game) = 0;
 	virtual void notify(EVENT event_type, void* event) = 0;
 	virtual int getCardCount();
 	virtual void setUnoFlag(bool value);
