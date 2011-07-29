@@ -18,6 +18,12 @@ using ::Casino::Uno::Action::UnoCard;
 using namespace ::Casino::Uno::Action;
 namespace Event = ::Casino::Uno::Event;
 
+#define REQ_INT_ARG(I)                                                  \
+    if (args.Length() <= (I) || !args[I]->IsInt32()) {                  \
+        return ThrowException(Exception::TypeError(                     \
+            String::New("Argument " #I " must be an integer")));        \
+    }
+
 JavascriptUnoPlayer::JavascriptUnoPlayer(Handle<Object> jsplayer) {
 	HandleScope scope;
 	session_id = *String::AsciiValue(jsplayer->Get(String::New("session_id"))->ToString());
@@ -44,10 +50,12 @@ UnoAction* JavascriptUnoPlayer::pickAction(UnoGame *game) {
 	Local<Function> pickAction_cb = getCallback("pickAction");
 
 	Handle<Value> picked_index;
+	Local<FunctionTemplate> pickActionAfter_cb = FunctionTemplate::New(pickActionAfter);
+	Handle<Value> argument = pickActionAfter_cb->GetFunction();
 
 	{   // call pickAction_cb
 		TryCatch try_catch;
-		picked_index = pickAction_cb->Call(Context::GetCurrent()->Global(), 0, NULL);
+		picked_index = pickAction_cb->Call(Context::GetCurrent()->Global(), 1, &argument);
 		if (try_catch.HasCaught()) {
 			node::FatalException(try_catch);
 		}
@@ -69,6 +77,16 @@ UnoAction* JavascriptUnoPlayer::pickAction(UnoGame *game) {
 	/** @todo add color picking */
 
 	return picked;
+}
+
+Handle<Value> pickActionAfter(const Arguments &args) {
+	REQ_INT_ARG(0);
+
+	int picked_index = args[0]->Int32Value();
+
+	throw picked_index;
+
+	return Undefined();
 }
 
 Local<Object> JavascriptUnoPlayer::createCardObject(UnoCard* card) {
@@ -343,5 +361,7 @@ void JavascriptUnoPlayer::notify(EVENT event_type, void* event) {
 		}
 	}
 }
+
+#undef REQ_INT_ARG
 
 }}} //namespace

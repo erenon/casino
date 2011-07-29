@@ -27,6 +27,7 @@ public:
 	JavascriptUnoPlayer(Handle<Object> jsplayer);
 	virtual Local<Function> getCallback(const char* cbname);
 	virtual UnoAction* pickAction(UnoGame *game);
+	static Handle<Value> pickActionAfter(const Arguments &args);
 	virtual Local<Object> createCardObject(UnoCard* card);
 	virtual Local<Object> createPlayerObject(UnoPlayer* player);
 	virtual void notify(EVENT event_type, void* event);
