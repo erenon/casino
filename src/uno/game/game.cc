@@ -11,9 +11,8 @@
 namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Uno::Player::UnoPlayer;
-using ::Casino::Uno::Action::UnoCard;
-using namespace ::Casino::Uno::Action;	//UnoAction, CARD_COLOR/VALUE
-using ::Casino::Uno::Action::SimpleCard;
+//UnoAction, UnoCard, SimpleCard, CARD_COLOR/VALUE
+using namespace ::Casino::Uno::Action;
 
 UnoGame::UnoGame(int max_player_count)
 	:Game(max_player_count),
