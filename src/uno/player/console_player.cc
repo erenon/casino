@@ -7,7 +7,7 @@
 
 namespace Casino { namespace Uno { namespace Player {
 
-ConsoleUnoPlayer::ConsoleUnoPlayer(
+ConsolePlayer::ConsolePlayer(
 	std::istream& in,
 	std::ostream& out
 )
@@ -15,7 +15,7 @@ ConsoleUnoPlayer::ConsoleUnoPlayer(
 	out(out)
 {}
 
-void ConsoleUnoPlayer::println(const char* str) {
+void ConsolePlayer::println(const char* str) {
 	out << str << std::endl;
 }
 
@@ -82,7 +82,7 @@ std::ostream& operator<<(std::ostream& out, Card *card) {
 	return out;
 }
 
-void ConsoleUnoPlayer::listCards() {
+void ConsolePlayer::listCards() {
 	card_iterator it;
 
 	int i = 1;
@@ -95,7 +95,7 @@ void ConsoleUnoPlayer::listCards() {
 	out << i << ". draw" << std::endl;
 }
 
-int ConsoleUnoPlayer::chooseCard() {
+int ConsolePlayer::chooseCard() {
 	int choose;
 	bool valid = false;
 
@@ -138,7 +138,7 @@ int ConsoleUnoPlayer::chooseCard() {
 	return choose - 1;	// -1: index shift
 }
 
-CARD_COLOR ConsoleUnoPlayer::chooseColor() {
+CARD_COLOR ConsolePlayer::chooseColor() {
 	out << "-Choose a color (red/green/blue/yellow): ";
 	char color_first_letter;
 	CARD_COLOR color = CARD_COLOR_BLACK;
@@ -171,7 +171,7 @@ CARD_COLOR ConsoleUnoPlayer::chooseColor() {
 	return color;
 }
 
-Action* ConsoleUnoPlayer::pickAction(Game *game) {
+Action* ConsolePlayer::pickAction(Game *game) {
 	out << std::endl << "==" << this->getName() << "'s turn" << std::endl;
 	SimpleCard last_card = game->lastPlayedCard();
 	out << "-Last card was: " << &last_card << std::endl;
@@ -207,7 +207,7 @@ Action* ConsoleUnoPlayer::pickAction(Game *game) {
 	return picked;
 }
 
-void ConsoleUnoPlayer::notify(Event::EVENT event_type, void* event) {
+void ConsolePlayer::notify(Event::EVENT event_type, void* event) {
 	switch (event_type) {
 	case Event::EVENT_GAME_START:
 		println("==The Game has begun.");

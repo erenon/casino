@@ -20,7 +20,7 @@ using ::Casino::Uno::Game::Game;
 using namespace ::Casino::Uno::Action;
 namespace Event = ::Casino::Uno::Event;
 
-class ConsoleUnoPlayer :public UnoPlayer
+class ConsolePlayer :public UnoPlayer
 {
 protected:
 	std::istream& in;
@@ -30,7 +30,7 @@ protected:
 	virtual int chooseCard();
 	virtual CARD_COLOR chooseColor();
 public:
-	ConsoleUnoPlayer(std::istream& in, std::ostream& out);
+	ConsolePlayer(std::istream& in, std::ostream& out);
 	virtual Action* pickAction(Game *game);
 	virtual void notify(Event::EVENT event_type, void* event);
 };

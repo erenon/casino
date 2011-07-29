@@ -8,7 +8,7 @@
 #include "uno/action/full_card_deck.h"
 
 using ::Casino::Uno::Game::Game;
-using ::Casino::Uno::Player::ConsoleUnoPlayer;
+using ::Casino::Uno::Player::ConsolePlayer;
 using ::Casino::Uno::Player::RobotEasyUnoPlayer;
 using ::Casino::Uno::Action::FullCardDeck;
 
@@ -16,7 +16,7 @@ int main(void) {
 	printf("===Casino Uno\n");
 
 	Game game(4);
-	ConsoleUnoPlayer alice(std::cin, std::cout);
+	ConsolePlayer alice(std::cin, std::cout);
 	RobotEasyUnoPlayer robots[3];
 	FullCardDeck deck;
 
