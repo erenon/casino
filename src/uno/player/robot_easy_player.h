@@ -15,7 +15,7 @@ using ::Casino::Uno::Game::Game;
 //Card, SimpleCard, WildCard, CARD_COLOR, CARD_VALUE
 using namespace ::Casino::Uno::Action;
 
-class RobotEasyUnoPlayer :public Player
+class RobotEasyPlayer :public Player
 {
 protected:
 	//std::ostream& out;
@@ -23,7 +23,7 @@ protected:
 	virtual CARD_COLOR chooseColor();
 	static bool compareCardValue(Card* a, Card* b);
 public:
-	RobotEasyUnoPlayer(/*std::ostream& out*/);
+	RobotEasyPlayer(/*std::ostream& out*/);
 	virtual Action* pickAction(Game *game);
 	virtual void notify(::Casino::Uno::Event::EVENT event_type, void* event) {}
 };

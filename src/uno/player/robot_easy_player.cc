@@ -13,13 +13,13 @@ namespace Casino { namespace Uno { namespace Player {
 //Card, CARD_VALUE, WildCard
 using namespace ::Casino::Uno::Action;
 
-RobotEasyUnoPlayer::RobotEasyUnoPlayer() {}
+RobotEasyPlayer::RobotEasyPlayer() {}
 
-/*int RobotEasyUnoPlayer::chooseCard() {
+/*int RobotEasyPlayer::chooseCard() {
 
 }*/
 
-CARD_COLOR  RobotEasyUnoPlayer::chooseColor() {
+CARD_COLOR  RobotEasyPlayer::chooseColor() {
 	std::map<CARD_COLOR, int> colors;
 
 	colors[CARD_COLOR_RED] = 0;
@@ -46,7 +46,7 @@ CARD_COLOR  RobotEasyUnoPlayer::chooseColor() {
 	return picked;
 }
 
-bool RobotEasyUnoPlayer::compareCardValue(Card* a, Card* b) {
+bool RobotEasyPlayer::compareCardValue(Card* a, Card* b) {
 	CARD_VALUE values[] = {
 		CARD_VALUE_0,
 		CARD_VALUE_1,
@@ -81,7 +81,7 @@ bool RobotEasyUnoPlayer::compareCardValue(Card* a, Card* b) {
 }
 
 
-Action*  RobotEasyUnoPlayer::pickAction(Game *game) {
+Action*  RobotEasyPlayer::pickAction(Game *game) {
 	std::vector<Card*> valid_moves;
 	card_iterator card;
 	std::string dummy_str;

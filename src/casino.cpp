@@ -9,7 +9,7 @@
 
 using ::Casino::Uno::Game::Game;
 using ::Casino::Uno::Player::ConsolePlayer;
-using ::Casino::Uno::Player::RobotEasyUnoPlayer;
+using ::Casino::Uno::Player::RobotEasyPlayer;
 using ::Casino::Uno::Action::FullCardDeck;
 
 int main(void) {
@@ -17,7 +17,7 @@ int main(void) {
 
 	Game game(4);
 	ConsolePlayer alice(std::cin, std::cout);
-	RobotEasyUnoPlayer robots[3];
+	RobotEasyPlayer robots[3];
 	FullCardDeck deck;
 
 	alice.setName("player");
