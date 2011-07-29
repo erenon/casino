@@ -15,11 +15,11 @@ namespace Casino { namespace Node { namespace Uno { namespace Game {
 
 using namespace v8;
 using namespace node;
-using ::Casino::Uno::Game::UnoGame;
-using ::Casino::Uno::Player::UnoPlayer;
-using ::Casino::Uno::Player::JavascriptUnoPlayer;
-using ::Casino::Uno::Player::RobotEasyUnoPlayer;
-using ::Casino::Uno::Action::UnoFullCardDeck;
+using ::Casino::Uno::Game::Game;
+using ::Casino::Uno::Player::Player;
+using ::Casino::Uno::Player::JavascriptPlayer;
+using ::Casino::Uno::Player::RobotEasyPlayer;
+using ::Casino::Uno::Action::FullCardDeck;
 
 #define REQ_INT_ARG(I)                                                  \
     if (args.Length() <= (I) || !args[I]->IsInt32()) {                  \
@@ -36,9 +36,9 @@ using ::Casino::Uno::Action::UnoFullCardDeck;
 GameWrapper::GameWrapper(int max_player_count)
 	:bot_count(0)
 {
-	game = new UnoGame(max_player_count);
+	game = new Game(max_player_count);
 
-	deck = new UnoFullCardDeck();
+	deck = new FullCardDeck();
 	deck->fillGameWithCards(game);
 }
 
@@ -78,7 +78,7 @@ Handle<Value> GameWrapper::JoinPlayer(const Arguments &args) {
 
 	REQ_OBJ_ARG(0);
 
-	JavascriptUnoPlayer* player = new JavascriptUnoPlayer(
+	JavascriptPlayer* player = new JavascriptPlayer(
 		args[0]->ToObject()
 	);
 
@@ -107,7 +107,7 @@ Handle<Value> GameWrapper::AddBot(const Arguments &args) {
 	HandleScope scope;
 	GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
 	for (int i = 0; i < count; i++) {
-		RobotEasyUnoPlayer *robot = new RobotEasyUnoPlayer();
+		RobotEasyPlayer *robot = new RobotEasyPlayer();
 
 		{ // hack ahead. 49: ASCII 0
 			std::string name = "robot ";
@@ -156,7 +156,7 @@ Handle<Value> GameWrapper::Dispose(const Arguments &args) {
 	delete wrapper->game;
 	delete wrapper->deck;
 
-	std::list<UnoPlayer*>::iterator player;
+	std::list<Player*>::iterator player;
 	for (player = wrapper->players.begin(); player != wrapper->players.end(); player++) {
 		delete (*player);
 	}

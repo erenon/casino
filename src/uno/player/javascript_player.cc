@@ -12,7 +12,7 @@
 namespace Casino { namespace Uno { namespace Player {
 
 using namespace v8;
-using ::Casino::Uno::Player::UnoPlayer;
+using ::Casino::Uno::Player::Player;
 using ::Casino::Uno::Action::Action;
 using ::Casino::Uno::Action::Card;
 using namespace ::Casino::Uno::Action;
@@ -24,13 +24,13 @@ namespace Event = ::Casino::Uno::Event;
             String::New("Argument " #I " must be an integer")));        \
     }
 
-JavascriptUnoPlayer::JavascriptUnoPlayer(Handle<Object> jsplayer) {
+JavascriptPlayer::JavascriptPlayer(Handle<Object> jsplayer) {
 	HandleScope scope;
 	session_id = *String::AsciiValue(jsplayer->Get(String::New("session_id"))->ToString());
 	this->jsplayer = Persistent<Object>::New(jsplayer);
 }
 
-Local<Function> JavascriptUnoPlayer::getCallback(const char* cbname) {
+Local<Function> JavascriptPlayer::getCallback(const char* cbname) {
 	HandleScope scope;
 	Local<Function> cb = Local<Function>::Cast(
 		jsplayer->Get(String::New(cbname))
@@ -45,7 +45,7 @@ Local<Function> JavascriptUnoPlayer::getCallback(const char* cbname) {
 /**
  * @todo handle invalid move
  */
-Action* JavascriptUnoPlayer::pickAction(UnoGame *game) {
+Action* JavascriptPlayer::pickAction(Game *game) {
 	HandleScope scope;
 	Local<Function> pickAction_cb = getCallback("pickAction");
 
@@ -89,7 +89,7 @@ Handle<Value> pickActionAfter(const Arguments &args) {
 	return Undefined();
 }
 
-Local<Object> JavascriptUnoPlayer::createCardObject(Card* card) {
+Local<Object> JavascriptPlayer::createCardObject(Card* card) {
 	HandleScope scope;
 	Local<Object> jscard = Object::New();
 
@@ -161,7 +161,7 @@ Local<Object> JavascriptUnoPlayer::createCardObject(Card* card) {
 	return scope.Close(jscard);
 }
 
-Local<Object> JavascriptUnoPlayer::createPlayerObject(UnoPlayer* player) {
+Local<Object> JavascriptPlayer::createPlayerObject(Player* player) {
 	HandleScope scope;
 	Local<Object> jsplayer = Object::New();
 
@@ -173,7 +173,7 @@ Local<Object> JavascriptUnoPlayer::createPlayerObject(UnoPlayer* player) {
 	return scope.Close(jsplayer);
 }
 
-void JavascriptUnoPlayer::notify(EVENT event_type, void* event) {
+void JavascriptPlayer::notify(EVENT event_type, void* event) {
 	HandleScope scope;
 
 	Local<Function> notify_cb = getCallback("notify");

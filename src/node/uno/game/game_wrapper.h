@@ -14,9 +14,9 @@ namespace Casino { namespace Node { namespace Uno { namespace Game {
 
 using namespace v8;
 using namespace node;
-using ::Casino::Uno::Game::UnoGame;
-using ::Casino::Uno::Player::UnoPlayer;
-using ::Casino::Uno::Action::UnoFullCardDeck;
+using ::Casino::Uno::Game::Game;
+using ::Casino::Uno::Player::Player;
+using ::Casino::Uno::Action::FullCardDeck;
 
 class GameWrapper
 :public ObjectWrap
@@ -33,9 +33,9 @@ public:
     static Handle<Value> Dispose(const Arguments &args);
 
 protected:
-    UnoGame* game;
-    UnoFullCardDeck* deck;
-    std::list<UnoPlayer*> players;
+    Game* game;
+    FullCardDeck* deck;
+    std::list<Player*> players;
     int bot_count;
 };
 
