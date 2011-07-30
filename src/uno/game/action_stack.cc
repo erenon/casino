@@ -1,4 +1,4 @@
-#include "game.h"
+#include "action_stack.h"
 
 #include "../action/card.h"
 
@@ -14,16 +14,16 @@ namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Uno::Action::Card;
 
-ptrdiff_t Game::ActionStack::getrandom(ptrdiff_t i) {
+ptrdiff_t ActionStack::getrandom(ptrdiff_t i) {
 	return rand() % i;
 }
 
-void Game::ActionStack::shuffle(std::deque<Card *> &toShuffle) {
+void ActionStack::shuffle(std::deque<Card *> &toShuffle) {
 	srand( unsigned( time(NULL)));
  	std::random_shuffle(toShuffle.begin(), toShuffle.end(), getrandom);
 }
 
-void Game::ActionStack::shufflePlayedIntoDeck() {
+void ActionStack::shufflePlayedIntoDeck() {
 	shuffle(played);
 
 	std::deque<Card *>::iterator it;
@@ -34,19 +34,19 @@ void Game::ActionStack::shufflePlayedIntoDeck() {
 	played.clear();
 }
 
-void Game::ActionStack::shuffleDeck() {
+void ActionStack::shuffleDeck() {
 	shuffle(deck);
 }
 
-void Game::ActionStack::addCard(Card *card) {
+void ActionStack::addCard(Card *card) {
 	deck.push_back(card);
 }
 
-void Game::ActionStack::addCardToPlayed(Card *card) {
+void ActionStack::addCardToPlayed(Card *card) {
 	played.push_front(card);
 }
 
-Card* Game::ActionStack::drawCard() {
+Card* ActionStack::drawCard() {
 	if (deck.size() == 0) {
 		if (played.size() > 0) {
 			shufflePlayedIntoDeck();

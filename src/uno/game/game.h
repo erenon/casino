@@ -7,6 +7,8 @@
 #include "../action/simple_card.h"
 #include "../action/action.h"
 #include "../action/draw.h"
+#include "player_list.h"
+#include "action_stack.h"
 
 #include <deque>
 #include <list>
@@ -22,47 +24,8 @@ using namespace ::Casino::Uno::Action;
 class Game :public ::Casino::Common::Game::Game
 {
 protected:
-	class PlayerList {
-	protected:
-		std::list<Player *> players;
-		bool turn_direction_normal;
-		typedef std::list<Player *>::iterator player_iterator;
-		player_iterator current_player;
-		Player* prev_player;
-		player_iterator determineNextPlayer();
-
-	public:
-		PlayerList();
-		void joinPlayer(Player *player);
-		int size();
-		Player *getNextPlayer();
-		Player *getPreviousPlayer();
-		Player *getCurrentPlayer();
-		Player *next();
-		void reset();
-		void reverseTurn();
-		void notifyAll(Event::EVENT event_type, void* event);
-		void notifyOthers(Event::EVENT event_type, void* event, Player* player);
-	} players;
-
-	class ActionStack {
-	protected:
-		std::deque<Card *> deck;
-		std::deque<Card *> played;
-
-		static ptrdiff_t getrandom(ptrdiff_t i);
-		void shuffle(std::deque<Card *> &toShuffle);
-		void shufflePlayedIntoDeck();
-	public:
-		void shuffleDeck();
-		void addCard(Card *card);
-		void addCardToPlayed(Card *card);
-		Card* drawCard();
-		//Card *lastPlayedCard();
-		CARD_COLOR last_played_color;
-		CARD_VALUE last_played_value;
-		virtual ~ActionStack() {};
-	} deck;
+	PlayerList players;
+	ActionStack deck;
 
 	int current_penalty;
 	Draw draw_action;

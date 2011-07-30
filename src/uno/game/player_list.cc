@@ -1,4 +1,4 @@
-#include "game.h"
+#include "player_list.h"
 
 #include "../player/player.h"
 
@@ -8,22 +8,22 @@ namespace Casino { namespace Uno { namespace Game {
 
 using ::Casino::Uno::Player::Player;
 
-Game::PlayerList::PlayerList()
+PlayerList::PlayerList()
 	:turn_direction_normal(true),
 	 prev_player(NULL)
 {
 	current_player = players.begin();
 }
 
-void Game::PlayerList::joinPlayer(Player* player) {
+void PlayerList::joinPlayer(Player* player) {
 	players.push_back(player);
 }
 
-int Game::PlayerList::size() {
+int PlayerList::size() {
 	return players.size();
 }
 
-Game::PlayerList::player_iterator Game::PlayerList::determineNextPlayer() {
+PlayerList::player_iterator PlayerList::determineNextPlayer() {
 	player_iterator next_player = current_player;
 
 	if (turn_direction_normal) {
@@ -48,25 +48,25 @@ Game::PlayerList::player_iterator Game::PlayerList::determineNextPlayer() {
 	return next_player;
 }
 
-Player *Game::PlayerList::getNextPlayer() {
+Player *PlayerList::getNextPlayer() {
 	return *determineNextPlayer();
 }
 
-Player *Game::PlayerList::getPreviousPlayer() {
+Player *PlayerList::getPreviousPlayer() {
 	return prev_player;
 }
 
-Player *Game::PlayerList::getCurrentPlayer() {
+Player *PlayerList::getCurrentPlayer() {
 	return *current_player;
 }
 
-Player *Game::PlayerList::next() {
+Player *PlayerList::next() {
 	prev_player = *current_player;
 	current_player = determineNextPlayer();
 	return *current_player;
 }
 
-void Game::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
+void PlayerList::notifyAll(Event::EVENT event_type, void* event) {
 	player_iterator it;
 
 	for (it = players.begin(); it != players.end(); it++) {
@@ -74,7 +74,7 @@ void Game::PlayerList::notifyAll(Event::EVENT event_type, void* event) {
 	}
 }
 
-void Game::PlayerList::notifyOthers(Event::EVENT event_type, void* event, Player* player) {
+void PlayerList::notifyOthers(Event::EVENT event_type, void* event, Player* player) {
 	player_iterator it;
 
 	for (it = players.begin(); it != players.end(); it++) {
@@ -84,12 +84,12 @@ void Game::PlayerList::notifyOthers(Event::EVENT event_type, void* event, Player
 	}
 }
 
-void Game::PlayerList::reset() {
+void PlayerList::reset() {
 	prev_player = NULL;
 	current_player = players.begin();
 }
 
-void Game::PlayerList::reverseTurn() {
+void PlayerList::reverseTurn() {
 	turn_direction_normal = !turn_direction_normal;
 }
 
