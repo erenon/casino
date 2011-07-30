@@ -5,7 +5,7 @@
 #include "../event/event.h"
 
 namespace Casino { namespace Uno { namespace Game {
-	class Game;
+	class ConsoleGame;
 }}} //namespace
 
 namespace Casino { namespace Uno { namespace Player {
@@ -24,7 +24,7 @@ protected:
 	static bool compareCardValue(Card* a, Card* b);
 public:
 	RobotEasyPlayer(/*std::ostream& out*/);
-	virtual Action* pickAction(Game *game);
+	virtual Action* pickAction(ConsoleGame *game);
 	virtual void notify(::Casino::Uno::Event::EVENT event_type, void* event) {}
 };
 

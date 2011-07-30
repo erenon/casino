@@ -1,5 +1,5 @@
 #include "console_player.h"
-#include "../game/game.h"
+#include "../game/console_game.h"
 #include <iostream>
 #include <limits> //for istream ignore
 #include <cstring>
@@ -171,7 +171,7 @@ CARD_COLOR ConsolePlayer::chooseColor() {
 	return color;
 }
 
-Action* ConsolePlayer::pickAction(Game *game) {
+Action* ConsolePlayer::pickAction(ConsoleGame *game) {
 	out << std::endl << "==" << this->getName() << "'s turn" << std::endl;
 	SimpleCard last_card = game->lastPlayedCard();
 	out << "-Last card was: " << &last_card << std::endl;

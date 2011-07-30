@@ -1,7 +1,7 @@
 #include "robot_easy_player.h"
 #include "../action/card.h"
 #include "../action/wild_card.h"
-#include "../game/game.h"
+#include "../game/console_game.h"
 
 #include <vector>
 #include <string>
@@ -81,7 +81,7 @@ bool RobotEasyPlayer::compareCardValue(Card* a, Card* b) {
 }
 
 
-Action*  RobotEasyPlayer::pickAction(Game *game) {
+Action*  RobotEasyPlayer::pickAction(ConsoleGame *game) {
 	std::vector<Card*> valid_moves;
 	card_iterator card;
 	std::string dummy_str;

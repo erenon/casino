@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "uno/game/game.h"
+#include "uno/game/console_game.h"
 #include "uno/player/console_player.h"
 #include "uno/player/robot_easy_player.h"
 #include "uno/action/full_card_deck.h"
 
-using ::Casino::Uno::Game::Game;
+using ::Casino::Uno::Game::ConsoleGame;
 using ::Casino::Uno::Player::ConsolePlayer;
 using ::Casino::Uno::Player::RobotEasyPlayer;
 using ::Casino::Uno::Action::FullCardDeck;
@@ -15,7 +15,7 @@ using ::Casino::Uno::Action::FullCardDeck;
 int main(void) {
 	printf("===Casino Uno\n");
 
-	Game game(4);
+	ConsoleGame game(4);
 	ConsolePlayer alice(std::cin, std::cout);
 	RobotEasyPlayer robots[3];
 	FullCardDeck deck;
