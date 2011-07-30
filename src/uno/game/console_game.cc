@@ -21,25 +21,6 @@ ConsoleGame::ConsoleGame(int max_player_count)
 
 }
 
-void ConsoleGame::joinPlayer(Player *player) {
-	if (players.size() >= max_player_count) {
-		throw std::overflow_error("Game is full");
-	}
-
-	players.joinPlayer(player);
-
-
-	{ //notify about joined player
-		Event::player_joined event;
-		event.player = player;
-		players.notifyOthers(
-			Event::EVENT_PLAYER_JOINED,
-			reinterpret_cast<void*>(&event),
-			player
-		);
-	}
-}
-
 void ConsoleGame::checkUno() {
 	//no previous player was registered, it's the first move
 	if (previous_nonblocked_player == NULL) {

@@ -32,7 +32,6 @@ protected:
 
 public:
 	ConsoleGame(int max_player_count);
-	virtual void joinPlayer(Player *player);
 
 	void start();
 

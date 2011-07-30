@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <stdexcept>
+
 namespace Casino { namespace Uno { namespace Game {
 
 Game::Game(int max_player_count)
@@ -7,6 +9,37 @@ Game::Game(int max_player_count)
 	 current_penalty(0)
 {
 
+}
+
+//
+// PLAYERS
+//
+
+void Game::joinPlayer(Player *player) {
+	if (players.size() >= max_player_count) {
+		throw std::overflow_error("Game is full");
+	}
+
+	players.joinPlayer(player);
+
+
+	{ //notify about joined player
+		Event::player_joined event;
+		event.player = player;
+		players.notifyOthers(
+			Event::EVENT_PLAYER_JOINED,
+			reinterpret_cast<void*>(&event),
+			player
+		);
+	}
+}
+
+/**
+ * @todo don't expose addCard this way,
+ * dependency inject deck instead.
+ */
+void Game::addCardToDeck(Card *card) {
+	deck.addCard(card);
 }
 
 //
@@ -32,15 +65,6 @@ void Game::dealPenality(Player* player) {
 void Game::dealCard(Player* player) {
 	Card* top_card = deck.drawCard();
 	player->addAction(top_card);
-}
-
-
-/**
- * @todo don't expose addCard this way,
- * dependency inject deck instead.
- */
-void Game::addCardToDeck(Card *card) {
-	deck.addCard(card);
 }
 
 //

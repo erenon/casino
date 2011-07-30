@@ -4,11 +4,14 @@
 #include "../../common/game/game.h"
 #include "player_list.h"
 #include "action_stack.h"
-#include "../action/action.h"
+//#include "../action/action.h"
+#include "../player/player.h"
+#include "../action/card.h"
 #include "../action/draw.h"
 
 namespace Casino { namespace Uno { namespace Game {
 
+using ::Casino::Uno::Player::Player;
 //CARD_COLOR/VALUE, Draw
 using namespace ::Casino::Uno::Action;
 
@@ -23,6 +26,8 @@ protected:
 
 public:
 	Game(int max_player_count);
+
+	virtual void joinPlayer(Player *player);
 
 	void addCardToDeck(Card *card);
 
