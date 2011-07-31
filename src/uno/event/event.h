@@ -24,7 +24,8 @@ enum EVENT {
 	EVENT_GAME_END,
 	EVENT_UNO_SAID,
 	EVENT_GETS_BLOCKED,
-	EVENT_PLAYER_JOINED
+	EVENT_PLAYER_JOINED,
+	EVENT_PLAYERS_TURN
 };
 
 struct card_played {
@@ -66,6 +67,10 @@ struct gets_blocked {
 };
 
 struct player_joined {
+	Player* player;
+};
+
+struct players_turn {
 	Player* player;
 };
 
