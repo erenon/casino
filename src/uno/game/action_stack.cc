@@ -34,12 +34,39 @@ void ActionStack::shufflePlayedIntoDeck() {
 	played.clear();
 }
 
+void ActionStack::addCard(Card *card) {
+	deck.push_back(card);
+}
+
 void ActionStack::shuffleDeck() {
 	shuffle(deck);
 }
 
-void ActionStack::addCard(Card *card) {
-	deck.push_back(card);
+void ActionStack::playOutFirstCard() {
+	Card* top_card;
+	bool card_ok = false;
+
+	while (!card_ok) {
+		top_card = drawCard();
+		CARD_COLOR color = top_card->getColor();
+		CARD_VALUE value = top_card->getValue();
+
+		if (
+			color != CARD_COLOR_BLACK
+		&&  value != CARD_VALUE_BLOCK
+		&&  value != CARD_VALUE_PLUSTWO
+		&&  value != CARD_VALUE_REVERSE
+		) {
+			//card ok, play out
+			last_played_color = top_card->getColor();
+			last_played_value = top_card->getValue();
+			addCardToPlayed(top_card);
+			card_ok = true;
+		} else {
+			//!SimpleCard, take it back
+			addCard(top_card);
+		}
+	}
 }
 
 void ActionStack::addCardToPlayed(Card *card) {

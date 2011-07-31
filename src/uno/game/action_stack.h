@@ -18,14 +18,15 @@ protected:
 	void shuffle(std::deque<Card *> &toShuffle);
 	void shufflePlayedIntoDeck();
 public:
-	void shuffleDeck();
+	virtual ~ActionStack() {};
 	void addCard(Card *card);
+	void shuffleDeck();
+	void playOutFirstCard();
 	void addCardToPlayed(Card *card);
 	Card* drawCard();
-	//Card *lastPlayedCard();
+
 	CARD_COLOR last_played_color;
 	CARD_VALUE last_played_value;
-	virtual ~ActionStack() {};
 };
 
 }}} //namespace
