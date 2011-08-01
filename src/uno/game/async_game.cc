@@ -158,11 +158,18 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 
 	// determine next player
 	Player* next_player;
-	do {
+	bool next_player_found = false;
+
+	while (!next_player_found) {
 		std::cout << ".";
 		players.next();
 		next_player = players.getCurrentPlayer();
-	} while (next_player->isBlocked() == true);
+		if (next_player->isBlocked() == true) {
+			next_player->unblock();
+		} else {
+			next_player_found = true;
+		}
+	}
 
 	{   // notify about the next player
 		Event::players_turn event;
