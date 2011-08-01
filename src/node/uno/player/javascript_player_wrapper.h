@@ -19,6 +19,7 @@ public:
 	static void Initialize(Handle<Object> target);
 	static Handle<Value> New(const Arguments &args);
 	static Handle<Value> PlayCard(const Arguments &args);
+	static Handle<Value> Draw(const Arguments &args);
 	static Handle<Value> Dispose(const Arguments &args);
 
 	JavascriptPlayer* getNativePlayer();

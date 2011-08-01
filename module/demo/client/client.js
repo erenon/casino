@@ -87,6 +87,15 @@ var table = function() {
             areas = a;
         },
         
+        init: function() {
+            var drawButton = $('<a></a>');
+            drawButton.html('Draw');
+            drawButton.click(function(){
+                socket.emit('play_draw');
+            });
+            areas.buttons.append(drawButton);
+        },
+        
         addPlayerCard: function(card) {
             var li = $('<li></li>');
             li.html(cardBuilder(card));
@@ -118,9 +127,12 @@ $(document).ready(function() {
     table.setAreas(
     { 
         playerCards: $('#playerCards'),
-        infoBar: $('#infoBar')
+        infoBar: $('#infoBar'),
+        buttons: $('#buttons')
     }
     );
+    
+    table.init();
 });
 
 var player = function() {

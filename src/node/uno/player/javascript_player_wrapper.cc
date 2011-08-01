@@ -3,8 +3,6 @@
 #include <string>
 #include <stdexcept>
 
-#include <iostream>
-
 namespace Casino { namespace Node { namespace Uno { namespace Player {
 
 #define REQ_OBJ_ARG(I)                                                  \
@@ -25,6 +23,7 @@ void JavascriptPlayerWrapper::Initialize(Handle<Object> target) {
 	t->InstanceTemplate()->SetInternalFieldCount(1);
 
 	NODE_SET_PROTOTYPE_METHOD(t, "playCard", PlayCard);
+	NODE_SET_PROTOTYPE_METHOD(t, "draw", Draw);
 	NODE_SET_PROTOTYPE_METHOD(t, "dispose", Dispose);
 
 	target->Set(String::NewSymbol("Player"), t->GetFunction());
@@ -45,7 +44,38 @@ Handle<Value> JavascriptPlayerWrapper::PlayCard(const Arguments &args) {
 	HandleScope scope;
 
 	JavascriptPlayerWrapper* wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(args.This());
-	wrapper->player->playCard(args);
+
+	try {
+		wrapper->player->playCard(args);
+	} catch (std::invalid_argument &e) {
+		return ThrowException(Exception::TypeError(
+            String::New(e.what())
+		));
+	} catch (std::domain_error &e) {
+		return ThrowException(Exception::Error(
+            String::New(e.what())
+		));
+	}
+
+	return scope.Close(Undefined());
+}
+
+Handle<Value> JavascriptPlayerWrapper::Draw(const Arguments &args) {
+	HandleScope scope;
+
+	JavascriptPlayerWrapper* wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(args.This());
+
+	try {
+		wrapper->player->draw();
+	} catch (std::invalid_argument &e) {
+		return ThrowException(Exception::TypeError(
+            String::New(e.what())
+		));
+	} catch (std::domain_error &e) {
+		return ThrowException(Exception::Error(
+            String::New(e.what())
+		));
+	}
 
 	return scope.Close(Undefined());
 }

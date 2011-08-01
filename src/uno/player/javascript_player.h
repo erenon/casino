@@ -31,7 +31,8 @@ public:
 	virtual void setGame(AsyncGame* game);
 	virtual Local<Function> getCallback(const char* cbname);
 	virtual void addAction(Action *action);
-	Handle<Value> playCard(const Arguments &args);
+	void playCard(const Arguments &args);
+	void draw();
 	virtual Action* pickAction(ConsoleGame *game);
 	virtual Action* pickAction(AsyncGame *game);
 	virtual Local<Object> createCardObject(Card* card);

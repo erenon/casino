@@ -31,6 +31,14 @@ var Player = function(session_id) {
         }
     });
     
+    socket.on('play_draw', function() {
+        try {
+            native_player.draw();
+        } catch (e) {
+            socket.emit('invalid_move', e.message);
+        }    
+    });
+    
     /**
      * the NativePlayer will bind native methods
      * to the given object (this).

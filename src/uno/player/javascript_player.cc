@@ -73,10 +73,12 @@ void JavascriptPlayer::addAction(Action *action) {
 	}
 }
 
-Handle<Value> JavascriptPlayer::playCard(const Arguments &args) {
+void JavascriptPlayer::playCard(const Arguments &args) {
 	HandleScope scope;
 
-	REQ_OBJ_ARG(0);
+    if (args.Length() <= 0 || !args[0]->IsObject()) {
+        throw std::invalid_argument("Argument 0 must be an object");
+    }
 
 	Local<Object> picked_card = args[0]->ToObject();
 
@@ -84,25 +86,21 @@ Handle<Value> JavascriptPlayer::playCard(const Arguments &args) {
 	Local<String> key_value = String::NewSymbol("value");
 
 	if (picked_card->Has(key_color) == false) {
-		return ThrowException(Exception::TypeError(
-            String::New("Malformed card object, no color property.")));
+		throw std::invalid_argument("Malformed card object, no color property.");
 	}
 
 	if (picked_card->Has(key_value) == false) {
-		return ThrowException(Exception::TypeError(
-            String::New("Malformed card object, no value property.")));
+		throw std::invalid_argument("Malformed card object, no value property.");
 	}
 
 	Local<Value> property_color = picked_card->Get(key_color);
 	if (property_color->IsString() == false) {
-		return ThrowException(Exception::TypeError(
-            String::New("Card color must be string.")));
+		throw std::invalid_argument("Card color must be string.");
 	}
 
 	Local<Value> property_value = picked_card->Get(key_value);
 	if (property_value->IsString() == false) {
-		return ThrowException(Exception::TypeError(
-            String::New("Card value must be string.")));
+		throw std::invalid_argument("Card value must be string.");
 	}
 
 	CARD_COLOR picked_color;
@@ -111,8 +109,7 @@ Handle<Value> JavascriptPlayer::playCard(const Arguments &args) {
 			*String::AsciiValue(property_color->ToString())
 		);
 	} catch (std::invalid_argument &e) {
-		return ThrowException(Exception::Error(
-            String::New(e.what())));
+		throw;
 	}
 
 	CARD_VALUE picked_value;
@@ -121,8 +118,7 @@ Handle<Value> JavascriptPlayer::playCard(const Arguments &args) {
 			*String::AsciiValue(property_value->ToString())
 		);
 	} catch (std::invalid_argument &e) {
-		return ThrowException(Exception::Error(
-            String::New(e.what())));
+		throw;
 	}
 
 	card_iterator action;
@@ -136,13 +132,23 @@ Handle<Value> JavascriptPlayer::playCard(const Arguments &args) {
 			try {
 				game->takeAction(this, *action);
 			} catch (std::invalid_argument &message) {
-				return ThrowException(Exception::Error(
-					String::New(message.what())));
+				throw std::domain_error(message.what());
 			}
 		}
 	}
 
-	return scope.Close(Boolean::New(true));
+}
+
+void JavascriptPlayer::draw() {
+	HandleScope scope;
+
+	Action* draw = game->getDrawAction();
+
+	try {
+		game->takeAction(this, draw);
+	} catch (std::invalid_argument &message) {
+		throw;
+	}
 }
 
 Action* JavascriptPlayer::pickAction(ConsoleGame *game) {
