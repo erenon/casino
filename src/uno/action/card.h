@@ -43,23 +43,15 @@ protected:
 	CARD_COLOR color;
 	CARD_VALUE value;
 public:
-	Card() {}
-	Card(CARD_COLOR color, CARD_VALUE value)
-		:color(color),
-		 value(value)
-	{}
+	Card();
+	Card(CARD_COLOR color, CARD_VALUE value);
 
-	virtual bool isDisposeable() {
-		return true;
-	}
+	virtual bool isDisposeable();
+	virtual CARD_COLOR getColor();
+	virtual CARD_VALUE getValue();
 
-	virtual CARD_COLOR getColor() {
-		return color;
-	}
-
-	virtual CARD_VALUE getValue() {
-		return value;
-	}
+	static CARD_COLOR stringToColor(const char* color_string);
+	static CARD_VALUE stringToValue(const char* value_string);
 };
 
 }}} //namespace
