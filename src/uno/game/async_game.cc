@@ -4,6 +4,9 @@
 #include "../action/simple_card.h"
 
 #include <string>
+#include <stdexcept>
+
+#include <iostream>
 
 namespace Casino { namespace Uno { namespace Game {
 
@@ -119,7 +122,7 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 	is_valid = isValidMove(player, action, message);
 
 	if (!is_valid) {
-		throw message;
+		throw std::invalid_argument(message.c_str());
 	}
 
 	if (action->isDisposeable()) {
@@ -156,9 +159,10 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 	// determine next player
 	Player* next_player;
 	do {
+		std::cout << ".";
 		players.next();
 		next_player = players.getCurrentPlayer();
-	} while (next_player->isBlocked() == false);
+	} while (next_player->isBlocked() == true);
 
 	{   // notify about the next player
 		Event::players_turn event;
