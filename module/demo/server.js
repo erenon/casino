@@ -66,14 +66,14 @@ io.sockets.on('connection', function(socket) {
     });    
     
     socket.on('start_game', function(data) {
-        var game = new casino.game(4),
+        var game = new casino.Game(4),
             session_id = players.socketToSession[socket.id];
             p = new Player(session_id);
         
         game.joinPlayer(p);
         game.addBot(3);
         game.start();
-        game.dispose();
+        //game.dispose();
     });
     
 /*    //send
