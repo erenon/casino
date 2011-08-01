@@ -5,6 +5,7 @@
 #include <cstdlib>
 
 #include "uno/game/game_wrapper.h"
+#include "uno/player/javascript_player_wrapper.h"
 
 using namespace v8;
 using namespace node;
@@ -26,6 +27,7 @@ void init( Handle<Object> target ) {
     NODE_SET_METHOD(target, "hello", Hello);
 
     Casino::Node::Uno::Game::GameWrapper::Initialize(target);
+    Casino::Node::Uno::Player::JavascriptPlayerWrapper::Initialize(target);
 }
 
 //NODE_MODULE(casino, Casino::Node::Uno::Game::GameWrapper::Initialize);
