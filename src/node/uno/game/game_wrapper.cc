@@ -5,20 +5,18 @@
 #include <string>
 
 #include "game_wrapper.h"
-#include "../../../uno/game/game.h"
-#include "../../../uno/player/player.h"
+#include "../player/javascript_player_wrapper.h"
 #include "../../../uno/player/javascript_player.h"
-#include "../../../uno/player/robot_easy_player.h"
+#include "../../../uno/player/async_robot_easy_player.h"
 #include "../../../uno/action/full_card_deck.h"
 
 namespace Casino { namespace Node { namespace Uno { namespace Game {
 
 using namespace v8;
 using namespace node;
-using ::Casino::Uno::Game::Game;
-using ::Casino::Uno::Player::Player;
-using ::Casino::Uno::Player::JavascriptPlayer;
-using ::Casino::Uno::Player::RobotEasyPlayer;
+using ::Casino::Node::Uno::Player::JavascriptPlayerWrapper;
+using ::Casino::Node::Uno::Player::JavascriptPlayer;
+using ::Casino::Uno::Player::AsyncRobotEasyPlayer;
 using ::Casino::Uno::Action::FullCardDeck;
 
 #define REQ_INT_ARG(I)                                                  \
@@ -36,7 +34,7 @@ using ::Casino::Uno::Action::FullCardDeck;
 GameWrapper::GameWrapper(int max_player_count)
 	:bot_count(0)
 {
-	game = new Game(max_player_count);
+	game = new AsyncGame(max_player_count);
 
 	deck = new FullCardDeck();
 	deck->fillGameWithCards(game);
@@ -49,16 +47,15 @@ void GameWrapper::Initialize(Handle<Object> target) {
 	Local<FunctionTemplate> t = FunctionTemplate::New(New);
 	t->InstanceTemplate()->SetInternalFieldCount(1);
 
-	//NODE_SET_METHOD(t, "createGame", CreateGame);
 	NODE_SET_PROTOTYPE_METHOD(t, "joinPlayer", JoinPlayer);
+	NODE_SET_PROTOTYPE_METHOD(t, "addBot", AddBot);
 	NODE_SET_PROTOTYPE_METHOD(t, "start", Start);
 	NODE_SET_PROTOTYPE_METHOD(t, "dispose", Dispose);
-	NODE_SET_PROTOTYPE_METHOD(t, "addBot", AddBot);
 
-	target->Set(String::NewSymbol("game"), t->GetFunction());
+	target->Set(String::NewSymbol("Game"), t->GetFunction());
 }
 
-Handle<Value> GameWrapper::New( const Arguments &args ) {
+Handle<Value> GameWrapper::New(const Arguments &args) {
 	HandleScope scope;
 
 	REQ_INT_ARG(0);
@@ -78,12 +75,17 @@ Handle<Value> GameWrapper::JoinPlayer(const Arguments &args) {
 
 	REQ_OBJ_ARG(0);
 
-	JavascriptPlayer* player = new JavascriptPlayer(
+	Handle<Object> jsplayer_wrapper = args[0]->ToObject()->Get(String::New("native_player"))->ToObject();
+	JavascriptPlayerWrapper* player_wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(jsplayer_wrapper);
+	JavascriptPlayer* player = player_wrapper->getNativePlayer();
+
+	/*JavascriptPlayerWrapper* player = new JavascriptPlayerWrapper(
 		args[0]->ToObject()
-	);
+	);*/
 
 	try {
 		wrapper->game->joinPlayer(player);
+		player->setGame(wrapper->game);
 		wrapper->players.push_back(player);
 	} catch (std::overflow_error e) {
 		delete player;
@@ -107,7 +109,7 @@ Handle<Value> GameWrapper::AddBot(const Arguments &args) {
 	HandleScope scope;
 	GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
 	for (int i = 0; i < count; i++) {
-		RobotEasyPlayer *robot = new RobotEasyPlayer();
+		AsyncRobotEasyPlayer *robot = new AsyncRobotEasyPlayer();
 
 		{ // hack ahead. 49: ASCII 0
 			std::string name = "robot ";
@@ -117,6 +119,7 @@ Handle<Value> GameWrapper::AddBot(const Arguments &args) {
 
 		try {
 			wrapper->game->joinPlayer(robot);
+			robot->setGame(wrapper->game);
 			wrapper->players.push_back(robot);
 			wrapper->bot_count++;
 		} catch (std::overflow_error e) {
@@ -138,15 +141,6 @@ Handle<Value> GameWrapper::Start(const Arguments &args) {
 	wrapper->game->start();
 
 	return scope.Close(Boolean::New(true));
-}
-
-Handle<Value> GameWrapper::IsValidMove(const Arguments &args) {
-	HandleScope scope;
-	//GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
-
-	bool isValid = true;
-
-	return scope.Close(Boolean::New(isValid));
 }
 
 Handle<Value> GameWrapper::Dispose(const Arguments &args) {
