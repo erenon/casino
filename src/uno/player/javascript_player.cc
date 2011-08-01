@@ -1,20 +1,21 @@
 #include <node/v8.h>
 #include <node/node.h>
 #include <string>
+#include <assert.h>
+#include <stdexcept>
 
 #include "javascript_player.h"
 #include "../action/action.h"
 #include "../action/card.h"
-#include "../game/game.h"
+#include "../game/async_game.h"
 #include "../event/event.h"
-
 
 namespace Casino { namespace Uno { namespace Player {
 
 using namespace v8;
+using ::Casino::Uno::Game::AsyncGame;
 using ::Casino::Uno::Player::Player;
-using ::Casino::Uno::Action::Action;
-using ::Casino::Uno::Action::Card;
+//Action, Card, CARD_COLOR/VALUE
 using namespace ::Casino::Uno::Action;
 namespace Event = ::Casino::Uno::Event;
 
@@ -24,10 +25,22 @@ namespace Event = ::Casino::Uno::Event;
             String::New("Argument " #I " must be an integer")));        \
     }
 
+#define REQ_OBJ_ARG(I)                                                  \
+    if (args.Length() <= (I) || !args[I]->IsObject()) {                 \
+        return ThrowException(Exception::TypeError(                     \
+            String::New("Argument " #I " must be an object")));         \
+    }
+
 JavascriptPlayer::JavascriptPlayer(Handle<Object> jsplayer) {
 	HandleScope scope;
 	session_id = *String::AsciiValue(jsplayer->Get(String::New("session_id"))->ToString());
 	this->jsplayer = Persistent<Object>::New(jsplayer);
+
+	setJavascriptCallbacks();
+}
+
+void JavascriptPlayer::setGame(AsyncGame* game) {
+	this->game = game;
 }
 
 Local<Function> JavascriptPlayer::getCallback(const char* cbname) {
@@ -37,16 +50,110 @@ Local<Function> JavascriptPlayer::getCallback(const char* cbname) {
 	);
 
 	if (!cb->IsFunction()) {
-		throw "callback not found";
+		std::string error("callback not found: ");
+		error.append(cbname);
+		throw std::invalid_argument(error.c_str());
 	}
 
 	return scope.Close(cb);
 }
+
+void JavascriptPlayer::addAction(Action *action) {
+	Player::addAction(action);
+
+	assert(action->isDisposeable() == true);
+	Card* card = dynamic_cast<Card *>(action);
+	Handle<Value> argument = createCardObject(card);
+
+	Local<Function> addaction_cb = getCallback("addAction");
+	TryCatch try_catch;
+	addaction_cb->Call(Context::GetCurrent()->Global(), 1, &argument);
+	if (try_catch.HasCaught()) {
+		node::FatalException(try_catch);
+	}
+}
+
+Handle<Value> JavascriptPlayer::playCard(const Arguments &args) {
+	HandleScope scope;
+
+	REQ_OBJ_ARG(0);
+
+	Local<Object> picked_card = args[0]->ToObject();
+
+	Local<String> key_color = String::NewSymbol("color");
+	Local<String> key_value = String::NewSymbol("value");
+
+	if (picked_card->Has(key_color) == false) {
+		return ThrowException(Exception::TypeError(
+            String::New("Malformed card object, no color property.")));
+	}
+
+	if (picked_card->Has(key_value) == false) {
+		return ThrowException(Exception::TypeError(
+            String::New("Malformed card object, no value property.")));
+	}
+
+	Local<Value> property_color = picked_card->Get(key_color);
+	if (property_color->IsString() == false) {
+		return ThrowException(Exception::TypeError(
+            String::New("Card color must be string.")));
+	}
+
+	Local<Value> property_value = picked_card->Get(key_value);
+	if (property_value->IsString() == false) {
+		return ThrowException(Exception::TypeError(
+            String::New("Card value must be string.")));
+	}
+
+	CARD_COLOR picked_color;
+	try {
+		picked_color = Card::stringToColor(
+			*String::AsciiValue(property_color->ToString())
+		);
+	} catch (std::invalid_argument &e) {
+		return ThrowException(Exception::Error(
+            String::New(e.what())));
+	}
+
+	CARD_VALUE picked_value;
+	try {
+		picked_value = Card::stringToValue(
+			*String::AsciiValue(property_value->ToString())
+		);
+	} catch (std::invalid_argument &e) {
+		return ThrowException(Exception::Error(
+            String::New(e.what())));
+	}
+
+	card_iterator action;
+	for (action = hand.begin(); action != hand.end(); action++) {
+		Card* card = static_cast<Card*>(*action);
+
+		// same color and value
+		if (card->getColor() == picked_color
+		&&  card->getValue() == picked_value
+		) {
+			try {
+				game->takeAction(this, *action);
+			} catch (std::invalid_argument &message) {
+				return ThrowException(Exception::Error(
+					String::New(message.what())));
+			}
+		}
+	}
+
+	return scope.Close(Boolean::New(true));
+}
+
+Action* JavascriptPlayer::pickAction(ConsoleGame *game) {
+	throw std::domain_error("JavascriptPlayer::pickAction not implemented");
+}
+
 /**
  * @todo handle invalid move
  */
-Action* JavascriptPlayer::pickAction(Game *game) {
-	HandleScope scope;
+Action* JavascriptPlayer::pickAction(AsyncGame *game) {
+	/*HandleScope scope;
 	Local<Function> pickAction_cb = getCallback("pickAction");
 
 	Handle<Value> picked_index;
@@ -72,21 +179,13 @@ Action* JavascriptPlayer::pickAction(Game *game) {
 		}
 	} else {
 		// invalid
-	}
+	}*/
+
+	return hand[0];
 
 	/** @todo add color picking */
 
-	return picked;
-}
-
-Handle<Value> pickActionAfter(const Arguments &args) {
-	REQ_INT_ARG(0);
-
-	int picked_index = args[0]->Int32Value();
-
-	throw picked_index;
-
-	return Undefined();
+	//return picked;
 }
 
 Local<Object> JavascriptPlayer::createCardObject(Card* card) {
@@ -126,7 +225,7 @@ Local<Object> JavascriptPlayer::createCardObject(Card* card) {
 	const char* value = NULL;
 #define CASE_CARD_VALUE(V,O) 	\
 	case CARD_VALUE_##V: 		\
-		value = O; \
+		value = O; 				\
 		break;
 
 	switch (card->getValue()) {
@@ -175,8 +274,6 @@ Local<Object> JavascriptPlayer::createPlayerObject(Player* player) {
 
 void JavascriptPlayer::notify(EVENT event_type, void* event) {
 	HandleScope scope;
-
-	Local<Function> notify_cb = getCallback("notify");
 
 	Local<Object> jsevent = Object::New();
 	const char* jstype = "";
@@ -341,7 +438,20 @@ void JavascriptPlayer::notify(EVENT event_type, void* event) {
 		break;
 	}
 
+	case Event::EVENT_PLAYERS_TURN:
+	{
+		jstype = "players_turn";
+		Event::players_turn* e = reinterpret_cast<Event::players_turn*>(event);
+
+		jsevent->Set(
+			String::NewSymbol("player"),
+			createPlayerObject(e->player)
+		);
+		break;
+	}
+
 	default:
+		jstype = "unknow_event";
 		break;
 
 	}
@@ -354,12 +464,30 @@ void JavascriptPlayer::notify(EVENT event_type, void* event) {
 	Handle<Value> argument = jsevent;
 
 	{   // call notify_cb
+		Local<Function> notify_cb = getCallback("notify");
 		TryCatch try_catch;
 		notify_cb->Call(Context::GetCurrent()->Global(), 1, &argument);
 		if (try_catch.HasCaught()) {
 			node::FatalException(try_catch);
 		}
 	}
+}
+
+void JavascriptPlayer::setJavascriptCallbacks() {
+	Local<Function> registercb_cb = getCallback("registerCallback");
+
+	// play card callback
+	/*Local<FunctionTemplate> playCard_cb = FunctionTemplate::New(playCard);
+
+	Local<Value> arguments[2];
+	arguments[0] = String::NewSymbol("playCard");
+	arguments[1] = playCard_cb->GetFunction();
+
+	TryCatch try_catch;
+	registercb_cb->Call(Context::GetCurrent()->Global(), 2, arguments);
+	if (try_catch.HasCaught()) {
+		node::FatalException(try_catch);
+	}*/
 }
 
 #undef REQ_INT_ARG
