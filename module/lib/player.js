@@ -1,33 +1,43 @@
+var NativePlayer = require('./casino').Player;
+
 var Player = function(session_id) {
     this.session_id = session_id;
-    var that = this;
-    
-    this.socket = function() {
-        return players.sessionToSocket[that.session_id];
+    var that = this,
+        socket = players.sessionToSocket[that.session_id],
+        native_player;
+        
+    this.registerCallback = function(cb_name, cb) {
+        console.log('register cb: ', cb_name);
+        this[cb_name] = cb;
     };
     
     this.notify = function(event) {
-        var socket = that.socket();
-        socket.emit('notify', event);
+        var type = event.event_type;
+        delete event.event_type;
+        socket.emit(type, event);
     };
     
-    this.pickAction = function(callback) {
-        console.log('picking action...');
-        
-        var socket = that.socket();
-        socket.emit('pick_action', function(picked_index) {
-            console.log(picked_index);
-            
-            try {
-                callback(picked_index);
-            } catch (e) {
-                console.log('failed to call javascript player action pick cb');
-            }
-        });
-        
-        console.log('+-----+');
-        return 0;
+    this.addAction = function(action) {
+        //console.log('action added: ', action);
+        socket.emit('action_added', action);
     };
+    
+    socket.on('play_card', function(card) {
+        console.log(card);
+        try {
+            native_player.playCard(card);
+        } catch (e) {
+            socket.emit('invalid_move', e.message);
+        }
+    });
+    
+    /**
+     * the NativePlayer will bind native methods
+     * to the given object (this).
+     */
+    native_player = new NativePlayer(this);
+    
+    this.native_player = native_player;
 };
 
 var players = {};
