@@ -62,7 +62,7 @@ CARD_VALUE Card::stringToValue(const char* value_string) {
 	m["block"] = CARD_VALUE_BLOCK;
 	m["reverse"] = CARD_VALUE_REVERSE;
 	m["+2"] = CARD_VALUE_PLUSTWO;
-	m["colorpick"] = CARD_VALUE_COLORPICK;
+	m["colorpicker"] = CARD_VALUE_COLORPICK;
 	m["+4"] = CARD_VALUE_PLUSFOUR;
 
 	std::string needed(value_string);
