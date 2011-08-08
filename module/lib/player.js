@@ -6,6 +6,13 @@ var Player = function(session_id) {
         socket = players.sessionToSocket[that.session_id],
         native_player;
         
+    if (!socket) {
+        throw {
+            name: 'OutOfBounds',
+            message: 'Given session id is not found in session to socket map'
+        };
+    }
+        
     this.registerCallback = function(cb_name, cb) {
         console.log('register cb: ', cb_name);
         this[cb_name] = cb;
@@ -22,13 +29,18 @@ var Player = function(session_id) {
         socket.emit('action_added', action);
     };
     
-    socket.on('play_card', function(card) {
-        console.log(card);
+    socket.on('play_card', function(card, status_cb) {
+        var isValid = true,
+            message;
+    
         try {
             native_player.playCard(card);
         } catch (e) {
-            socket.emit('invalid_move', e.message);
+            isValid = false;
+            message = e.message;
         }
+        
+        status_cb(isValid, message);
     });
     
     socket.on('play_draw', function() {
