@@ -29,18 +29,18 @@ public:
 
 	virtual void joinPlayer(Player *player);
 
-	void addCardToDeck(Card *card);
+	virtual void addCardToDeck(Card *card);
 
-	bool isPenalty();
-	void increasePenality(int addition);
-	void dealPenality(Player* player);
-	void dealCard(Player* player);
+	virtual bool isPenalty();
+	virtual void increasePenality(int addition);
+	virtual void dealPenality(Player* player);
+	virtual void dealCard(Player* player);
 
-	void blockNextPlayer();
-	void reverseTurn();
-	void drawCards();
-	Draw *getDrawAction();
-	void setLastColor(CARD_COLOR color);
+	virtual void blockNextPlayer();
+	virtual void reverseTurn();
+	virtual void drawCards();
+	virtual Draw *getDrawAction();
+	virtual void setLastColor(CARD_COLOR color);
 };
 
 }}} //namespace
