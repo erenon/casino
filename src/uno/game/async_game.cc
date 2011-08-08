@@ -171,6 +171,16 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 		}
 	}
 
+	if (next_player->getCardCount() == 0) {
+		// this player wins
+		Event::game_end event;
+		event.winner = players.getCurrentPlayer();
+		players.notifyAll(
+			Event::EVENT_GAME_END,
+			reinterpret_cast<void*>(&event)
+		);
+	}
+
 	{   // notify about the next player
 		Event::players_turn event;
 		event.player = players.getCurrentPlayer();
