@@ -6,20 +6,6 @@ socket.on('connect', function(event) {
     });
 });
 
-/*socket.on('notify', function(event) {
-    console.log(event);
-    
-    switch (event.event_type) {
-        case 'players_turn':
-            if (event.player.name = player.getName()) {
-                console.log('your turn');
-            }
-            break;
-        default:
-            break;
-    };
-});*/
-
 socket.on('game_start', function(event) {
     console.log(event);
     table.addInfo('The Game has begun. First card is: ' 
@@ -29,9 +15,47 @@ socket.on('game_start', function(event) {
     );
 });
 
-socket.on('action_added', function(action) {
-    //console.log(action);
-    table.addPlayerCard(action);
+socket.on('card_played', function(event) {
+    var card = event.played_card,
+        name = event.played_by.name;
+    table.addInfo('Card: '+card.color+' / '+card.value+' played by '+name);
+});
+
+socket.on('game_end', function(event) {
+    table.addInfo('Game ended. Winner: ' + event.winner.name);
+});
+
+socket.on('colorpick', function(event) {
+    var color = event.color,
+        name = event.picked_by.name;
+    table.addInfo(name + ' picked color ' + color);
+});
+
+socket.on('draw_card', function(event) {
+    var count = event.card_count,
+        name = event.player.name;
+        
+    if (count == 1) {
+        table.addInfo(name + ' draws a card');
+    } else {
+        table.addInfo(name + ' draws ' + count + ' cards');
+    }
+});
+
+socket.on('gets_blocked', function(event) {
+    var blocked = event.gets_blocked.name,
+        blocker = event.blocked_by.name;
+    table.addInfo(blocked + ' gets blocked by ' + blocker);
+});
+
+socket.on('uno_said', function(event) {
+    var name = event.said_by.name,
+        type = event.type;
+    table.addInfo(name + ' is on UNO (' + type + ')');
+});
+
+socket.on('player_joined', function(event) {
+    table.addInfo(event.player.name + ' joined to the game');
 });
 
 socket.on('players_turn', function(event) {
@@ -43,27 +67,19 @@ socket.on('players_turn', function(event) {
     }
 });
 
-socket.on('invalid_move', function(message) {
-    table.addInfo('Invalid move: ' + message);
-});
-
-socket.on('card_played', function(event) {
-    var card = event.played_card,
-        name = event.played_by.name;
-    table.addInfo('Card: '+card.color+' / '+card.value+' played by '+name);
-});
-
-/*socket.on('pick_action', function(callback) {
-    callback(5);
-});*/
-
-/*socket.on('game_start', function(event) {
+socket.on('unknow_event', function(event) {
     console.log(event);
+    table.addInfo('[UNKNOWN EVENT]');
 });
 
-socket.on('player_joined', function(obj){
-    console.log(obj);
-});*/
+
+
+socket.on('action_added', function(action) {
+    //console.log(action);
+    table.addPlayerCard(action);
+});
+
+
 
 var table = function() {
     var areas,
@@ -73,8 +89,14 @@ var table = function() {
         div.html('color: ' + card.color + ' / value: ' + card.value);
         div.data('card', card);
         div.click(function(){
-            socket.emit('play_card', div.data('card'));
-            div.closest('li').remove();
+            socket.emit('play_card', div.data('card'), function(isValid, message) {
+                if (isValid === true) {
+                    div.closest('li').remove();
+                } else {
+                    table.addInfo('Invalid move: ' + message);
+                }
+            });
+            
         });
         
         return div;
