@@ -17,7 +17,7 @@ protected:
     GameConfig config;
 
 public:
-    AsyncGame(int max_player_count);
+    explicit AsyncGame(int max_player_count);
     void start();
     bool isValidMove(Player* player, Action* action, std::string &message);
     void takeAction(Player* player, Action* action);

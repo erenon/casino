@@ -25,7 +25,7 @@ namespace Event = ::Uno::Event;
 class AsyncPlayer :public Player {
 
 public:
-    AsyncPlayer(Handle<Object> jsplayer);
+    explicit AsyncPlayer(Handle<Object> jsplayer);
     virtual void setGame(AsyncGame* game);
     virtual Local<Function> getCallback(const char* cbname);
     virtual void addCard(Card *action);
@@ -39,9 +39,6 @@ protected:
     std::string session_id;    /**< to ensure unique players (not implemented) */
     Persistent<Object> jsplayer;
     AsyncGame* game;
-
-private:
-    AsyncPlayer(AsyncPlayer &player) {}
 };
 
 }}  // namespace

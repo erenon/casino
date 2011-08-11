@@ -25,7 +25,7 @@ protected:
     bool blocked;
 public:
     Player();
-    Player(const char *name);
+    explicit Player(const char *name);
     virtual void setName(const char *name);
     virtual std::string getName();
 

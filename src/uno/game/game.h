@@ -25,7 +25,7 @@ protected:
     Draw draw_action;
 
 public:
-    Game(int max_player_count);
+    explicit Game(int max_player_count);
     virtual ~Game() {};
 
     virtual void joinPlayer(Player *player);

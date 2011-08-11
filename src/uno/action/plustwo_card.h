@@ -12,7 +12,7 @@ using ::Uno::Action::CARD_VALUE;
 class PlustwoCard :public Card {
 
 public:
-    PlustwoCard(CARD_COLOR color);
+	explicit PlustwoCard(CARD_COLOR color);
     void takeAction(Game* game);
 };
 

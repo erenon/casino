@@ -27,7 +27,7 @@ public:
 protected:
     AsyncPlayer* player;
 
-    JavascriptPlayerWrapper(Handle<Object> jsplayer);
+    explicit JavascriptPlayerWrapper(Handle<Object> jsplayer);
 };
 
 }}}  // namespace

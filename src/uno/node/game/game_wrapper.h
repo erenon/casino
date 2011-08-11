@@ -19,7 +19,7 @@ using ::Uno::Player::Player;
 class GameWrapper :public ObjectWrap {
 
 public:
-    GameWrapper(int max_player_count);
+    explicit GameWrapper(int max_player_count);
 
     static void Initialize(Handle<Object> target);
     static Handle<Value> New(const Arguments &args);
