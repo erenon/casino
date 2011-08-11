@@ -26,7 +26,7 @@ class Game {
 
  public:
     explicit Game(int max_player_count);
-    virtual ~Game() {};
+    virtual ~Game() {}
 
     virtual void joinPlayer(Player *player);
     virtual int getPlayerCount();

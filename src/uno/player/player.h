@@ -39,7 +39,7 @@ class Player {
     virtual bool isBlocked();
     virtual void block();
     virtual void unblock();
-    virtual ~Player() {};
+    virtual ~Player() {}
 };
 
 }}  // namespace
