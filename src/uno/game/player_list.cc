@@ -9,9 +9,8 @@ namespace Uno { namespace Game {
 using ::Uno::Player::Player;
 
 PlayerList::PlayerList()
-    :turn_direction_normal(true),
-     prev_player(NULL)
-{
+	:turn_direction_normal(true),
+	 prev_player(NULL) {
     current_player = players.begin();
 }
 
@@ -93,4 +92,4 @@ void PlayerList::reverseTurn() {
     turn_direction_normal = !turn_direction_normal;
 }
 
-}} //namespace
+}}  // namespace

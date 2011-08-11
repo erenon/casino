@@ -14,4 +14,4 @@ void Draw::takeAction(Game* game) {
     game->drawCards();
 }
 
-}} //namespace
+}}  // namespace

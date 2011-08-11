@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <deque>
 
-//shuffle:
+// shuffle:
 #include <algorithm>
 #include <ctime>
 #include <cstdlib>
@@ -126,13 +126,13 @@ void Deck::playOutFirstCard() {
         &&  value != CARD_VALUE_PLUSTWO
         &&  value != CARD_VALUE_REVERSE
         ) {
-            //card ok, play out
+            // card ok, play out
             last_played_color = top_card->getColor();
             last_played_value = top_card->getValue();
             addCardToPlayed(top_card);
             card_ok = true;
         } else {
-            //!SimpleCard, take it back
+            // !SimpleCard, take it back
             addCard(top_card);
         }
     }
@@ -156,4 +156,4 @@ Card* Deck::drawCard() {
     return top_card;
 }
 
-}} //namespace
+}}  // namespace

@@ -11,8 +11,8 @@ namespace Uno { namespace Game {
 using ::Uno::Player::Player;
 using ::Uno::Action::Action;
 
-class AsyncGame :public ::Uno::Game::Game
-{
+class AsyncGame :public ::Uno::Game::Game {
+
 protected:
     GameConfig config;
 
@@ -24,6 +24,6 @@ public:
     void takeDraw(Player* player);
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_GAME_ASYNC_GAME_H_

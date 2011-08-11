@@ -16,4 +16,4 @@ void PlusfourCard::takeAction(Game* game) {
     WildCard::takeAction(game);
 }
 
-}} //namespace
+}}  // namespace

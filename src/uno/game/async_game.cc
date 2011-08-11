@@ -13,10 +13,7 @@ namespace Event = ::Uno::Event;
 using ::Uno::Action::SimpleCard;
 
 AsyncGame::AsyncGame(int max_player_count)
-    :Uno::Game::Game(max_player_count)
-{
-
-}
+	:Uno::Game::Game(max_player_count) {}
 
 void AsyncGame::start() {
     // prepare deck
@@ -144,7 +141,7 @@ void AsyncGame::takeAction(Player* player, Action* action) {
         deck.last_played_value = played_card->getValue();
         deck.addCardToPlayed(played_card);
 
-        { //notify about played card
+        { // notify about played card
             Event::card_played event;
             SimpleCard played_card(
                 deck.last_played_color,
@@ -165,7 +162,7 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 
     // check for forgotten uno
     /** @todo implement this */
-    //checkUno();
+    // checkUno();
 
     // determine next player
     Player* next_player;
@@ -205,4 +202,4 @@ void AsyncGame::takeDraw(Player* player) {
     takeAction(player, &draw_action);
 }
 
-}} //namespace
+}}  // namespace

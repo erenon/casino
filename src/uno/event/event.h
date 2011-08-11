@@ -5,11 +5,11 @@
 
 namespace Uno { namespace Player {
     class Player;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Action {
     class Card;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Event {
 
@@ -74,6 +74,6 @@ struct players_turn {
     Player* player;
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_EVENT_EVENT_H_

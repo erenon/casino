@@ -10,7 +10,7 @@
 
 namespace Uno { namespace Player {
 
-//Card, CARD_VALUE, WildCard
+// Card, CARD_VALUE, WildCard
 using namespace ::Uno::Action;
 
 AsyncRobotEasyPlayer::AsyncRobotEasyPlayer() {}
@@ -55,7 +55,7 @@ void AsyncRobotEasyPlayer::takeAction() {
     }
 
     if (valid_moves.size() < 1) {
-        //no valid move, draw
+        // no valid move, draw
         game->takeDraw(this);
     } else {
 
@@ -136,4 +136,4 @@ bool AsyncRobotEasyPlayer::compareCardValue(Card* a, Card* b) {
     return value_a < value_b;
 }
 
-}} //namespace
+}}  // namespace

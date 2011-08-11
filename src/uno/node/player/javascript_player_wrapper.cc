@@ -99,4 +99,4 @@ JavascriptPlayerWrapper::~JavascriptPlayerWrapper() {
 
 #undef REQ_OBJ_ARG
 
-}}} //namespace
+}}}  // namespace

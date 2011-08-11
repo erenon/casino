@@ -5,20 +5,20 @@
 
 namespace Uno { namespace Game {
     class Game;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Action {
 
 using ::Uno::Action::Action;
 using ::Uno::Game::Game;
 
-class Draw :public Action
-{
+class Draw :public Action {
+
 public:
     bool isDisposeable();
     void takeAction(Game* game);
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_ACTION_DRAW_H_

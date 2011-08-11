@@ -3,19 +3,19 @@
 
 namespace Uno { namespace Game {
     class Game;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Action {
 
 using ::Uno::Game::Game;
 
-class Action
-{
+class Action {
+
 public:
     virtual bool isDisposeable() = 0;
     virtual void takeAction(Game* game) = 0;
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_ACTION_ACTION_H_

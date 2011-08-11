@@ -29,9 +29,7 @@ using ::Uno::Player::AsyncRobotEasyPlayer;
             String::New("Argument " #I " must be an object")));         \
     }
 
-GameWrapper::GameWrapper(int max_player_count)
-    :bot_count(0)
-{
+GameWrapper::GameWrapper(int max_player_count) :bot_count(0) {
     game = new AsyncGame(max_player_count);
 }
 
@@ -140,7 +138,6 @@ Handle<Value> GameWrapper::Dispose(const Arguments &args) {
     GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
 
     delete wrapper->game;
-    //delete wrapper->deck;
 
     std::list<Player*>::iterator player;
     for (player = wrapper->players.begin(); player != wrapper->players.end(); player++) {
@@ -153,4 +150,4 @@ Handle<Value> GameWrapper::Dispose(const Arguments &args) {
 #undef REQ_INT_ARG
 #undef REQ_OBJ_ARG
 
-}}} //namespace
+}}}  // namespace

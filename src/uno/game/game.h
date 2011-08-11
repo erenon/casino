@@ -10,11 +10,11 @@
 namespace Uno { namespace Game {
 
 using ::Uno::Player::Player;
-//CARD_COLOR/VALUE, Draw
+// CARD_COLOR/VALUE, Draw
 using namespace ::Uno::Action;
 
-class Game
-{
+class Game {
+
 protected:
     int max_player_count;
 
@@ -42,6 +42,6 @@ public:
     virtual void setLastColor(CARD_COLOR color);
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_GAME_GAME_H_

@@ -11,6 +11,6 @@ struct GameConfig {
     {}
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_GAME_GAME_CONFIG_H_

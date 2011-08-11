@@ -14,4 +14,4 @@ void PlustwoCard::takeAction(Game* game) {
     game->increasePenality(2);
 }
 
-}} //namespace
+}}  // namespace

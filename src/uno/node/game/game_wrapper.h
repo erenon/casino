@@ -16,9 +16,8 @@ using namespace node;
 using ::Uno::Game::AsyncGame;
 using ::Uno::Player::Player;
 
-class GameWrapper
-:public ObjectWrap
-{
+class GameWrapper :public ObjectWrap {
+
 public:
     GameWrapper(int max_player_count);
 
@@ -35,6 +34,6 @@ protected:
     int bot_count;
 };
 
-}}} //namespace
+}}}  // namespace
 
 #endif  // SRC_UNO_NODE_GAME_GAME_WRAPPER_H_

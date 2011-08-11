@@ -8,15 +8,15 @@
 
 namespace Uno { namespace Game {
     class Game;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Player {
 
 using ::Uno::Action::Card;
 namespace Event = ::Uno::Event;
 
-class Player
-{
+class Player {
+
 protected:
     std::string name;
     std::vector<Card*> hand;
@@ -42,7 +42,7 @@ public:
     virtual ~Player() {};
 };
 
-}} //namespace
+}}  // namespace
 
 
 #endif  // SRC_UNO_PLAYER_PLAYER_H_

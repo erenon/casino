@@ -4,7 +4,7 @@
 #include "../action/card.h"
 
 #include <deque>
-//CARD_COLOR/VALUE, Card
+// CARD_COLOR/VALUE, Card
 using namespace ::Uno::Action;
 
 namespace Uno { namespace Game {
@@ -30,6 +30,6 @@ public:
     CARD_VALUE last_played_value;
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_GAME_DECK_H_

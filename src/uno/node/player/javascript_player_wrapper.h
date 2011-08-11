@@ -12,9 +12,8 @@ using namespace v8;
 using namespace node;
 using ::Uno::Player::AsyncPlayer;
 
-class JavascriptPlayerWrapper
-:public ObjectWrap
-{
+class JavascriptPlayerWrapper :public ObjectWrap {
+
 public:
     static void Initialize(Handle<Object> target);
     static Handle<Value> New(const Arguments &args);
@@ -31,6 +30,6 @@ protected:
     JavascriptPlayerWrapper(Handle<Object> jsplayer);
 };
 
-}}} //namespace
+}}}  // namespace
 
 #endif  // SRC_UNO_NODE_PLAYER_JAVASCRIPT_PLAYER_WRAPPER_H_

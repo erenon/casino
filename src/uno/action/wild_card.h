@@ -9,8 +9,8 @@ using ::Uno::Action::Card;
 using ::Uno::Action::CARD_COLOR;
 using ::Uno::Action::CARD_VALUE;
 
-class WildCard :public Card
-{
+class WildCard :public Card {
+
 protected:
     CARD_COLOR choosen_color;
 public:
@@ -18,6 +18,6 @@ public:
     void takeAction(Game* game);
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_ACTION_WILD_CARD_H_

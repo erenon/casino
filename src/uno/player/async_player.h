@@ -12,7 +12,7 @@
 
 namespace Uno { namespace Game {
     class AsyncGame;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Player {
 
@@ -22,8 +22,8 @@ using ::Uno::Action::Card;
 using ::Uno::Game::AsyncGame;
 namespace Event = ::Uno::Event;
 
-class AsyncPlayer :public Player
-{
+class AsyncPlayer :public Player {
+
 public:
     AsyncPlayer(Handle<Object> jsplayer);
     virtual void setGame(AsyncGame* game);
@@ -44,6 +44,6 @@ private:
     AsyncPlayer(AsyncPlayer &player) {}
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_PLAYER_ASYNC_PLAYER_H_

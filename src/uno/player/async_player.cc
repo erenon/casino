@@ -15,7 +15,7 @@ using namespace v8;
 using ::Uno::Game::AsyncGame;
 using ::Uno::Player::Player;
 using ::Uno::Action::Action;
-//Card, CARD_COLOR/VALUE
+// Card, CARD_COLOR/VALUE
 using namespace ::Uno::Action;
 namespace Event = ::Uno::Event;
 
@@ -33,7 +33,11 @@ namespace Event = ::Uno::Event;
 
 AsyncPlayer::AsyncPlayer(Handle<Object> jsplayer) {
     HandleScope scope;
-    session_id = *String::AsciiValue(jsplayer->Get(String::New("session_id"))->ToString());
+
+    session_id = *String::AsciiValue(
+    	jsplayer->Get(String::New("session_id"))->ToString()
+    );
+
     this->jsplayer = Persistent<Object>::New(jsplayer);
 }
 
@@ -131,7 +135,6 @@ void AsyncPlayer::playCard(const Arguments &args) {
             }
         }
     }
-
 }
 
 void AsyncPlayer::draw() {
@@ -345,7 +348,6 @@ void AsyncPlayer::notify(Event::EVENT event_type, void* event) {
     default:
         jstype = "unknown_event";
         break;
-
     }
 
     jsevent->Set(
@@ -367,4 +369,4 @@ void AsyncPlayer::notify(Event::EVENT event_type, void* event) {
 
 #undef REQ_INT_ARG
 
-}} //namespace
+}}  // namespace

@@ -6,10 +6,7 @@ namespace Uno { namespace Game {
 
 Game::Game(int max_player_count)
     :max_player_count(max_player_count),
-     current_penalty(0)
-{
-
-}
+     current_penalty(0) {}
 
 //
 // PLAYERS
@@ -23,7 +20,7 @@ void Game::joinPlayer(Player *player) {
     players.joinPlayer(player);
 
 
-    { //notify about joined player
+    {   // notify about joined player
         Event::player_joined event;
         event.player = player;
         players.notifyOthers(
@@ -88,7 +85,7 @@ void Game::reverseTurn() {
 
 void Game::drawCards() {
     Player *player = players.getCurrentPlayer();
-    //player draws the current penalty or a single card
+    // player draws the current penalty or a single card
     int card_count = (isPenalty()) ? current_penalty : 1;
 
     if (isPenalty()) {
@@ -97,7 +94,7 @@ void Game::drawCards() {
         dealCard(player);
     }
 
-    {    // notify about the card draw
+    {   // notify about the card draw
         Event::draw_card event;
         event.player = players.getCurrentPlayer();
         event.card_count = card_count;
@@ -122,4 +119,4 @@ void Game::setLastColor(CARD_COLOR color) {
     );
 }
 
-}} //namespace
+}}  // namespace

@@ -9,11 +9,10 @@ using ::Uno::Action::WildCard;
 using ::Uno::Action::CARD_COLOR;
 using ::Uno::Action::CARD_VALUE;
 
-class ColorpickCard :public WildCard
-{
+class ColorpickCard :public WildCard {
+
 public:
-    ColorpickCard()
-    {
+    ColorpickCard() {
         color = CARD_COLOR_BLACK;
         value = CARD_VALUE_COLORPICK;
     }
@@ -23,6 +22,6 @@ public:
     }
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_ACTION_COLORPICK_CARD_H_

@@ -6,9 +6,7 @@ using ::Uno::Action::Action;
 
 Player::Player() :name("player"), unoFlag(false), blocked(false) {}
 
-Player::Player(const char *name)
-    :unoFlag(false), blocked(false)
-{
+Player::Player(const char *name) :unoFlag(false), blocked(false) {
     setName(name);
 }
 
@@ -68,4 +66,4 @@ void Player::unblock() {
     blocked = false;
 }
 
-}} //namespace
+}}  // namespace

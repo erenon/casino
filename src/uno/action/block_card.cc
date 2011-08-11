@@ -14,4 +14,4 @@ void BlockCard::takeAction(Game* game) {
     game->blockNextPlayer();
 }
 
-}} //namespace
+}}  // namespace

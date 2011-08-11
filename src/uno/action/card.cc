@@ -64,7 +64,7 @@ CARD_VALUE Card::stringToValue(const char* value_string) {
     m["block"] = CARD_VALUE_BLOCK;
     m["reverse"] = CARD_VALUE_REVERSE;
     m["+2"] = CARD_VALUE_PLUSTWO;
-    m["colorpicker"] = CARD_VALUE_COLORPICK;
+    m["colorpick"] = CARD_VALUE_COLORPICK;
     m["+4"] = CARD_VALUE_PLUSFOUR;
 
     found = m.find(needed);
@@ -124,4 +124,4 @@ const char* Card::valueToString(CARD_VALUE needed_value) {
     return (*found).second;
 }
 
-}} //namespace
+}}  // namespace

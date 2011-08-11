@@ -14,4 +14,4 @@ void WildCard::takeAction(Game* game) {
     game->setLastColor(choosen_color);
 }
 
-}} //namespace
+}}  // namespace

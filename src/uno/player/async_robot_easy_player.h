@@ -7,18 +7,18 @@
 
 namespace Uno { namespace Game {
     class AsyncGame;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Player {
 
 using ::Uno::Player::Player;
 using ::Uno::Game::AsyncGame;
-//Card, CARD_COLOR, CARD_VALUE
+// Card, CARD_COLOR, CARD_VALUE
 using namespace ::Uno::Action;
 namespace Event = ::Uno::Event;
 
-class AsyncRobotEasyPlayer :public Player
-{
+class AsyncRobotEasyPlayer :public Player {
+
 public:
     AsyncRobotEasyPlayer();
     virtual void setGame(AsyncGame* game);
@@ -32,6 +32,6 @@ protected:
     static bool compareCardValue(Card* a, Card* b);
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_

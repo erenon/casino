@@ -9,13 +9,13 @@ using ::Uno::Action::Card;
 using ::Uno::Action::CARD_COLOR;
 using ::Uno::Action::CARD_VALUE;
 
-class BlockCard :public Card
-{
+class BlockCard :public Card {
+
 public:
     BlockCard(CARD_COLOR color);
     void takeAction(Game* game);
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // BLOCK_CARD_H_
