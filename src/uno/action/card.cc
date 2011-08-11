@@ -77,8 +77,8 @@ CARD_VALUE Card::stringToValue(const char* value_string) {
 }
 
 const char* Card::colorToString(CARD_COLOR needed_color) {
-	std::map<CARD_COLOR, std::string> m;
-	std::map<CARD_COLOR, std::string>::iterator found;
+	std::map<CARD_COLOR, const char*> m;
+	std::map<CARD_COLOR, const char*>::iterator found;
 
 	m[CARD_COLOR_RED] = "red";
 	m[CARD_COLOR_GREEN] = "green";
@@ -92,12 +92,12 @@ const char* Card::colorToString(CARD_COLOR needed_color) {
 		throw new std::invalid_argument("Invalid CARD_COLOR");
 	}
 
-	return (*found).second.c_str();
+	return (*found).second;
 }
 
 const char* Card::valueToString(CARD_VALUE needed_value) {
-	std::map<CARD_VALUE, std::string> m;
-	std::map<CARD_VALUE, std::string>::iterator found;
+	std::map<CARD_VALUE, const char*> m;
+	std::map<CARD_VALUE, const char*>::iterator found;
 
 	m[CARD_VALUE_0] = "0";
 	m[CARD_VALUE_1] = "1";
@@ -121,7 +121,7 @@ const char* Card::valueToString(CARD_VALUE needed_value) {
 		throw new std::invalid_argument("Invalid CARD_VALUE");
 	}
 
-	return (*found).second.c_str();
+	return (*found).second;
 }
 
 }} //namespace
