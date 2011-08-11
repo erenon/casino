@@ -52,6 +52,8 @@ public:
 
 	static CARD_COLOR stringToColor(const char* color_string);
 	static CARD_VALUE stringToValue(const char* value_string);
+	static const char* colorToString(CARD_COLOR needed_color);
+	static const char* valueToString(CARD_VALUE needed_value);
 };
 
 }} //namespace

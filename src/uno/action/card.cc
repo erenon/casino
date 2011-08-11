@@ -28,6 +28,7 @@ CARD_VALUE Card::getValue() {
 CARD_COLOR Card::stringToColor(const char* color_string) {
 	std::map<std::string, CARD_COLOR> m;
 	std::map<std::string, CARD_COLOR>::iterator found;
+	std::string needed(color_string);
 
 	m["red"] = CARD_COLOR_RED;
 	m["green"] = CARD_COLOR_GREEN;
@@ -35,7 +36,7 @@ CARD_COLOR Card::stringToColor(const char* color_string) {
 	m["yellow"] = CARD_COLOR_YELLOW;
 	m["black"] = CARD_COLOR_BLACK;
 
-	std::string needed(color_string);
+
 	found = m.find(needed);
 
 	if (found == m.end()) {
@@ -48,6 +49,7 @@ CARD_COLOR Card::stringToColor(const char* color_string) {
 CARD_VALUE Card::stringToValue(const char* value_string) {
 	std::map<std::string, CARD_VALUE> m;
 	std::map<std::string, CARD_VALUE>::iterator found;
+	std::string needed(value_string);
 
 	m["0"] = CARD_VALUE_0;
 	m["1"] = CARD_VALUE_1;
@@ -65,7 +67,6 @@ CARD_VALUE Card::stringToValue(const char* value_string) {
 	m["colorpicker"] = CARD_VALUE_COLORPICK;
 	m["+4"] = CARD_VALUE_PLUSFOUR;
 
-	std::string needed(value_string);
 	found = m.find(needed);
 
 	if (found == m.end()) {
@@ -73,6 +74,54 @@ CARD_VALUE Card::stringToValue(const char* value_string) {
 	}
 
 	return (*found).second;
+}
+
+const char* Card::colorToString(CARD_COLOR needed_color) {
+	std::map<CARD_COLOR, std::string> m;
+	std::map<CARD_COLOR, std::string>::iterator found;
+
+	m[CARD_COLOR_RED] = "red";
+	m[CARD_COLOR_GREEN] = "green";
+	m[CARD_COLOR_BLUE] = "blue";
+	m[CARD_COLOR_YELLOW] = "yellow";
+	m[CARD_COLOR_BLACK] = "black";
+
+	found = m.find(needed_color);
+
+	if (found == m.end()) {
+		throw new std::invalid_argument("Invalid CARD_COLOR");
+	}
+
+	return (*found).second.c_str();
+}
+
+const char* Card::valueToString(CARD_VALUE needed_value) {
+	std::map<CARD_VALUE, std::string> m;
+	std::map<CARD_VALUE, std::string>::iterator found;
+
+	m[CARD_VALUE_0] = "0";
+	m[CARD_VALUE_1] = "1";
+	m[CARD_VALUE_2] = "2";
+	m[CARD_VALUE_3] = "3";
+	m[CARD_VALUE_4] = "4";
+	m[CARD_VALUE_5] = "5";
+	m[CARD_VALUE_6] = "6";
+	m[CARD_VALUE_7] = "7";
+	m[CARD_VALUE_8] = "8";
+	m[CARD_VALUE_9] = "9";
+	m[CARD_VALUE_BLOCK] = "block";
+	m[CARD_VALUE_REVERSE] = "reverse";
+	m[CARD_VALUE_PLUSTWO] = "+2";
+	m[CARD_VALUE_COLORPICK] = "colorpick";
+	m[CARD_VALUE_PLUSFOUR] = "+4";
+
+	found = m.find(needed_value);
+
+	if (found == m.end()) {
+		throw new std::invalid_argument("Invalid CARD_VALUE");
+	}
+
+	return (*found).second.c_str();
 }
 
 }} //namespace
