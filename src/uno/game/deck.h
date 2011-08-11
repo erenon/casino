@@ -1,5 +1,5 @@
-#ifndef UNO_GAME_ACTION_STACK_H_
-#define UNO_GAME_ACTION_STACK_H_
+#ifndef UNO_GAME_DECK_H_
+#define UNO_GAME_DECK_H_
 
 #include "../action/card.h"
 
@@ -9,7 +9,7 @@ using namespace ::Uno::Action;
 
 namespace Uno { namespace Game {
 
-class ActionStack {
+class Deck {
 protected:
 	std::deque<Card *> deck;
 	std::deque<Card *> played;
@@ -18,7 +18,7 @@ protected:
 	void shuffle(std::deque<Card *> &toShuffle);
 	void shufflePlayedIntoDeck();
 public:
-	virtual ~ActionStack() {};
+	virtual ~Deck() {};
 	void addCard(Card *card);
 	void shuffleDeck();
 	void playOutFirstCard();
@@ -31,4 +31,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_GAME_ACTION_STACK_H_ */
+#endif /* UNO_GAME_DECK_H_ */

@@ -1,4 +1,4 @@
-#include "action_stack.h"
+#include "deck.h"
 
 #include "../action/card.h"
 
@@ -14,16 +14,16 @@ namespace Uno { namespace Game {
 
 using ::Uno::Action::Card;
 
-ptrdiff_t ActionStack::getrandom(ptrdiff_t i) {
+ptrdiff_t Deck::getrandom(ptrdiff_t i) {
 	return rand() % i;
 }
 
-void ActionStack::shuffle(std::deque<Card *> &toShuffle) {
+void Deck::shuffle(std::deque<Card *> &toShuffle) {
 	srand( unsigned( time(NULL)));
  	std::random_shuffle(toShuffle.begin(), toShuffle.end(), getrandom);
 }
 
-void ActionStack::shufflePlayedIntoDeck() {
+void Deck::shufflePlayedIntoDeck() {
 	shuffle(played);
 
 	std::deque<Card *>::iterator it;
@@ -34,15 +34,15 @@ void ActionStack::shufflePlayedIntoDeck() {
 	played.clear();
 }
 
-void ActionStack::addCard(Card *card) {
+void Deck::addCard(Card *card) {
 	deck.push_back(card);
 }
 
-void ActionStack::shuffleDeck() {
+void Deck::shuffleDeck() {
 	shuffle(deck);
 }
 
-void ActionStack::playOutFirstCard() {
+void Deck::playOutFirstCard() {
 	Card* top_card;
 	bool card_ok = false;
 
@@ -69,11 +69,11 @@ void ActionStack::playOutFirstCard() {
 	}
 }
 
-void ActionStack::addCardToPlayed(Card *card) {
+void Deck::addCardToPlayed(Card *card) {
 	played.push_front(card);
 }
 
-Card* ActionStack::drawCard() {
+Card* Deck::drawCard() {
 	if (deck.size() == 0) {
 		if (played.size() > 0) {
 			shufflePlayedIntoDeck();
