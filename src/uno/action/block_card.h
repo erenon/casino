@@ -12,13 +12,8 @@ using ::Uno::Action::CARD_VALUE;
 class BlockCard :public Card
 {
 public:
-	BlockCard(CARD_COLOR color)
-		:Card(color, CARD_VALUE_BLOCK)
-	{}
-
-	void takeAction(Game* game) {
-		game->blockNextPlayer();
-	}
+    BlockCard(CARD_COLOR color);
+    void takeAction(Game* game);
 };
 
 }} //namespace

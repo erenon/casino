@@ -12,13 +12,8 @@ using ::Uno::Action::CARD_VALUE;
 class PlustwoCard :public Card
 {
 public:
-	PlustwoCard(CARD_COLOR color)
-		:Card(color, CARD_VALUE_PLUSTWO)
-	{}
-
-	void takeAction(Game* game) {
-		game->increasePenality(2);
-	}
+    PlustwoCard(CARD_COLOR color);
+    void takeAction(Game* game);
 };
 
 }} //namespace
