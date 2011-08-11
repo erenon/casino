@@ -1,5 +1,5 @@
-#ifndef UNO_ACTION_BLOCK_CARD_H_
-#define UNO_ACTION_BLOCK_CARD_H_
+#ifndef SRC_UNO_ACTION_BLOCK_CARD_H_
+#define SRC_UNO_ACTION_BLOCK_CARD_H_
 
 #include "card.h"
 
@@ -18,4 +18,4 @@ public:
 
 }} //namespace
 
-#endif /* BLOCK_CARD_H_ */
+#endif  // BLOCK_CARD_H_

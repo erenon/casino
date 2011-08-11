@@ -1,5 +1,5 @@
-#ifndef UNO_GAME_DECK_H_
-#define UNO_GAME_DECK_H_
+#ifndef SRC_UNO_GAME_DECK_H_
+#define SRC_UNO_GAME_DECK_H_
 
 #include "../action/card.h"
 
@@ -32,4 +32,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_GAME_DECK_H_ */
+#endif  // SRC_UNO_GAME_DECK_H_

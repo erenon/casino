@@ -1,5 +1,5 @@
-#ifndef UNO_GAME_GAME_H_
-#define UNO_GAME_GAME_H_
+#ifndef SRC_UNO_GAME_GAME_H_
+#define SRC_UNO_GAME_GAME_H_
 
 #include "player_list.h"
 #include "deck.h"
@@ -44,4 +44,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_GAME_GAME_H_ */
+#endif  // SRC_UNO_GAME_GAME_H_

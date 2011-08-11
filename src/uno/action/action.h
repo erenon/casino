@@ -1,5 +1,5 @@
-#ifndef UNO_ACTION_ACTION_H_
-#define UNO_ACTION_ACTION_H_
+#ifndef SRC_UNO_ACTION_ACTION_H_
+#define SRC_UNO_ACTION_ACTION_H_
 
 namespace Uno { namespace Game {
     class Game;
@@ -18,4 +18,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_ACTION_ACTION_H_ */
+#endif  // SRC_UNO_ACTION_ACTION_H_

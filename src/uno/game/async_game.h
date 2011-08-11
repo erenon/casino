@@ -1,5 +1,5 @@
-#ifndef UNO_GAME_ASYNC_GAME_H_
-#define UNO_GAME_ASYNC_GAME_H_
+#ifndef SRC_UNO_GAME_ASYNC_GAME_H_
+#define SRC_UNO_GAME_ASYNC_GAME_H_
 
 #include "game.h"
 #include "game_config.h"
@@ -26,4 +26,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_GAME_ASYNC_GAME_H_ */
+#endif  // SRC_UNO_GAME_ASYNC_GAME_H_

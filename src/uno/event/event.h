@@ -1,5 +1,5 @@
-#ifndef UNO_EVENT_EVENT_H_
-#define UNO_EVENT_EVENT_H_
+#ifndef SRC_UNO_EVENT_EVENT_H_
+#define SRC_UNO_EVENT_EVENT_H_
 
 #include "../action/card.h"
 
@@ -76,4 +76,4 @@ struct players_turn {
 
 }} //namespace
 
-#endif /* UNO_EVENT_EVENT_H_ */
+#endif  // SRC_UNO_EVENT_EVENT_H_

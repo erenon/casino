@@ -1,5 +1,5 @@
-#ifndef UNO_PLAYER_ASYNC_PLAYER_H_
-#define UNO_PLAYER_ASYNC_PLAYER_H_
+#ifndef SRC_UNO_PLAYER_ASYNC_PLAYER_H_
+#define SRC_UNO_PLAYER_ASYNC_PLAYER_H_
 
 #include <node/v8.h>
 #include <node/node.h>
@@ -46,4 +46,4 @@ private:
 
 }} //namespace
 
-#endif /* UNO_PLAYER_ASYNC_PLAYER_H_ */
+#endif  // SRC_UNO_PLAYER_ASYNC_PLAYER_H_

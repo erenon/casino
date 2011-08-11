@@ -1,5 +1,5 @@
-#ifndef UNO_PLAYER_PLAYER_H_
-#define UNO_PLAYER_PLAYER_H_
+#ifndef SRC_UNO_PLAYER_PLAYER_H_
+#define SRC_UNO_PLAYER_PLAYER_H_
 
 #include "../action/card.h"
 #include "../event/event.h"
@@ -45,4 +45,4 @@ public:
 }} //namespace
 
 
-#endif /* UNO_PLAYER_PLAYER_H_ */
+#endif  // SRC_UNO_PLAYER_PLAYER_H_

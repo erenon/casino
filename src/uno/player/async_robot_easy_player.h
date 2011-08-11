@@ -1,5 +1,5 @@
-#ifndef UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
-#define UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
+#ifndef SRC_UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
+#define SRC_UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
 
 #include "player.h"
 #include "../action/card.h"
@@ -34,4 +34,4 @@ protected:
 
 }} //namespace
 
-#endif /* UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_ */
+#endif  // SRC_UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_

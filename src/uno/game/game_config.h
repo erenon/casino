@@ -1,5 +1,5 @@
-#ifndef UNO_GAME_GAME_CONFIG_H_
-#define UNO_GAME_GAME_CONFIG_H_
+#ifndef SRC_UNO_GAME_GAME_CONFIG_H_
+#define SRC_UNO_GAME_GAME_CONFIG_H_
 
 namespace Uno { namespace Game {
 
@@ -13,4 +13,4 @@ struct GameConfig {
 
 }} //namespace
 
-#endif /* UNO_GAME_GAME_CONFIG_H_ */
+#endif  // SRC_UNO_GAME_GAME_CONFIG_H_

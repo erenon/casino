@@ -1,5 +1,5 @@
-#ifndef UNO_ACTION_CARD_H_
-#define UNO_ACTION_CARD_H_
+#ifndef SRC_UNO_ACTION_CARD_H_
+#define SRC_UNO_ACTION_CARD_H_
 
 #include "action.h"
 
@@ -58,4 +58,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_ACTION_CARD_H_ */
+#endif  // SRC_UNO_ACTION_CARD_H_

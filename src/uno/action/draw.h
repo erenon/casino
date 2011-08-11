@@ -1,5 +1,5 @@
-#ifndef UNO_ACTION_DRAW_H_
-#define UNO_ACTION_DRAW_H_
+#ifndef SRC_UNO_ACTION_DRAW_H_
+#define SRC_UNO_ACTION_DRAW_H_
 
 #include "../action/action.h"
 
@@ -21,4 +21,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_ACTION_DRAW_H_ */
+#endif  // SRC_UNO_ACTION_DRAW_H_

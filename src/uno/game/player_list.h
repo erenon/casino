@@ -1,5 +1,5 @@
-#ifndef UNO_GAME_PLAYER_LIST_H_
-#define UNO_GAME_PLAYER_LIST_H_
+#ifndef SRC_UNO_GAME_PLAYER_LIST_H_
+#define SRC_UNO_GAME_PLAYER_LIST_H_
 
 #include "../player/player.h"
 
@@ -34,4 +34,4 @@ public:
 
 }} //namespace
 
-#endif /* UNO_GAME_PLAYER_LIST_H_ */
+#endif  // SRC_UNO_GAME_PLAYER_LIST_H_
