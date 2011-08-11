@@ -11,9 +11,10 @@ using ::Uno::Game::Game;
 
 class Action {
 
-public:
+ public:
     virtual bool isDisposeable() = 0;
     virtual void takeAction(Game* game) = 0;
+    virtual ~Action() {}
 };
 
 }}  // namespace

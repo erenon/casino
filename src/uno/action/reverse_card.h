@@ -11,8 +11,8 @@ using ::Uno::Action::CARD_VALUE;
 
 class ReverseCard :public Card {
 
-public:
-	explicit ReverseCard(CARD_COLOR color);
+ public:
+    explicit ReverseCard(CARD_COLOR color);
     void takeAction(Game* game);
 };
 

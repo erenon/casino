@@ -18,7 +18,7 @@ using ::Uno::Player::Player;
 
 class GameWrapper :public ObjectWrap {
 
-public:
+ public:
     explicit GameWrapper(int max_player_count);
 
     static void Initialize(Handle<Object> target);
@@ -28,7 +28,7 @@ public:
     static Handle<Value> Start(const Arguments &args);
     static Handle<Value> Dispose(const Arguments &args);
 
-protected:
+ protected:
     AsyncGame* game;
     std::list<Player*> players;
     int bot_count;

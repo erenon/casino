@@ -15,7 +15,7 @@ using namespace ::Uno::Action;
 
 class Game {
 
-protected:
+ protected:
     int max_player_count;
 
     PlayerList players;
@@ -24,7 +24,7 @@ protected:
     int current_penalty;
     Draw draw_action;
 
-public:
+ public:
     explicit Game(int max_player_count);
     virtual ~Game() {};
 

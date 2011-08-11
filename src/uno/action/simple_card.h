@@ -15,7 +15,7 @@ using ::Uno::Action::CARD_VALUE;
 
 class SimpleCard :public Card {
 
-public:
+ public:
     SimpleCard(CARD_COLOR color, CARD_VALUE value)
         :Card(color, value) {}
 

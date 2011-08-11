@@ -11,7 +11,7 @@ using ::Uno::Action::CARD_VALUE;
 
 class BlockCard :public Card {
 
-public:
+ public:
     explicit BlockCard(CARD_COLOR color);
     void takeAction(Game* game);
 };

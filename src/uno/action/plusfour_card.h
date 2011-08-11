@@ -11,7 +11,7 @@ using ::Uno::Action::CARD_VALUE;
 
 class PlusfourCard :public WildCard {
 
-public:
+ public:
     PlusfourCard();
     void takeAction(Game* game);
 };

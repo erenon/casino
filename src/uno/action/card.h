@@ -39,10 +39,10 @@ enum CARD_VALUE {
 
 class Card :public Action {
 
-protected:
+ protected:
     CARD_COLOR color;
     CARD_VALUE value;
-public:
+ public:
     Card();
     Card(CARD_COLOR color, CARD_VALUE value);
 

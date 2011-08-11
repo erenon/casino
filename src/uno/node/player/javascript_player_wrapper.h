@@ -14,7 +14,7 @@ using ::Uno::Player::AsyncPlayer;
 
 class JavascriptPlayerWrapper :public ObjectWrap {
 
-public:
+ public:
     static void Initialize(Handle<Object> target);
     static Handle<Value> New(const Arguments &args);
     static Handle<Value> PlayCard(const Arguments &args);
@@ -24,7 +24,7 @@ public:
     AsyncPlayer* getNativePlayer();
     ~JavascriptPlayerWrapper();
 
-protected:
+ protected:
     AsyncPlayer* player;
 
     explicit JavascriptPlayerWrapper(Handle<Object> jsplayer);

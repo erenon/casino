@@ -35,7 +35,7 @@ AsyncPlayer::AsyncPlayer(Handle<Object> jsplayer) {
     HandleScope scope;
 
     session_id = *String::AsciiValue(
-    	jsplayer->Get(String::New("session_id"))->ToString()
+        jsplayer->Get(String::New("session_id"))->ToString()
     );
 
     this->jsplayer = Persistent<Object>::New(jsplayer);

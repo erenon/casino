@@ -11,7 +11,7 @@ using ::Uno::Action::CARD_VALUE;
 
 class ColorpickCard :public WildCard {
 
-public:
+ public:
     ColorpickCard() {
         color = CARD_COLOR_BLACK;
         value = CARD_VALUE_COLORPICK;

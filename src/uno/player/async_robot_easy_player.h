@@ -19,12 +19,12 @@ namespace Event = ::Uno::Event;
 
 class AsyncRobotEasyPlayer :public Player {
 
-public:
+ public:
     AsyncRobotEasyPlayer();
     virtual void setGame(AsyncGame* game);
     virtual void notify(Event::EVENT event_type, void* event);
 
-protected:
+ protected:
     AsyncGame* game;
 
     virtual void takeAction();

@@ -13,10 +13,10 @@ using ::Uno::Action::Action;
 
 class AsyncGame :public ::Uno::Game::Game {
 
-protected:
+ protected:
     GameConfig config;
 
-public:
+ public:
     explicit AsyncGame(int max_player_count);
     void start();
     bool isValidMove(Player* player, Action* action, std::string &message);

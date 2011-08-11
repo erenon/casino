@@ -11,7 +11,7 @@ using ::Uno::Player::Player;
 
 class PlayerList {
 
-protected:
+ protected:
     bool turn_direction_normal;
 
     std::list<Player *> players;
@@ -21,7 +21,7 @@ protected:
 
     player_iterator determineNextPlayer();
 
-public:
+ public:
     PlayerList();
     void joinPlayer(Player *player);
     int size();

@@ -17,13 +17,13 @@ namespace Event = ::Uno::Event;
 
 class Player {
 
-protected:
+ protected:
     std::string name;
     std::vector<Card*> hand;
     typedef std::vector<Card*>::iterator card_iterator;
     bool unoFlag;
     bool blocked;
-public:
+ public:
     Player();
     explicit Player(const char *name);
     virtual void setName(const char *name);

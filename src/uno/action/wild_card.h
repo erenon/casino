@@ -11,9 +11,9 @@ using ::Uno::Action::CARD_VALUE;
 
 class WildCard :public Card {
 
-protected:
+ protected:
     CARD_COLOR choosen_color;
-public:
+ public:
     void setColor(CARD_COLOR color);
     void takeAction(Game* game);
 };

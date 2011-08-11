@@ -14,7 +14,7 @@ using ::Uno::Game::Game;
 
 class Draw :public Action {
 
-public:
+ public:
     bool isDisposeable();
     void takeAction(Game* game);
 };

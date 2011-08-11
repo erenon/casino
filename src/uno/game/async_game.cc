@@ -13,7 +13,7 @@ namespace Event = ::Uno::Event;
 using ::Uno::Action::SimpleCard;
 
 AsyncGame::AsyncGame(int max_player_count)
-	:Uno::Game::Game(max_player_count) {}
+    :Uno::Game::Game(max_player_count) {}
 
 void AsyncGame::start() {
     // prepare deck
