@@ -18,4 +18,4 @@ public:
 
 }}  // namespace
 
-#endif  // BLOCK_CARD_H_
+#endif  // SRC_UNO_ACTION_BLOCK_CARD_H_
