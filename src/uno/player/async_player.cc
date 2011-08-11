@@ -146,65 +146,15 @@ Local<Object> AsyncPlayer::createCardObject(Card* card) {
 	HandleScope scope;
 	Local<Object> jscard = Object::New();
 
-	// set color
-	const char* color = NULL;
+	// get color and value string
+	const char* color = Card::colorToString(card->getColor());
+	const char* value = Card::valueToString(card->getValue());
 
-	switch (card->getColor()) {
-	case CARD_COLOR_RED:
-		color = "red";
-		break;
-	case CARD_COLOR_GREEN:
-		color = "green";
-		break;
-	case CARD_COLOR_BLUE:
-		color = "blue";
-		break;
-	case CARD_COLOR_YELLOW:
-		color = "yellow";
-		break;
-	case CARD_COLOR_BLACK:
-		color = "black";
-		break;
-	default:
-		color = "?";
-		break;
-	}
-
+	// set color and value property on a js object
 	jscard->Set(
 		String::New("color"),
 		String::NewSymbol(color)
 	);
-
-	// set value
-	const char* value = NULL;
-#define CASE_CARD_VALUE(V,O) 	\
-	case CARD_VALUE_##V: 		\
-		value = O; 				\
-		break;
-
-	switch (card->getValue()) {
-		CASE_CARD_VALUE(0,"0");
-		CASE_CARD_VALUE(1,"1");
-		CASE_CARD_VALUE(2,"2");
-		CASE_CARD_VALUE(3,"3");
-		CASE_CARD_VALUE(4,"4");
-		CASE_CARD_VALUE(5,"5");
-		CASE_CARD_VALUE(6,"6");
-		CASE_CARD_VALUE(7,"7");
-		CASE_CARD_VALUE(8,"8");
-		CASE_CARD_VALUE(9,"9");
-		CASE_CARD_VALUE(BLOCK, "block");
-		CASE_CARD_VALUE(REVERSE, "reverse");
-		CASE_CARD_VALUE(PLUSTWO, "+2");
-		CASE_CARD_VALUE(COLORPICK, "colorpicker");
-		CASE_CARD_VALUE(PLUSFOUR, "+4");
-
-		default:
-			value = "?";
-			break;
-	}
-
-#undef CASE_CARD_VALUE
 
 	jscard->Set(
 		String::New("value"),
@@ -285,23 +235,11 @@ void AsyncPlayer::notify(Event::EVENT event_type, void* event) {
 			createPlayerObject(e->picked_by)
 		);
 
-		const char* color;
-		switch (e->color) {
-		case CARD_COLOR_RED:
-			color = "red";
-			break;
-		case CARD_COLOR_GREEN:
-			color = "green";
-			break;
-		case CARD_COLOR_BLUE:
-			color = "blue";
-			break;
-		case CARD_COLOR_YELLOW:
-			color = "yellow";
-			break;
-		default:
+		const char* color = NULL;
+		try {
+			color = Card::colorToString(e->color);
+		} catch (std::invalid_argument &e) {
 			color = "?";
-			break;
 		}
 
 		jsevent->Set(
