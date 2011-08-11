@@ -1,13 +1,13 @@
-#ifndef CSU_PLAYER_LIST_H_
-#define CSU_PLAYER_LIST_H_
+#ifndef UNO_GAME_PLAYER_LIST_H_
+#define UNO_GAME_PLAYER_LIST_H_
 
 #include "../player/player.h"
 
 #include <list>
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 
-using ::Casino::Uno::Player::Player;
+using ::Uno::Player::Player;
 
 class PlayerList {
 protected:
@@ -32,6 +32,6 @@ public:
 	void notifyOthers(Event::EVENT event_type, void* event, Player* player);
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_PLAYER_LIST_H_ */
+#endif /* UNO_GAME_PLAYER_LIST_H_ */

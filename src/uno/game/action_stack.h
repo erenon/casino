@@ -1,13 +1,13 @@
-#ifndef CSU_ACTION_STACK_H_
-#define CSU_ACTION_STACK_H_
+#ifndef UNO_GAME_ACTION_STACK_H_
+#define UNO_GAME_ACTION_STACK_H_
 
 #include "../action/card.h"
 
 #include <deque>
 //CARD_COLOR/VALUE, Card
-using namespace ::Casino::Uno::Action;
+using namespace ::Uno::Action;
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 
 class ActionStack {
 protected:
@@ -29,6 +29,6 @@ public:
 	CARD_VALUE last_played_value;
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_ACTION_STACK_H_ */
+#endif /* UNO_GAME_ACTION_STACK_H_ */

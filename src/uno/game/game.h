@@ -1,23 +1,23 @@
-#ifndef CSU_GAME_H_
-#define CSU_GAME_H_
+#ifndef UNO_GAME_GAME_H_
+#define UNO_GAME_GAME_H_
 
-#include "../../common/game/game.h"
 #include "player_list.h"
 #include "action_stack.h"
-//#include "../action/action.h"
 #include "../player/player.h"
 #include "../action/card.h"
 #include "../action/draw.h"
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 
-using ::Casino::Uno::Player::Player;
+using ::Uno::Player::Player;
 //CARD_COLOR/VALUE, Draw
-using namespace ::Casino::Uno::Action;
+using namespace ::Uno::Action;
 
-class Game :public ::Casino::Common::Game::Game
+class Game
 {
 protected:
+	int max_player_count;
+
 	PlayerList players;
 	ActionStack deck;
 
@@ -26,8 +26,10 @@ protected:
 
 public:
 	Game(int max_player_count);
+	virtual ~Game() {};
 
 	virtual void joinPlayer(Player *player);
+	virtual int getPlayerCount();
 
 	virtual void addCardToDeck(Card *card);
 
@@ -43,6 +45,6 @@ public:
 	virtual void setLastColor(CARD_COLOR color);
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_GAME_H_ */
+#endif /* UNO_GAME_GAME_H_ */

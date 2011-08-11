@@ -9,19 +9,19 @@
 #include "colorpick_card.h"
 #include <list>
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 
-using ::Casino::Uno::Game::Game;
-using ::Casino::Uno::Action::Card;
-using ::Casino::Uno::Action::CARD_COLOR;
-using ::Casino::Uno::Action::CARD_VALUE;
+using ::Uno::Game::Game;
+using ::Uno::Action::Card;
+using ::Uno::Action::CARD_COLOR;
+using ::Uno::Action::CARD_VALUE;
 
-using ::Casino::Uno::Action::SimpleCard;
-using ::Casino::Uno::Action::BlockCard;
-using ::Casino::Uno::Action::ReverseCard;
-using ::Casino::Uno::Action::PlustwoCard;
-using ::Casino::Uno::Action::PlusfourCard;
-using ::Casino::Uno::Action::ColorpickCard;
+using ::Uno::Action::SimpleCard;
+using ::Uno::Action::BlockCard;
+using ::Uno::Action::ReverseCard;
+using ::Uno::Action::PlustwoCard;
+using ::Uno::Action::PlusfourCard;
+using ::Uno::Action::ColorpickCard;
 
 void FullCardDeck::add(Card *card) {
 	deck.push_back(card);
@@ -88,5 +88,5 @@ FullCardDeck::~FullCardDeck() {
 	}
 }
 
-}}} //namespace
+}} //namespace
 

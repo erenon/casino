@@ -2,10 +2,10 @@
 
 #include <stdexcept>
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 
 Game::Game(int max_player_count)
-	:Casino::Common::Game::Game(max_player_count),
+	:max_player_count(max_player_count),
 	 current_penalty(0)
 {
 
@@ -34,9 +34,13 @@ void Game::joinPlayer(Player *player) {
 	}
 }
 
+int Game::getPlayerCount() {
+	return players.size();
+}
+
 /**
  * @todo don't expose addCard this way,
- * dependency inject deck instead.
+ * dependency inject deck instance instead.
  */
 void Game::addCardToDeck(Card *card) {
 	deck.addCard(card);
@@ -117,4 +121,4 @@ void Game::setLastColor(CARD_COLOR color) {
 	);
 }
 
-}}} //namespace
+}} //namespace

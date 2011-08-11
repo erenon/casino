@@ -1,20 +1,19 @@
-#ifndef CSU_PLAYER_H_
-#define CSU_PLAYER_H_
+#ifndef UNO_PLAYER_PLAYER_H_
+#define UNO_PLAYER_PLAYER_H_
 
 #include "../action/action.h"
 #include "../event/event.h"
 #include <vector>
 #include <string>
 
-namespace Casino { namespace Uno { namespace Game {
-	class ConsoleGame;
-}}} //namespace
+namespace Uno { namespace Game {
+	class Game;
+}} //namespace
 
-namespace Casino { namespace Uno { namespace Player {
+namespace Uno { namespace Player {
 
-using ::Casino::Uno::Action::Action;
-using ::Casino::Uno::Game::ConsoleGame;
-using namespace ::Casino::Uno::Event;
+using ::Uno::Action::Action;
+namespace Event = ::Uno::Event;
 
 class Player
 {
@@ -29,13 +28,13 @@ public:
 	Player(const char *name);
 	virtual void setName(const char *name);
 	virtual std::string getName();
+
 	virtual void addAction(Action *action);
 	virtual void removeAction(Action *action);
-	virtual Action* pickAction(ConsoleGame *game) = 0;
-	virtual void notify(EVENT event_type, void* event) = 0;
+
+	virtual void notify(Event::EVENT event_type, void* event) = 0;
 	virtual int getCardCount();
 	virtual void setUnoFlag(bool value);
-	//virtual bool wrongUno();
 	virtual bool getUnoFlag();
 	virtual bool isBlocked();
 	virtual void block();
@@ -43,7 +42,7 @@ public:
 	virtual ~Player() {};
 };
 
-}}} //namespace
+}} //namespace
 
 
-#endif /* CSU_PLAYER_H_ */
+#endif /* UNO_PLAYER_PLAYER_H_ */

@@ -1,13 +1,13 @@
-#ifndef CSU_BLOCK_CARD_H_
-#define CSU_BLOCK_CARD_H_
+#ifndef UNO_ACTION_BLOCK_CARD_H_
+#define UNO_ACTION_BLOCK_CARD_H_
 
 #include "card.h"
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::Card;
-using ::Casino::Uno::Action::CARD_COLOR;
-using ::Casino::Uno::Action::CARD_VALUE;
+using ::Uno::Action::Card;
+using ::Uno::Action::CARD_COLOR;
+using ::Uno::Action::CARD_VALUE;
 
 class BlockCard :public Card
 {
@@ -21,6 +21,6 @@ public:
 	}
 };
 
-}}} //namespace
+}} //namespace
 
 #endif /* BLOCK_CARD_H_ */

@@ -6,18 +6,18 @@
 
 #include "game_wrapper.h"
 #include "../player/javascript_player_wrapper.h"
-#include "../../../uno/player/javascript_player.h"
-#include "../../../uno/player/async_robot_easy_player.h"
-#include "../../../uno/action/full_card_deck.h"
+#include "../../player/async_player.h"
+#include "../../player/async_robot_easy_player.h"
+#include "../../action/full_card_deck.h"
 
-namespace Casino { namespace Node { namespace Uno { namespace Game {
+namespace Uno { namespace Node { namespace Game {
 
 using namespace v8;
 using namespace node;
-using ::Casino::Node::Uno::Player::JavascriptPlayerWrapper;
-using ::Casino::Node::Uno::Player::JavascriptPlayer;
-using ::Casino::Uno::Player::AsyncRobotEasyPlayer;
-using ::Casino::Uno::Action::FullCardDeck;
+using ::Uno::Node::Player::JavascriptPlayerWrapper;
+using ::Uno::Node::Player::AsyncPlayer;
+using ::Uno::Player::AsyncRobotEasyPlayer;
+using ::Uno::Action::FullCardDeck;
 
 #define REQ_INT_ARG(I)                                                  \
     if (args.Length() <= (I) || !args[I]->IsInt32()) {                  \
@@ -75,13 +75,10 @@ Handle<Value> GameWrapper::JoinPlayer(const Arguments &args) {
 
 	REQ_OBJ_ARG(0);
 
-	Handle<Object> jsplayer_wrapper = args[0]->ToObject()->Get(String::New("native_player"))->ToObject();
+	/** @todo change the "nativePlayer" explicit get to a getter method */
+	Handle<Object> jsplayer_wrapper = args[0]->ToObject()->Get(String::New("nativePlayer"))->ToObject();
 	JavascriptPlayerWrapper* player_wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(jsplayer_wrapper);
-	JavascriptPlayer* player = player_wrapper->getNativePlayer();
-
-	/*JavascriptPlayerWrapper* player = new JavascriptPlayerWrapper(
-		args[0]->ToObject()
-	);*/
+	AsyncPlayer* player = player_wrapper->getNativePlayer();
 
 	try {
 		wrapper->game->joinPlayer(player);
@@ -161,4 +158,4 @@ Handle<Value> GameWrapper::Dispose(const Arguments &args) {
 #undef REQ_INT_ARG
 #undef REQ_OBJ_ARG
 
-}}}} //namespace
+}}} //namespace

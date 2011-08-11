@@ -1,16 +1,16 @@
-#ifndef CSNU_JAVASCRIPT_PLAYER_WRAPPER_H_
-#define CSNU_JAVASCRIPT_PLAYER_WRAPPER_H_
+#ifndef UNO_NODE_PLAYER_JAVASCRIPT_PLAYER_WRAPPER_H_
+#define UNO_NODE_PLAYER_JAVASCRIPT_PLAYER_WRAPPER_H_
 
 #include <node/v8.h>
 #include <node/node.h>
 
-#include "../../../uno/player/javascript_player.h"
+#include "../../player/async_player.h"
 
-namespace Casino { namespace Node { namespace Uno { namespace Player {
+namespace Uno { namespace Node { namespace Player {
 
 using namespace v8;
 using namespace node;
-using ::Casino::Uno::Player::JavascriptPlayer;
+using ::Uno::Player::AsyncPlayer;
 
 class JavascriptPlayerWrapper
 :public ObjectWrap
@@ -22,15 +22,15 @@ public:
 	static Handle<Value> Draw(const Arguments &args);
 	static Handle<Value> Dispose(const Arguments &args);
 
-	JavascriptPlayer* getNativePlayer();
+	AsyncPlayer* getNativePlayer();
 	~JavascriptPlayerWrapper();
 
 protected:
-	JavascriptPlayer* player;
+	AsyncPlayer* player;
 
 	JavascriptPlayerWrapper(Handle<Object> jsplayer);
 };
 
-}}}} //namespace
+}}} //namespace
 
-#endif /* CSNU_JAVASCRIPT_PLAYER_WRAPPER_H_ */
+#endif /* UNO_NODE_PLAYER_JAVASCRIPT_PLAYER_WRAPPER_H_ */

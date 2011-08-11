@@ -1,14 +1,14 @@
-#ifndef CSU_FULL_CARD_DECK_H_
-#define CSU_FULL_CARD_DECK_H_
+#ifndef UNO_ACTION_FULL_CARD_DECK_H_
+#define UNO_ACTION_FULL_CARD_DECK_H_
 
 #include "../game/game.h"
 #include "card.h"
 #include <list>
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 
-using ::Casino::Uno::Game::Game;
-using ::Casino::Uno::Action::Card;
+using ::Uno::Game::Game;
+using ::Uno::Action::Card;
 
 class FullCardDeck
 {
@@ -21,6 +21,6 @@ public:
 	~FullCardDeck();
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_FULL_CARD_DECK_H_ */
+#endif /* UNO_ACTION_FULL_CARD_DECK_H_ */

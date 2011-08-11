@@ -1,22 +1,21 @@
-#ifndef CSU_ASYNC_ROBOT_EASY_PLAYER_H_
-#define CSU_ASYNC_ROBOT_EASY_PLAYER_H_
+#ifndef UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
+#define UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
 
 #include "player.h"
 #include "../action/card.h"
 #include "../event/event.h"
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 	class AsyncGame;
-	class ConsoleGame;
-}}} //namespace
+}} //namespace
 
-namespace Casino { namespace Uno { namespace Player {
+namespace Uno { namespace Player {
 
-using ::Casino::Uno::Player::Player;
-using ::Casino::Uno::Game::AsyncGame;
+using ::Uno::Player::Player;
+using ::Uno::Game::AsyncGame;
 //Card, CARD_COLOR, CARD_VALUE
-using namespace ::Casino::Uno::Action;
-namespace Event = ::Casino::Uno::Event;
+using namespace ::Uno::Action;
+namespace Event = ::Uno::Event;
 
 class AsyncRobotEasyPlayer :public Player
 {
@@ -24,7 +23,6 @@ public:
 	AsyncRobotEasyPlayer();
 	virtual void setGame(AsyncGame* game);
 	virtual void notify(Event::EVENT event_type, void* event);
-	virtual Action* pickAction(ConsoleGame *game) {}
 
 protected:
 	AsyncGame* game;
@@ -34,6 +32,6 @@ protected:
 	static bool compareCardValue(Card* a, Card* b);
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_ASYNC_ROBOT_EASY_PLAYER_H_ */
+#endif /* UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_ */

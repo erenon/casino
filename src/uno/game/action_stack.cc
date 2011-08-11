@@ -10,9 +10,9 @@
 #include <ctime>
 #include <cstdlib>
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 
-using ::Casino::Uno::Action::Card;
+using ::Uno::Action::Card;
 
 ptrdiff_t ActionStack::getrandom(ptrdiff_t i) {
 	return rand() % i;
@@ -87,4 +87,4 @@ Card* ActionStack::drawCard() {
 	return top_card;
 }
 
-}}} //namespace
+}} //namespace

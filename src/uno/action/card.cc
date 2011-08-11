@@ -4,7 +4,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 
 Card::Card() {}
 
@@ -75,4 +75,4 @@ CARD_VALUE Card::stringToValue(const char* value_string) {
 	return (*found).second;
 }
 
-}}} //namespace
+}} //namespace

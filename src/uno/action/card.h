@@ -1,15 +1,15 @@
-#ifndef CSU_CARD_H_
-#define CSU_CARD_H_
+#ifndef UNO_ACTION_CARD_H_
+#define UNO_ACTION_CARD_H_
 
 #include "action.h"
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 	class Action;
-}}} //namespace
+}} //namespace
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::Action;
+using ::Uno::Action::Action;
 
 enum CARD_COLOR {
 	CARD_COLOR_RED,
@@ -54,6 +54,6 @@ public:
 	static CARD_VALUE stringToValue(const char* value_string);
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_CARD_H_ */
+#endif /* UNO_ACTION_CARD_H_ */

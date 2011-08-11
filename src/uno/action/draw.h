@@ -1,16 +1,16 @@
-#ifndef CSU_DRAW_H_
-#define CSU_DRAW_H_
+#ifndef UNO_ACTION_DRAW_H_
+#define UNO_ACTION_DRAW_H_
 
 #include "../action/action.h"
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 	class Game;
-}}} //namespace
+}} //namespace
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::Action;
-using ::Casino::Uno::Game::Game;
+using ::Uno::Action::Action;
+using ::Uno::Game::Game;
 
 class Draw :public Action
 {
@@ -19,6 +19,6 @@ public:
 	void takeAction(Game* game);
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_DRAW_H_ */
+#endif /* UNO_ACTION_DRAW_H_ */

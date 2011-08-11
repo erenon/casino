@@ -1,8 +1,8 @@
 #include "player.h"
 
-namespace Casino { namespace Uno { namespace Player {
+namespace Uno { namespace Player {
 
-using ::Casino::Uno::Action::Action;
+using ::Uno::Action::Action;
 
 Player::Player() :name("player"), unoFlag(false), blocked(false) {}
 
@@ -52,21 +52,6 @@ void Player::setUnoFlag(bool value) {
 	unoFlag = value;
 }
 
-/**
- * wrongUno = didForgetUno || fakeUno
- *
- * Checks whether player forgot to say uno,
- * or said uno unnecessarily.
- *
- * @return true, if player should be punished
- */
-/*bool Player::wrongUno() {
-	return (
-		(getCardCount() == 1 && unoFlag == false)
-	||  (getCardCount() != 1 && unoFlag == true)
-	);
-}*/
-
 bool Player::getUnoFlag() {
 	return unoFlag;
 }
@@ -83,4 +68,4 @@ void Player::unblock() {
 	blocked = false;
 }
 
-}}} //namespace
+}} //namespace

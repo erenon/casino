@@ -4,9 +4,9 @@
 
 #include <list>
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 
-using ::Casino::Uno::Player::Player;
+using ::Uno::Player::Player;
 
 PlayerList::PlayerList()
 	:turn_direction_normal(true),
@@ -93,4 +93,4 @@ void PlayerList::reverseTurn() {
 	turn_direction_normal = !turn_direction_normal;
 }
 
-}}} //namespace
+}} //namespace

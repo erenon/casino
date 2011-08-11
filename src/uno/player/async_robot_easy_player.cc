@@ -8,10 +8,10 @@
 #include <algorithm>
 #include <map>
 
-namespace Casino { namespace Uno { namespace Player {
+namespace Uno { namespace Player {
 
 //Card, CARD_VALUE, WildCard
-using namespace ::Casino::Uno::Action;
+using namespace ::Uno::Action;
 
 AsyncRobotEasyPlayer::AsyncRobotEasyPlayer() {}
 
@@ -20,12 +20,23 @@ void AsyncRobotEasyPlayer::notify(Event::EVENT event_type, void* event) {
 	case Event::EVENT_PLAYERS_TURN:
 	{
 		Event::players_turn* players_turn = reinterpret_cast<Event::players_turn*>(event);
+
 		if (players_turn->player == this) {
 			Action* picked_action = pickAction();
-
 			game->takeAction(this, picked_action);
 		}
 	}
+		break;
+	case Event::EVENT_CARD_PLAYED:
+	case Event::EVENT_DRAW_CARD:
+	case Event::EVENT_COLORPICK:
+	case Event::EVENT_GAME_START:
+	case Event::EVENT_GAME_END:
+	case Event::EVENT_UNO_SAID:
+	case Event::EVENT_GETS_BLOCKED:
+	case Event::EVENT_PLAYER_JOINED:
+	default:
+		break;
 	}
 }
 
@@ -125,4 +136,4 @@ bool AsyncRobotEasyPlayer::compareCardValue(Card* a, Card* b) {
 	return value_a < value_b;
 }
 
-}}} //namespace
+}} //namespace

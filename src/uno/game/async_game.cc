@@ -6,15 +6,13 @@
 #include <string>
 #include <stdexcept>
 
-#include <iostream>
+namespace Uno { namespace Game {
 
-namespace Casino { namespace Uno { namespace Game {
-
-namespace Event = ::Casino::Uno::Event;
-using ::Casino::Uno::Action::SimpleCard;
+namespace Event = ::Uno::Event;
+using ::Uno::Action::SimpleCard;
 
 AsyncGame::AsyncGame(int max_player_count)
-	:Casino::Uno::Game::Game(max_player_count)
+	:Uno::Game::Game(max_player_count)
 {
 
 }
@@ -172,7 +170,6 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 	bool next_player_found = false;
 
 	while (!next_player_found) {
-		std::cout << ".";
 		players.next();
 		next_player = players.getCurrentPlayer();
 		if (next_player->isBlocked() == true) {
@@ -218,4 +215,4 @@ void AsyncGame::drawCards() {
 	);
 }
 
-}}} //namespace
+}} //namespace

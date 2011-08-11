@@ -1,22 +1,22 @@
-#ifndef CSNU_GAME_WRAPPER_H_
-#define CSNU_GAME_WRAPPER_H_
+#ifndef UNO_NODE_GAME_GAME_WRAPPER_H_
+#define UNO_NODE_GAME_GAME_WRAPPER_H_
 
 #include <node/v8.h>
 #include <node/node.h>
 #include <list>
 #include  <stdexcept>
 
-#include "../../../uno/game/async_game.h"
-#include "../../../uno/player/player.h"
-#include "../../../uno/action/full_card_deck.h"
+#include "../../game/async_game.h"
+#include "../../player/player.h"
+#include "../../action/full_card_deck.h"
 
-namespace Casino { namespace Node { namespace Uno { namespace Game {
+namespace Uno { namespace Node { namespace Game {
 
 using namespace v8;
 using namespace node;
-using ::Casino::Uno::Game::AsyncGame;
-using ::Casino::Uno::Player::Player;
-using ::Casino::Uno::Action::FullCardDeck;
+using ::Uno::Game::AsyncGame;
+using ::Uno::Player::Player;
+using ::Uno::Action::FullCardDeck;
 
 class GameWrapper
 :public ObjectWrap
@@ -38,6 +38,6 @@ protected:
     int bot_count;
 };
 
-}}}} //namespace
+}}} //namespace
 
-#endif /* CSNU_GAME_WRAPPER_H_ */
+#endif /* UNO_NODE_GAME_GAME_WRAPPER_H_ */

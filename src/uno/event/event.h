@@ -1,20 +1,20 @@
-#ifndef CSU_EVENT_H_
-#define CSU_EVENT_H_
+#ifndef UNO_EVENT_EVENT_H_
+#define UNO_EVENT_EVENT_H_
 
 #include "../action/card.h"
 
-namespace Casino { namespace Uno { namespace Player {
+namespace Uno { namespace Player {
 	class Player;
-}}} //namespace
+}} //namespace
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 	class Card;
-}}} //namespace
+}} //namespace
 
-namespace Casino { namespace Uno { namespace Event {
+namespace Uno { namespace Event {
 
-using ::Casino::Uno::Player::Player;
-using ::Casino::Uno::Action::Card;
+using ::Uno::Player::Player;
+using ::Uno::Action::Card;
 
 enum EVENT {
 	EVENT_CARD_PLAYED,
@@ -40,7 +40,7 @@ struct draw_card {
 
 struct colorpick {
 	Player* picked_by;
-	Casino::Uno::Action::CARD_COLOR color;
+	::Uno::Action::CARD_COLOR color;
 };
 
 struct game_start {
@@ -74,6 +74,6 @@ struct players_turn {
 	Player* player;
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_EVENT_H_ */
+#endif /* UNO_EVENT_EVENT_H_ */

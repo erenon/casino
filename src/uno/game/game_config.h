@@ -1,7 +1,7 @@
-#ifndef CSU_GAME_CONFIG_H_
-#define CSU_GAME_CONFIG_H_
+#ifndef UNO_GAME_GAME_CONFIG_H_
+#define UNO_GAME_GAME_CONFIG_H_
 
-namespace Casino { namespace Uno { namespace Game {
+namespace Uno { namespace Game {
 
 struct GameConfig {
 	int initial_hand_size;
@@ -11,6 +11,6 @@ struct GameConfig {
 	{}
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_GAME_CONFIG_H_ */
+#endif /* UNO_GAME_GAME_CONFIG_H_ */

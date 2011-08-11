@@ -1,13 +1,13 @@
-#ifndef CSU_COLORPICK_CARD_H_
-#define CSU_COLORPICK_CARD_H_
+#ifndef UNO_ACTION_COLORPICK_CARD_H_
+#define UNO_ACTION_COLORPICK_CARD_H_
 
 #include "wild_card.h"
 
-namespace Casino { namespace Uno { namespace Action {
+namespace Uno { namespace Action {
 
-using ::Casino::Uno::Action::WildCard;
-using ::Casino::Uno::Action::CARD_COLOR;
-using ::Casino::Uno::Action::CARD_VALUE;
+using ::Uno::Action::WildCard;
+using ::Uno::Action::CARD_COLOR;
+using ::Uno::Action::CARD_VALUE;
 
 class ColorpickCard :public WildCard
 {
@@ -23,6 +23,6 @@ public:
 	}
 };
 
-}}} //namespace
+}} //namespace
 
-#endif /* CSU_COLORPICK_CARD_H_ */
+#endif /* UNO_ACTION_COLORPICK_CARD_H_ */

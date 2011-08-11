@@ -3,7 +3,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace Casino { namespace Node { namespace Uno { namespace Player {
+namespace Uno { namespace Node { namespace Player {
 
 #define REQ_OBJ_ARG(I)                                                  \
     if (args.Length() <= (I) || !args[I]->IsObject()) {                 \
@@ -12,7 +12,7 @@ namespace Casino { namespace Node { namespace Uno { namespace Player {
     }
 
 JavascriptPlayerWrapper::JavascriptPlayerWrapper(Handle<Object> jsplayer) {
-	player = new JavascriptPlayer(jsplayer);
+	player = new AsyncPlayer(jsplayer);
 }
 
 void JavascriptPlayerWrapper::Initialize(Handle<Object> target) {
@@ -89,7 +89,7 @@ Handle<Value> JavascriptPlayerWrapper::Dispose(const Arguments &args) {
 	return scope.Close(Undefined());
 }
 
-JavascriptPlayer* JavascriptPlayerWrapper::getNativePlayer() {
+AsyncPlayer* JavascriptPlayerWrapper::getNativePlayer() {
 	return player;
 }
 
@@ -99,4 +99,4 @@ JavascriptPlayerWrapper::~JavascriptPlayerWrapper() {
 
 #undef REQ_OBJ_ARG
 
-}}}} //namespace
+}}} //namespace
