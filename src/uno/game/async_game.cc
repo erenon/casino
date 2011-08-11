@@ -30,6 +30,17 @@ void AsyncGame::start() {
 		players.reset();
 		for (int i = 0; i < players.size(); i++, players.next()) {
 			players.getCurrentPlayer()->addAction(deck.drawCard());
+
+			{
+				Event::draw_card event;
+				event.card_count = 1;
+				event.player = players.getCurrentPlayer();
+				players.notifyOthers(
+					Event::EVENT_DRAW_CARD,
+					reinterpret_cast<void*>(&event),
+					players.getCurrentPlayer()
+				);
+			}
 		}
 	}
 
