@@ -1,12 +1,13 @@
 #include "./async_robot_easy_player.h"
-#include "../action/card.h"
-#include "../action/wild_card.h"
-#include "../game/async_game.h"
 
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <map>
+
+#include "../action/card.h"
+#include "../action/wild_card.h"
+#include "../game/async_game.h"
 
 namespace Uno { namespace Player {
 

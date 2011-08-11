@@ -1,10 +1,11 @@
 #ifndef SRC_UNO_PLAYER_PLAYER_H_
 #define SRC_UNO_PLAYER_PLAYER_H_
 
-#include "../action/card.h"
-#include "../event/event.h"
 #include <vector>
 #include <string>
+
+#include "../action/card.h"
+#include "../event/event.h"
 
 namespace Uno { namespace Game {
     class Game;

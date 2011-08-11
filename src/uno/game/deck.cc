@@ -1,13 +1,5 @@
 #include "./deck.h"
 
-#include "../action/card.h"
-#include "../action/simple_card.h"
-#include "../action/block_card.h"
-#include "../action/reverse_card.h"
-#include "../action/plustwo_card.h"
-#include "../action/plusfour_card.h"
-#include "../action/colorpick_card.h"
-
 #include <stdexcept>
 #include <deque>
 
@@ -15,6 +7,14 @@
 #include <algorithm>
 #include <ctime>
 #include <cstdlib>
+
+#include "../action/card.h"
+#include "../action/simple_card.h"
+#include "../action/block_card.h"
+#include "../action/reverse_card.h"
+#include "../action/plustwo_card.h"
+#include "../action/plusfour_card.h"
+#include "../action/colorpick_card.h"
 
 namespace Uno { namespace Game {
 

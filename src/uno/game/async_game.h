@@ -1,10 +1,9 @@
 #ifndef SRC_UNO_GAME_ASYNC_GAME_H_
 #define SRC_UNO_GAME_ASYNC_GAME_H_
 
-#include "./game.h"
-
 #include <string>
 
+#include "./game.h"
 #include "./game_config.h"
 #include "../player/player.h"
 #include "../action/action.h"

@@ -1,11 +1,11 @@
 #include "./async_game.h"
 
+#include <string>
+#include <stdexcept>
+
 #include "./deck.h"
 #include "../event/event.h"
 #include "../action/simple_card.h"
-
-#include <string>
-#include <stdexcept>
 
 namespace Uno { namespace Game {
 

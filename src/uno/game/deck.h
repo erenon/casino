@@ -1,13 +1,14 @@
 #ifndef SRC_UNO_GAME_DECK_H_
 #define SRC_UNO_GAME_DECK_H_
 
+#include <deque>
+
 #include "../action/card.h"
 
-#include <deque>
+namespace Uno { namespace Game {
+
 // CARD_COLOR/VALUE, Card
 using namespace ::Uno::Action;
-
-namespace Uno { namespace Game {
 
 class Deck {
  protected:
