@@ -5,7 +5,7 @@
 
 namespace Uno { namespace Action {
     class Action;
-}} //namespace
+}}  // namespace
 
 namespace Uno { namespace Action {
 
@@ -37,8 +37,8 @@ enum CARD_VALUE {
     CARD_VALUE_PLUSFOUR
 };
 
-class Card :public Action
-{
+class Card :public Action {
+
 protected:
     CARD_COLOR color;
     CARD_VALUE value;
@@ -56,6 +56,6 @@ public:
     static const char* valueToString(CARD_VALUE needed_value);
 };
 
-}} //namespace
+}}  // namespace
 
 #endif  // SRC_UNO_ACTION_CARD_H_
