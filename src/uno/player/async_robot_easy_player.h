@@ -6,7 +6,7 @@
 #include "../event/event.h"
 
 namespace Uno { namespace Game {
-	class AsyncGame;
+    class AsyncGame;
 }} //namespace
 
 namespace Uno { namespace Player {
@@ -20,16 +20,16 @@ namespace Event = ::Uno::Event;
 class AsyncRobotEasyPlayer :public Player
 {
 public:
-	AsyncRobotEasyPlayer();
-	virtual void setGame(AsyncGame* game);
-	virtual void notify(Event::EVENT event_type, void* event);
+    AsyncRobotEasyPlayer();
+    virtual void setGame(AsyncGame* game);
+    virtual void notify(Event::EVENT event_type, void* event);
 
 protected:
-	AsyncGame* game;
+    AsyncGame* game;
 
-	virtual void takeAction();
-	virtual CARD_COLOR chooseColor();
-	static bool compareCardValue(Card* a, Card* b);
+    virtual void takeAction();
+    virtual CARD_COLOR chooseColor();
+    static bool compareCardValue(Card* a, Card* b);
 };
 
 }} //namespace

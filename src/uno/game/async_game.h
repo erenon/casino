@@ -14,14 +14,14 @@ using ::Uno::Action::Action;
 class AsyncGame :public ::Uno::Game::Game
 {
 protected:
-	GameConfig config;
+    GameConfig config;
 
 public:
-	AsyncGame(int max_player_count);
-	void start();
-	bool isValidMove(Player* player, Action* action, std::string &message);
-	void takeAction(Player* player, Action* action);
-	void takeDraw(Player* player);
+    AsyncGame(int max_player_count);
+    void start();
+    bool isValidMove(Player* player, Action* action, std::string &message);
+    void takeAction(Player* player, Action* action);
+    void takeDraw(Player* player);
 };
 
 }} //namespace

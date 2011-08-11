@@ -4,11 +4,11 @@
 namespace Uno { namespace Game {
 
 struct GameConfig {
-	int initial_hand_size;
+    int initial_hand_size;
 
-	GameConfig()
-		:initial_hand_size(7)
-	{}
+    GameConfig()
+        :initial_hand_size(7)
+    {}
 };
 
 }} //namespace

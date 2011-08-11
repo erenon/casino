@@ -7,7 +7,7 @@
 #include <string>
 
 namespace Uno { namespace Game {
-	class Game;
+    class Game;
 }} //namespace
 
 namespace Uno { namespace Player {
@@ -18,28 +18,28 @@ namespace Event = ::Uno::Event;
 class Player
 {
 protected:
-	std::string name;
-	std::vector<Card*> hand;
-	typedef std::vector<Card*>::iterator card_iterator;
-	bool unoFlag;
-	bool blocked;
+    std::string name;
+    std::vector<Card*> hand;
+    typedef std::vector<Card*>::iterator card_iterator;
+    bool unoFlag;
+    bool blocked;
 public:
-	Player();
-	Player(const char *name);
-	virtual void setName(const char *name);
-	virtual std::string getName();
+    Player();
+    Player(const char *name);
+    virtual void setName(const char *name);
+    virtual std::string getName();
 
-	virtual void addCard(Card *card);
-	virtual void removeCard(Card *card);
+    virtual void addCard(Card *card);
+    virtual void removeCard(Card *card);
 
-	virtual void notify(Event::EVENT event_type, void* event) = 0;
-	virtual int getCardCount();
-	virtual void setUnoFlag(bool value);
-	virtual bool getUnoFlag();
-	virtual bool isBlocked();
-	virtual void block();
-	virtual void unblock();
-	virtual ~Player() {};
+    virtual void notify(Event::EVENT event_type, void* event) = 0;
+    virtual int getCardCount();
+    virtual void setUnoFlag(bool value);
+    virtual bool getUnoFlag();
+    virtual bool isBlocked();
+    virtual void block();
+    virtual void unblock();
+    virtual ~Player() {};
 };
 
 }} //namespace

@@ -7,65 +7,65 @@ using ::Uno::Action::Action;
 Player::Player() :name("player"), unoFlag(false), blocked(false) {}
 
 Player::Player(const char *name)
-	:unoFlag(false), blocked(false)
+    :unoFlag(false), blocked(false)
 {
-	setName(name);
+    setName(name);
 }
 
 void Player::setName(const char *name) {
-	this->name = name;
+    this->name = name;
 }
 
 std::string Player::getName() {
-	return name;
+    return name;
 }
 
 void Player::addCard(Card *card) {
-	hand.push_back(card);
+    hand.push_back(card);
 }
 
 void Player::removeCard(Card *card) {
-	card_iterator it;
+    card_iterator it;
 
-	for (it = hand.begin(); it != hand.end(); it++) {
-		if (*it == card) {
-			hand.erase(it);
-			break;
-		}
-	}
+    for (it = hand.begin(); it != hand.end(); it++) {
+        if (*it == card) {
+            hand.erase(it);
+            break;
+        }
+    }
 }
 
 int Player::getCardCount() {
-	card_iterator it;
-	int count = 0;
+    card_iterator it;
+    int count = 0;
 
-	for (it = hand.begin(); it != hand.end(); it++) {
-		if ((*it)->isDisposeable()) {
-			count++;
-		}
-	}
+    for (it = hand.begin(); it != hand.end(); it++) {
+        if ((*it)->isDisposeable()) {
+            count++;
+        }
+    }
 
-	return count;
+    return count;
 }
 
 void Player::setUnoFlag(bool value) {
-	unoFlag = value;
+    unoFlag = value;
 }
 
 bool Player::getUnoFlag() {
-	return unoFlag;
+    return unoFlag;
 }
 
 bool Player::isBlocked() {
-	return blocked;
+    return blocked;
 }
 
 void Player::block() {
-	blocked = true;
+    blocked = true;
 }
 
 void Player::unblock() {
-	blocked = false;
+    blocked = false;
 }
 
 }} //namespace

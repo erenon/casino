@@ -11,7 +11,7 @@
 
 
 namespace Uno { namespace Game {
-	class AsyncGame;
+    class AsyncGame;
 }} //namespace
 
 namespace Uno { namespace Player {
@@ -25,23 +25,23 @@ namespace Event = ::Uno::Event;
 class AsyncPlayer :public Player
 {
 public:
-	AsyncPlayer(Handle<Object> jsplayer);
-	virtual void setGame(AsyncGame* game);
-	virtual Local<Function> getCallback(const char* cbname);
-	virtual void addCard(Card *action);
-	void playCard(const Arguments &args);
-	void draw();
-	virtual Local<Object> createCardObject(Card* card);
-	virtual Local<Object> createPlayerObject(Player* player);
-	virtual void notify(Event::EVENT event_type, void* event);
+    AsyncPlayer(Handle<Object> jsplayer);
+    virtual void setGame(AsyncGame* game);
+    virtual Local<Function> getCallback(const char* cbname);
+    virtual void addCard(Card *action);
+    void playCard(const Arguments &args);
+    void draw();
+    virtual Local<Object> createCardObject(Card* card);
+    virtual Local<Object> createPlayerObject(Player* player);
+    virtual void notify(Event::EVENT event_type, void* event);
 
 protected:
-	std::string session_id;	/**< to ensure unique players (not implemented) */
-	Persistent<Object> jsplayer;
-	AsyncGame* game;
+    std::string session_id;    /**< to ensure unique players (not implemented) */
+    Persistent<Object> jsplayer;
+    AsyncGame* game;
 
 private:
-	AsyncPlayer(AsyncPlayer &player) {}
+    AsyncPlayer(AsyncPlayer &player) {}
 };
 
 }} //namespace

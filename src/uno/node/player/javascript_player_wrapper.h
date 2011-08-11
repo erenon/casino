@@ -16,19 +16,19 @@ class JavascriptPlayerWrapper
 :public ObjectWrap
 {
 public:
-	static void Initialize(Handle<Object> target);
-	static Handle<Value> New(const Arguments &args);
-	static Handle<Value> PlayCard(const Arguments &args);
-	static Handle<Value> Draw(const Arguments &args);
-	static Handle<Value> Dispose(const Arguments &args);
+    static void Initialize(Handle<Object> target);
+    static Handle<Value> New(const Arguments &args);
+    static Handle<Value> PlayCard(const Arguments &args);
+    static Handle<Value> Draw(const Arguments &args);
+    static Handle<Value> Dispose(const Arguments &args);
 
-	AsyncPlayer* getNativePlayer();
-	~JavascriptPlayerWrapper();
+    AsyncPlayer* getNativePlayer();
+    ~JavascriptPlayerWrapper();
 
 protected:
-	AsyncPlayer* player;
+    AsyncPlayer* player;
 
-	JavascriptPlayerWrapper(Handle<Object> jsplayer);
+    JavascriptPlayerWrapper(Handle<Object> jsplayer);
 };
 
 }}} //namespace

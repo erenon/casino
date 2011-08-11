@@ -16,32 +16,30 @@ using namespace ::Uno::Action;
 class Game
 {
 protected:
-	int max_player_count;
+    int max_player_count;
 
-	PlayerList players;
-	Deck deck;
+    PlayerList players;
+    Deck deck;
 
-	int current_penalty;
-	Draw draw_action;
+    int current_penalty;
+    Draw draw_action;
 
 public:
-	Game(int max_player_count);
-	virtual ~Game() {};
+    Game(int max_player_count);
+    virtual ~Game() {};
 
-	virtual void joinPlayer(Player *player);
-	virtual int getPlayerCount();
+    virtual void joinPlayer(Player *player);
+    virtual int getPlayerCount();
 
-	virtual void addCardToDeck(Card *card);
+    virtual bool isPenalty();
+    virtual void increasePenality(int addition);
+    virtual void dealPenality(Player* player);
+    virtual void dealCard(Player* player);
 
-	virtual bool isPenalty();
-	virtual void increasePenality(int addition);
-	virtual void dealPenality(Player* player);
-	virtual void dealCard(Player* player);
-
-	virtual void blockNextPlayer();
-	virtual void reverseTurn();
-	virtual void drawCards();
-	virtual void setLastColor(CARD_COLOR color);
+    virtual void blockNextPlayer();
+    virtual void reverseTurn();
+    virtual void drawCards();
+    virtual void setLastColor(CARD_COLOR color);
 };
 
 }} //namespace

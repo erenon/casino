@@ -5,8 +5,8 @@
 namespace Uno { namespace Game {
 
 Game::Game(int max_player_count)
-	:max_player_count(max_player_count),
-	 current_penalty(0)
+    :max_player_count(max_player_count),
+     current_penalty(0)
 {
 
 }
@@ -16,34 +16,26 @@ Game::Game(int max_player_count)
 //
 
 void Game::joinPlayer(Player *player) {
-	if (players.size() >= max_player_count) {
-		throw std::overflow_error("Game is full");
-	}
+    if (players.size() >= max_player_count) {
+        throw std::overflow_error("Game is full");
+    }
 
-	players.joinPlayer(player);
+    players.joinPlayer(player);
 
 
-	{ //notify about joined player
-		Event::player_joined event;
-		event.player = player;
-		players.notifyOthers(
-			Event::EVENT_PLAYER_JOINED,
-			reinterpret_cast<void*>(&event),
-			player
-		);
-	}
+    { //notify about joined player
+        Event::player_joined event;
+        event.player = player;
+        players.notifyOthers(
+            Event::EVENT_PLAYER_JOINED,
+            reinterpret_cast<void*>(&event),
+            player
+        );
+    }
 }
 
 int Game::getPlayerCount() {
-	return players.size();
-}
-
-/**
- * @todo don't expose addCard this way,
- * dependency inject deck instance instead.
- */
-void Game::addCardToDeck(Card *card) {
-	deck.addCard(card);
+    return players.size();
 }
 
 //
@@ -51,24 +43,24 @@ void Game::addCardToDeck(Card *card) {
 //
 
 bool Game::isPenalty() {
-	return (current_penalty > 0);
+    return (current_penalty > 0);
 }
 
 void Game::increasePenality(int addition) {
-	current_penalty += addition;
+    current_penalty += addition;
 }
 
 void Game::dealPenality(Player* player) {
-	for (int i = 0; i < current_penalty; i++) {
-		dealCard(player);
-	}
+    for (int i = 0; i < current_penalty; i++) {
+        dealCard(player);
+    }
 
-	current_penalty = 0;
+    current_penalty = 0;
 }
 
 void Game::dealCard(Player* player) {
-	Card* top_card = deck.drawCard();
-	player->addCard(top_card);
+    Card* top_card = deck.drawCard();
+    player->addCard(top_card);
 }
 
 //
@@ -76,58 +68,58 @@ void Game::dealCard(Player* player) {
 //
 
 void Game::blockNextPlayer() {
-	players.getNextPlayer()->block();
+    players.getNextPlayer()->block();
 
-	{
-		Event::gets_blocked event;
-		event.gets_blocked = players.getNextPlayer();
-		event.blocked_by = players.getCurrentPlayer();
+    {
+        Event::gets_blocked event;
+        event.gets_blocked = players.getNextPlayer();
+        event.blocked_by = players.getCurrentPlayer();
 
-		players.notifyAll(
-			Event::EVENT_GETS_BLOCKED,
-			reinterpret_cast<void*>(&event)
-		);
-	}
+        players.notifyAll(
+            Event::EVENT_GETS_BLOCKED,
+            reinterpret_cast<void*>(&event)
+        );
+    }
 }
 
 void Game::reverseTurn() {
-	players.reverseTurn();
+    players.reverseTurn();
 }
 
 void Game::drawCards() {
-	Player *player = players.getCurrentPlayer();
-	//player draws the current penalty or a single card
-	int card_count = (isPenalty()) ? current_penalty : 1;
+    Player *player = players.getCurrentPlayer();
+    //player draws the current penalty or a single card
+    int card_count = (isPenalty()) ? current_penalty : 1;
 
-	if (isPenalty()) {
-		dealPenality(player);
-	} else {
-		dealCard(player);
-	}
+    if (isPenalty()) {
+        dealPenality(player);
+    } else {
+        dealCard(player);
+    }
 
-	{	// notify about the card draw
-		Event::draw_card event;
-		event.player = players.getCurrentPlayer();
-		event.card_count = card_count;
-		players.notifyOthers(
-			Event::EVENT_DRAW_CARD,
-			reinterpret_cast<void*>(&event),
-			players.getCurrentPlayer()
-		);
-	}
+    {    // notify about the card draw
+        Event::draw_card event;
+        event.player = players.getCurrentPlayer();
+        event.card_count = card_count;
+        players.notifyOthers(
+            Event::EVENT_DRAW_CARD,
+            reinterpret_cast<void*>(&event),
+            players.getCurrentPlayer()
+        );
+    }
 }
 
 void Game::setLastColor(CARD_COLOR color) {
-	deck.last_played_color = color;
+    deck.last_played_color = color;
 
-	Event::colorpick event;
-	event.picked_by = players.getCurrentPlayer();
-	event.color = color;
-	players.notifyOthers(
-		Event::EVENT_COLORPICK,
-		reinterpret_cast<void*>(&event),
-		players.getCurrentPlayer()
-	);
+    Event::colorpick event;
+    event.picked_by = players.getCurrentPlayer();
+    event.color = color;
+    players.notifyOthers(
+        Event::EVENT_COLORPICK,
+        reinterpret_cast<void*>(&event),
+        players.getCurrentPlayer()
+    );
 }
 
 }} //namespace

@@ -7,11 +7,11 @@ using ::Uno::Action::CARD_COLOR;
 using ::Uno::Action::CARD_VALUE;
 
 void WildCard::setColor(CARD_COLOR color) {
-	choosen_color = color;
+    choosen_color = color;
 }
 
 void WildCard::takeAction(Game* game) {
-	game->setLastColor(choosen_color);
+    game->setLastColor(choosen_color);
 }
 
 }} //namespace

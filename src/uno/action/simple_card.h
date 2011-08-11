@@ -4,7 +4,7 @@
 #include "card.h"
 
 namespace Uno { namespace Game {
-	class Game;
+    class Game;
 }} //namespace
 
 namespace Uno { namespace Action {
@@ -16,11 +16,11 @@ using ::Uno::Action::CARD_VALUE;
 class SimpleCard :public Card
 {
 public:
-	SimpleCard(CARD_COLOR color, CARD_VALUE value)
-		:Card(color, value)
-	{}
+    SimpleCard(CARD_COLOR color, CARD_VALUE value)
+        :Card(color, value)
+    {}
 
-	virtual void takeAction(Game* game) {}
+    virtual void takeAction(Game* game) {}
 };
 
 }} //namespace

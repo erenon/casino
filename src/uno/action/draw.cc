@@ -7,11 +7,11 @@ namespace Uno { namespace Action {
 using ::Uno::Game::Game;
 
 bool Draw::isDisposeable() {
-	return false;
+    return false;
 }
 
 void Draw::takeAction(Game* game) {
-	game->drawCards();
+    game->drawCards();
 }
 
 }} //namespace

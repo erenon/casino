@@ -11,22 +11,23 @@ namespace Uno { namespace Game {
 
 class Deck {
 protected:
-	std::deque<Card *> deck;
-	std::deque<Card *> played;
+    std::deque<Card *> deck;
+    std::deque<Card *> played;
 
-	static ptrdiff_t getrandom(ptrdiff_t i);
-	void shuffle(std::deque<Card *> &toShuffle);
-	void shufflePlayedIntoDeck();
+    static ptrdiff_t getrandom(ptrdiff_t i);
+    virtual void shuffle(std::deque<Card *> &toShuffle);
+    virtual void shufflePlayedIntoDeck();
 public:
-	virtual ~Deck() {};
-	void addCard(Card *card);
-	void shuffleDeck();
-	void playOutFirstCard();
-	void addCardToPlayed(Card *card);
-	Card* drawCard();
+    Deck();
+    virtual ~Deck();
+    virtual void addCard(Card *card);
+    virtual void shuffleDeck();
+    virtual void playOutFirstCard();
+    virtual void addCardToPlayed(Card *card);
+    virtual Card* drawCard();
 
-	CARD_COLOR last_played_color;
-	CARD_VALUE last_played_value;
+    CARD_COLOR last_played_color;
+    CARD_VALUE last_played_value;
 };
 
 }} //namespace

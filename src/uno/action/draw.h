@@ -4,7 +4,7 @@
 #include "../action/action.h"
 
 namespace Uno { namespace Game {
-	class Game;
+    class Game;
 }} //namespace
 
 namespace Uno { namespace Action {
@@ -15,8 +15,8 @@ using ::Uno::Game::Game;
 class Draw :public Action
 {
 public:
-	bool isDisposeable();
-	void takeAction(Game* game);
+    bool isDisposeable();
+    void takeAction(Game* game);
 };
 
 }} //namespace

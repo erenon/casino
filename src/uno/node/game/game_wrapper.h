@@ -8,7 +8,6 @@
 
 #include "../../game/async_game.h"
 #include "../../player/player.h"
-#include "../../action/full_card_deck.h"
 
 namespace Uno { namespace Node { namespace Game {
 
@@ -16,13 +15,12 @@ using namespace v8;
 using namespace node;
 using ::Uno::Game::AsyncGame;
 using ::Uno::Player::Player;
-using ::Uno::Action::FullCardDeck;
 
 class GameWrapper
 :public ObjectWrap
 {
 public:
-	GameWrapper(int max_player_count);
+    GameWrapper(int max_player_count);
 
     static void Initialize(Handle<Object> target);
     static Handle<Value> New(const Arguments &args);
@@ -33,7 +31,6 @@ public:
 
 protected:
     AsyncGame* game;
-    FullCardDeck* deck;
     std::list<Player*> players;
     int bot_count;
 };

@@ -12,15 +12,15 @@ using ::Uno::Action::CARD_VALUE;
 class ColorpickCard :public WildCard
 {
 public:
-	ColorpickCard()
-	{
-		color = CARD_COLOR_BLACK;
-		value = CARD_VALUE_COLORPICK;
-	}
+    ColorpickCard()
+    {
+        color = CARD_COLOR_BLACK;
+        value = CARD_VALUE_COLORPICK;
+    }
 
-	void takeAction(Game* game) {
-		WildCard::takeAction(game);
-	}
+    void takeAction(Game* game) {
+        WildCard::takeAction(game);
+    }
 };
 
 }} //namespace
