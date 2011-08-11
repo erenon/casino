@@ -343,10 +343,7 @@ void AsyncPlayer::notify(Event::EVENT event_type, void* event) {
 	}
 
 	default:
-		/**
-		 * @todo fix typo: unknown.
-		 */
-		jstype = "unknow_event";
+		jstype = "unknown_event";
 		break;
 
 	}
