@@ -96,11 +96,24 @@ void Game::reverseTurn() {
 
 void Game::drawCards() {
 	Player *player = players.getCurrentPlayer();
+	//player draws the current penalty or a single card
+	int card_count = (isPenalty()) ? current_penalty : 1;
 
 	if (isPenalty()) {
 		dealPenality(player);
 	} else {
 		dealCard(player);
+	}
+
+	{	// notify about the card draw
+		Event::draw_card event;
+		event.player = players.getCurrentPlayer();
+		event.card_count = card_count;
+		players.notifyOthers(
+			Event::EVENT_DRAW_CARD,
+			reinterpret_cast<void*>(&event),
+			players.getCurrentPlayer()
+		);
 	}
 }
 

@@ -204,20 +204,4 @@ void AsyncGame::takeDraw(Player* player) {
 	takeAction(player, &draw_action);
 }
 
-void AsyncGame::drawCards() {
-	//player draws the current penalty or a single card
-	int card_count = (isPenalty()) ? current_penalty : 1;
-
-	Game::drawCards();
-
-	Event::draw_card event;
-	event.player = players.getCurrentPlayer();
-	event.card_count = card_count;
-	players.notifyOthers(
-		Event::EVENT_DRAW_CARD,
-		reinterpret_cast<void*>(&event),
-		players.getCurrentPlayer()
-	);
-}
-
 }} //namespace

@@ -22,8 +22,6 @@ public:
 	bool isValidMove(Player* player, Action* action, std::string &message);
 	void takeAction(Player* player, Action* action);
 	void takeDraw(Player* player);
-
-	void drawCards();
 };
 
 }} //namespace
