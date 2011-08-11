@@ -103,7 +103,7 @@ Handle<Value> GameWrapper::AddBot(const Arguments &args) {
 
         { // hack ahead. 49: ASCII 0
             std::string name = "robot ";
-            name.push_back((char)(wrapper->bot_count+49));
+            name.push_back(static_cast<char>(wrapper->bot_count+49));
             robot->setName(name.c_str());
         }
 
