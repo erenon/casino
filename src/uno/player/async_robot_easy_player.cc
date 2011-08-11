@@ -85,7 +85,7 @@ CARD_COLOR  AsyncRobotEasyPlayer::chooseColor() {
 
 	card_iterator card;
 	for (card = hand.begin(); card < hand.end(); card++) {
-		colors[static_cast<Card*>(*card)->getColor()]++;
+		colors[(*card)->getColor()]++;
 	}
 
 	CARD_COLOR picked = CARD_COLOR_RED;

@@ -117,16 +117,15 @@ void AsyncPlayer::playCard(const Arguments &args) {
 		throw;
 	}
 
-	card_iterator action;
-	for (action = hand.begin(); action < hand.end(); action++) {
-		Card* card = static_cast<Card*>(*action);
+	card_iterator card;
+	for (card = hand.begin(); card < hand.end(); card++) {
 
 		// same color and value
-		if (card->getColor() == picked_color
-		&&  card->getValue() == picked_value
+		if ((*card)->getColor() == picked_color
+		&&  (*card)->getValue() == picked_value
 		) {
 			try {
-				game->takeAction(this, *action);
+				game->takeAction(this, *card);
 			} catch (std::invalid_argument &message) {
 				throw std::domain_error(message.what());
 			}
