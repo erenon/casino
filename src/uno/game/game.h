@@ -41,7 +41,6 @@ public:
 	virtual void blockNextPlayer();
 	virtual void reverseTurn();
 	virtual void drawCards();
-	virtual Draw *getDrawAction();
 	virtual void setLastColor(CARD_COLOR color);
 };
 

@@ -22,8 +22,7 @@ void AsyncRobotEasyPlayer::notify(Event::EVENT event_type, void* event) {
 		Event::players_turn* players_turn = reinterpret_cast<Event::players_turn*>(event);
 
 		if (players_turn->player == this) {
-			Action* picked_action = pickAction();
-			game->takeAction(this, picked_action);
+			takeAction();
 		}
 	}
 		break;
@@ -44,35 +43,36 @@ void AsyncRobotEasyPlayer::setGame(AsyncGame* game) {
 	this->game = game;
 }
 
-Action*  AsyncRobotEasyPlayer::pickAction() {
+void AsyncRobotEasyPlayer::takeAction() {
 	std::vector<Card*> valid_moves;
 	card_iterator card;
 	std::string dummy_str;
 
-	for (card = hand.begin(); card != hand.end(); card++) {
+	for (card = hand.begin(); card < hand.end(); card++) {
 		if (game->isValidMove(this, *card, dummy_str)) {
-			valid_moves.push_back(static_cast<Card*>(*card));
+			valid_moves.push_back(*card);
 		}
 	}
 
 	if (valid_moves.size() < 1) {
 		//no valid move, draw
-		return game->getDrawAction();
+		game->takeDraw(this);
+	} else {
+
+		std::sort(valid_moves.begin(), valid_moves.end(), compareCardValue);
+		Card* picked = valid_moves.front();
+
+		if (picked->getColor() == CARD_COLOR_BLACK) {
+			CARD_COLOR new_color = chooseColor();
+			static_cast<WildCard*>(picked)->setColor(new_color);
+		}
+
+		if (hand.size() == 2) {
+			setUnoFlag(true);
+		}
+
+		game->takeAction(this, picked);
 	}
-
-	std::sort(valid_moves.begin(), valid_moves.end(), compareCardValue);
-	Action* picked = valid_moves.front();
-
-	if (static_cast<Card*>(picked)->getColor() == CARD_COLOR_BLACK) {
-		CARD_COLOR new_color = chooseColor();
-		static_cast<WildCard*>(picked)->setColor(new_color);
-	}
-
-	if (hand.size() == 2) {
-		setUnoFlag(true);
-	}
-
-	return picked;
 }
 
 CARD_COLOR  AsyncRobotEasyPlayer::chooseColor() {
@@ -84,7 +84,7 @@ CARD_COLOR  AsyncRobotEasyPlayer::chooseColor() {
 	colors[CARD_COLOR_YELLOW] = 0;
 
 	card_iterator card;
-	for (card = hand.begin(); card != hand.end(); card++) {
+	for (card = hand.begin(); card < hand.end(); card++) {
 		colors[static_cast<Card*>(*card)->getColor()]++;
 	}
 

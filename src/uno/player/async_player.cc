@@ -136,10 +136,8 @@ void AsyncPlayer::playCard(const Arguments &args) {
 }
 
 void AsyncPlayer::draw() {
-	Action* draw = game->getDrawAction();
-
 	try {
-		game->takeAction(this, draw);
+		game->takeDraw(this);
 	} catch (std::invalid_argument &message) {
 		throw;
 	}

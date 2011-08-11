@@ -71,7 +71,7 @@ void AsyncGame::start() {
  * tweak takeAction to it after
  */
 bool AsyncGame::isValidMove(Player* player, Action* action, std::string &message) {
-	if (action == getDrawAction() && player == players.getCurrentPlayer()) {
+	if (action == &draw_action && player == players.getCurrentPlayer()) {
 		return true;
 	}
 
@@ -198,6 +198,10 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 			reinterpret_cast<void*>(&event)
 		);
 	}
+}
+
+void AsyncGame::takeDraw(Player* player) {
+	takeAction(player, &draw_action);
 }
 
 void AsyncGame::drawCards() {

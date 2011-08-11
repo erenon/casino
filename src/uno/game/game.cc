@@ -104,10 +104,6 @@ void Game::drawCards() {
 	}
 }
 
-Draw *Game::getDrawAction() {
-	return &draw_action;
-}
-
 void Game::setLastColor(CARD_COLOR color) {
 	deck.last_played_color = color;
 
