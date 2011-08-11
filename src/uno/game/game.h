@@ -2,7 +2,7 @@
 #define UNO_GAME_GAME_H_
 
 #include "player_list.h"
-#include "action_stack.h"
+#include "deck.h"
 #include "../player/player.h"
 #include "../action/card.h"
 #include "../action/draw.h"
@@ -19,7 +19,7 @@ protected:
 	int max_player_count;
 
 	PlayerList players;
-	ActionStack deck;
+	Deck deck;
 
 	int current_penalty;
 	Draw draw_action;

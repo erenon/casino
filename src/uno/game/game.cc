@@ -68,7 +68,7 @@ void Game::dealPenality(Player* player) {
 
 void Game::dealCard(Player* player) {
 	Card* top_card = deck.drawCard();
-	player->addAction(top_card);
+	player->addCard(top_card);
 }
 
 //

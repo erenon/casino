@@ -27,7 +27,7 @@ void AsyncGame::start() {
 	for (int card_idx = 0; card_idx < config.initial_hand_size; card_idx++) {
 		players.reset();
 		for (int i = 0; i < players.size(); i++, players.next()) {
-			players.getCurrentPlayer()->addAction(deck.drawCard());
+			players.getCurrentPlayer()->addCard(deck.drawCard());
 
 			{
 				Event::draw_card event;
@@ -135,9 +135,10 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 	}
 
 	if (action->isDisposeable()) {
-		player->removeAction(action);
-
 		Card* played_card = static_cast<Card*>(action);
+
+		player->removeCard(played_card);
+
 		deck.last_played_color = played_card->getColor();
 		deck.last_played_value = played_card->getValue();
 		deck.addCardToPlayed(played_card);

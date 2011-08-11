@@ -6,7 +6,6 @@
 #include <string>
 
 #include "player.h"
-#include "../action/action.h"
 #include "../action/card.h"
 #include "../event/event.h"
 
@@ -19,7 +18,6 @@ namespace Uno { namespace Player {
 
 using namespace v8;
 using ::Uno::Player::Player;
-using ::Uno::Action::Action;
 using ::Uno::Action::Card;
 using ::Uno::Game::AsyncGame;
 namespace Event = ::Uno::Event;
@@ -30,7 +28,7 @@ public:
 	AsyncPlayer(Handle<Object> jsplayer);
 	virtual void setGame(AsyncGame* game);
 	virtual Local<Function> getCallback(const char* cbname);
-	virtual void addAction(Action *action);
+	virtual void addCard(Card *action);
 	void playCard(const Arguments &args);
 	void draw();
 	virtual Local<Object> createCardObject(Card* card);

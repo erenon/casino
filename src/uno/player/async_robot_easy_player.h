@@ -2,6 +2,7 @@
 #define UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
 
 #include "player.h"
+#include "../action/action.h"
 #include "../action/card.h"
 #include "../event/event.h"
 
@@ -13,6 +14,7 @@ namespace Uno { namespace Player {
 
 using ::Uno::Player::Player;
 using ::Uno::Game::AsyncGame;
+using ::Uno::Action::Action;
 //Card, CARD_COLOR, CARD_VALUE
 using namespace ::Uno::Action;
 namespace Event = ::Uno::Event;

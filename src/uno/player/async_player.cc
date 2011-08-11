@@ -1,7 +1,6 @@
 #include <node/v8.h>
 #include <node/node.h>
 #include <string>
-#include <assert.h>
 #include <stdexcept>
 
 #include "async_player.h"
@@ -15,7 +14,8 @@ namespace Uno { namespace Player {
 using namespace v8;
 using ::Uno::Game::AsyncGame;
 using ::Uno::Player::Player;
-//Action, Card, CARD_COLOR/VALUE
+using ::Uno::Action::Action;
+//Card, CARD_COLOR/VALUE
 using namespace ::Uno::Action;
 namespace Event = ::Uno::Event;
 
@@ -56,11 +56,9 @@ Local<Function> AsyncPlayer::getCallback(const char* cbname) {
 	return scope.Close(cb);
 }
 
-void AsyncPlayer::addAction(Action *action) {
-	Player::addAction(action);
+void AsyncPlayer::addCard(Card *card) {
+	Player::addCard(card);
 
-	assert(action->isDisposeable() == true);
-	Card* card = dynamic_cast<Card *>(action);
 	Handle<Value> argument = createCardObject(card);
 
 	Local<Function> addaction_cb = getCallback("addAction");

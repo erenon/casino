@@ -20,15 +20,15 @@ std::string Player::getName() {
 	return name;
 }
 
-void Player::addAction(Action *action) {
-	hand.push_back(action);
+void Player::addCard(Card *card) {
+	hand.push_back(card);
 }
 
-void Player::removeAction(Action *action) {
+void Player::removeCard(Card *card) {
 	card_iterator it;
 
 	for (it = hand.begin(); it != hand.end(); it++) {
-		if (*it == action) {
+		if (*it == card) {
 			hand.erase(it);
 			break;
 		}
