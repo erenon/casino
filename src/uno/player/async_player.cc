@@ -108,7 +108,7 @@ void AsyncPlayer::playCard(const Arguments &args) {
         picked_color = Card::stringToColor(
             *String::AsciiValue(property_color->ToString())
         );
-    } catch (std::invalid_argument &e) {
+    } catch (const std::invalid_argument &e) {
         throw;
     }
 
@@ -117,7 +117,7 @@ void AsyncPlayer::playCard(const Arguments &args) {
         picked_value = Card::stringToValue(
             *String::AsciiValue(property_value->ToString())
         );
-    } catch (std::invalid_argument &e) {
+    } catch (const std::invalid_argument &e) {
         throw;
     }
 
@@ -130,7 +130,7 @@ void AsyncPlayer::playCard(const Arguments &args) {
         ) {
             try {
                 game->takeAction(this, *card);
-            } catch (std::invalid_argument &message) {
+            } catch (const std::invalid_argument &message) {
                 throw std::domain_error(message.what());
             }
         }
@@ -241,7 +241,7 @@ void AsyncPlayer::notify(Event::EVENT event_type, void* event) {
         const char* color = NULL;
         try {
             color = Card::colorToString(e->color);
-        } catch (std::invalid_argument &e) {
+        } catch (const std::invalid_argument &e) {
             color = "?";
         }
 

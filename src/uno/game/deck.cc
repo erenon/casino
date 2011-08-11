@@ -89,7 +89,7 @@ ptrdiff_t Deck::getrandom(ptrdiff_t i) {
 
 void Deck::shuffle(std::deque<Card *> &toShuffle) {
     srand( unsigned( time(NULL)));
-     std::random_shuffle(toShuffle.begin(), toShuffle.end(), getrandom);
+    std::random_shuffle(toShuffle.begin(), toShuffle.end(), getrandom);
 }
 
 void Deck::shufflePlayedIntoDeck() {

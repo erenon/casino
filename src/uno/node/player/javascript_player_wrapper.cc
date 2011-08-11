@@ -47,11 +47,11 @@ Handle<Value> JavascriptPlayerWrapper::PlayCard(const Arguments &args) {
 
     try {
         wrapper->player->playCard(args);
-    } catch (std::invalid_argument &e) {
+    } catch (const std::invalid_argument &e) {
         return ThrowException(Exception::TypeError(
             String::New(e.what())
         ));
-    } catch (std::domain_error &e) {
+    } catch (const std::domain_error &e) {
         return ThrowException(Exception::Error(
             String::New(e.what())
         ));
@@ -67,11 +67,11 @@ Handle<Value> JavascriptPlayerWrapper::Draw(const Arguments &args) {
 
     try {
         wrapper->player->draw();
-    } catch (std::invalid_argument &e) {
+    } catch (const std::invalid_argument &e) {
         return ThrowException(Exception::TypeError(
             String::New(e.what())
         ));
-    } catch (std::domain_error &e) {
+    } catch (const std::domain_error &e) {
         return ThrowException(Exception::Error(
             String::New(e.what())
         ));
