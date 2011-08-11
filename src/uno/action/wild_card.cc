@@ -1,4 +1,4 @@
-#include "wild_card.h"
+#include "./wild_card.h"
 #include "../game/game.h"
 
 namespace Uno { namespace Action {

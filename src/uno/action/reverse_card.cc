@@ -1,4 +1,4 @@
-#include "reverse_card.h"
+#include "./reverse_card.h"
 
 #include "../game/game.h"
 

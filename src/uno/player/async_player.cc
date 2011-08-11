@@ -3,7 +3,7 @@
 #include <string>
 #include <stdexcept>
 
-#include "async_player.h"
+#include "./async_player.h"
 #include "../action/action.h"
 #include "../action/card.h"
 #include "../game/async_game.h"

@@ -1,4 +1,4 @@
-#include "async_robot_easy_player.h"
+#include "./async_robot_easy_player.h"
 #include "../action/card.h"
 #include "../action/wild_card.h"
 #include "../game/async_game.h"

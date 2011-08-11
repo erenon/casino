@@ -1,4 +1,4 @@
-#include "player_list.h"
+#include "./player_list.h"
 
 #include "../player/player.h"
 

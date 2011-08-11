@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "game_wrapper.h"
+#include "./game_wrapper.h"
 #include "../player/javascript_player_wrapper.h"
 #include "../../player/async_player.h"
 #include "../../player/async_robot_easy_player.h"

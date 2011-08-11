@@ -1,4 +1,4 @@
-#include "plusfour_card.h"
+#include "./plusfour_card.h"
 
 #include "../game/game.h"
 

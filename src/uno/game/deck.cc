@@ -1,4 +1,4 @@
-#include "deck.h"
+#include "./deck.h"
 
 #include "../action/card.h"
 #include "../action/simple_card.h"

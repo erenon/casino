@@ -5,7 +5,7 @@
 #include <node/node.h>
 #include <string>
 
-#include "player.h"
+#include "./player.h"
 #include "../action/card.h"
 #include "../event/event.h"
 

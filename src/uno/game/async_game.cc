@@ -1,6 +1,6 @@
-#include "async_game.h"
+#include "./async_game.h"
 
-#include "deck.h"
+#include "./deck.h"
 #include "../event/event.h"
 #include "../action/simple_card.h"
 

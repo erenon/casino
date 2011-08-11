@@ -1,7 +1,7 @@
 #ifndef SRC_UNO_ACTION_PLUSFOUR_CARD_H_
 #define SRC_UNO_ACTION_PLUSFOUR_CARD_H_
 
-#include "wild_card.h"
+#include "./wild_card.h"
 
 namespace Uno { namespace Action {
 

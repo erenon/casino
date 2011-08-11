@@ -1,8 +1,8 @@
 #ifndef SRC_UNO_GAME_GAME_H_
 #define SRC_UNO_GAME_GAME_H_
 
-#include "player_list.h"
-#include "deck.h"
+#include "./player_list.h"
+#include "./deck.h"
 #include "../player/player.h"
 #include "../action/card.h"
 #include "../action/draw.h"

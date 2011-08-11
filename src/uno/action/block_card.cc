@@ -1,4 +1,4 @@
-#include "block_card.h"
+#include "./block_card.h"
 
 #include "../game/game.h"
 

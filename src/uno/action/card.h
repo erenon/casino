@@ -1,7 +1,7 @@
 #ifndef SRC_UNO_ACTION_CARD_H_
 #define SRC_UNO_ACTION_CARD_H_
 
-#include "action.h"
+#include "./action.h"
 
 namespace Uno { namespace Action {
     class Action;

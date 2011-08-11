@@ -1,7 +1,7 @@
 #ifndef SRC_UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
 #define SRC_UNO_PLAYER_ASYNC_ROBOT_EASY_PLAYER_H_
 
-#include "player.h"
+#include "./player.h"
 #include "../action/card.h"
 #include "../event/event.h"
 

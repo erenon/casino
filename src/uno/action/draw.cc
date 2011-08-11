@@ -1,4 +1,4 @@
-#include "draw.h"
+#include "./draw.h"
 
 #include "../game/game.h"
 

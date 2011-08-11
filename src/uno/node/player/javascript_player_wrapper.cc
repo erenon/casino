@@ -1,4 +1,4 @@
-#include "javascript_player_wrapper.h"
+#include "./javascript_player_wrapper.h"
 
 #include <string>
 #include <stdexcept>
