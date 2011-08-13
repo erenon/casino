@@ -3,8 +3,7 @@ var NativePlayer = require('./casino').Player;
 var Player = function(session_id) {
     this.session_id = session_id;
     var that = this,
-        socket = players.sessionToSocket[that.session_id],
-        native_player;
+        socket = players.sessionToSocket[session_id];
         
     if (!socket) {
         throw {
@@ -12,11 +11,6 @@ var Player = function(session_id) {
             message: 'Given session id is not found in session to socket map'
         };
     }
-        
-    this.registerCallback = function(cb_name, cb) {
-        console.log('register cb: ', cb_name);
-        this[cb_name] = cb;
-    };
     
     this.notify = function(event) {
         var type = event.event_type;
@@ -29,35 +23,34 @@ var Player = function(session_id) {
         socket.emit('action_added', action);
     };
     
-    socket.on('play_card', function(card, status_cb) {
+    this.takeAction = function(nativePlayerCallback, nativePlayerArguments, clientCallback) {
         var isValid = true,
             message;
     
         try {
-            native_player.playCard(card);
+            this.nativePlayer[nativePlayerCallback](nativePlayerArguments);
         } catch (e) {
             isValid = false;
             message = e.message;
         }
         
-        status_cb(isValid, message);
+        clientCallback(isValid, message);        
+    };
+    
+    socket.on('play_card', function(card, statusCallback) {
+        that.takeAction('playCard', card, statusCallback);
     });
     
-    socket.on('play_draw', function() {
-        try {
-            native_player.draw();
-        } catch (e) {
-            socket.emit('invalid_move', e.message);
-        }    
+    socket.on('play_draw', function(statusCallback) {
+        that.takeAction('draw', null, statusCallback);  
     });
     
     /**
      * the NativePlayer will bind native methods
-     * to the given object (this).
+     * to the returned object that uses 
+     * the callbacks of the given object (this).
      */
-    native_player = new NativePlayer(this);
-    
-    this.native_player = native_player;
+    this.nativePlayer = new NativePlayer(this);
 };
 
 var players = {};
