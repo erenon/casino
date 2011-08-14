@@ -20,12 +20,13 @@ body {
     margin: 0 0 0 105px;
 }
 
+.horizontalOppositeContainer .card {
+    margin: 0 0 0 -105px;
+}
+
 .verticalOppositeContainer {
-    /*width: 200px;
-    height: 400px;*/
     float: left;
     display: block;
-    /*clear: both;*/
 }
 
 .verticalOppositeContainer .hand {
@@ -34,13 +35,10 @@ body {
 }
 
 .verticalOppositeContainer .card {
-    /*display: block;
-    float: left;*/
+    margin: -165px 0 0 0;
 }
 
 #oppositeContainerLeft .card {
-    margin: -165px 0 0 0;
-    
     -moz-transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
     -o-transform: rotate(90deg);
@@ -49,8 +47,6 @@ body {
 }
 
 #oppositeContainerRight .card {
-    margin: -165px 0 0 0;
-    
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
@@ -82,6 +78,10 @@ body {
 
 #playerContainer .hand {
     margin: 0 0 0 105px;
+}
+
+#playerContainer .card {
+    margin: 0 0 0 -105px;
 }
 
 #playerContainer .card:hover {
@@ -122,13 +122,44 @@ body {
     float: left;
 }
 
+/* player overlay */
+
+.playerOverlay {
+    position: absolute;
+}
+
+.playerOverlayBlock {
+    font-size: 4em;
+    color: #ee0000;
+    
+    text-shadow: 0px 0px 4px #ff0000;
+    filter: dropshadow(color=#ff0000, offx=0, offy=0);
+}
+
+.playerOverlayBlockZoom {
+    color: #ee0000;
+    /*opacity: 0;*/ 
+   
+    -moz-transform: scale(10);
+    -webkit-transform: scale(10);
+    -o-transform: scale(10);
+    -ms-transform: scale(10);
+    transform: scale(10);
+    
+    -webkit-transition: all 1.8s ease-in;
+    -moz-transition: all 1s ease-in;
+    -o-transition: all 1s ease-in;
+    transition: all 1s ease-in; 
+    
+    text-shadow: 0px 0px 4px #b80000;
+    filter: dropshadow(color=#b80000, offx=0, offy=0);   
+}
+
 /* deck */
 
 #deck > div {
     float: left;
-}
-
-#deck .card {
+    padding: 10px;
     margin: 10px;
 }
 
@@ -181,7 +212,6 @@ body {
     box-shadow: 0px 0px 5px 0px #000000;
     
     float: left;
-    margin: 0 0 0 -105px;
 }
 
 .card-red {
@@ -288,6 +318,12 @@ body {
     padding: 0 20px 0 0 !important;
 }
 
+.card-plustwo .card-inner {
+    font-size: 5em;
+    height: 130px;
+    padding: 20px 13px 0 7px;
+}
+
 .card-backside .card-inner {
     background: #000;
     color: #a00;
@@ -303,4 +339,95 @@ body {
     
     text-shadow: 2px 2px 0px #fff;
     filter: dropshadow(color=#fff, offx=2, offy=2);
+}
+
+/* colorpickBox */
+.overlayBox {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    
+    -webkit-box-shadow: 0px 0px 3px 3px #000;
+    -moz-box-shadow: 0px 0px 3px 3px #000;
+    box-shadow: 0px 0px 3px 3px #000;
+}
+
+#colorpickBox {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    
+    width: 200px;
+}
+
+.colorpickOption {
+    margin: 10px;
+    width: 80px;
+    height: 80px;
+    display: block;
+    float: left;
+}
+
+.colorpickOptionRed {
+    background: #EE0000;
+    
+    -moz-border-radius: 10px 0 0 0;
+    -webkit-border-radius: 10px 0 0 0;
+    border-radius: 10px 0 0 0;
+}
+
+.colorpickOptionGreen {
+    background: #056100;
+    
+    -moz-border-radius: 0 10px 0 0;
+    -webkit-border-radius: 0 10px 0 0;
+    border-radius: 0 10px 0 0;
+}
+
+.colorpickOptionBlue {
+    background: #0E0A8E;
+    
+    -moz-border-radius: 0 0 0 10px;
+    -webkit-border-radius: 0 0 0 10px;
+    border-radius: 0 0 0 10px;
+}
+
+.colorpickOptionYellow {
+    background: #FFCC00;
+    
+    -moz-border-radius: 0 0 10px 0;
+    -webkit-border-radius: 0 0 10px 0;
+    border-radius: 0 0 10px 0;
+}
+
+/* moving card animations */
+.cardFloating {
+    position: absolute;
+    margin: 0;
+}
+
+.cardHorizontal {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+}
+
+.cardVertical {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    
+    -webkit-transition: all 0.5s ease-in;
+    -moz-transition: all 0.5s ease-in;
+}
+
+.cardMoving {
+    -webkit-transition: all 0.2s ease-in;
+    -moz-transition: all 0.2s ease-in;
+}
+
+.cardZoom {
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
 }

@@ -5,96 +5,8 @@ var unoTable = (function($) {
         _,  //i18n
         socket, //socket.io endpoint
         deck,   //deck instance
-        events, //event queue instance
-        EventQueue = function() {
-            var that = this,
-                events = [],
-                locked = false
-                ;
-                
-            this.add = function(eventCallback /*, and callback arguments*/) {
-                events.push({
-                    callback: eventCallback,
-                    arguments: Array.prototype.slice.call(arguments, 1)
-                });
-                
-                if (!locked) {
-                    // only the current event is there
-                    // start event loop
-                    this.run();
-                }
-            }
-            
-            this.run = function() {
-                var event,
-                    arguments;
-                    
-                locked = false;
-                
-                if (events.length > 0) {
-                    locked = true;
-                    
-                    event = events.shift();
-                    
-                    arguments = event.arguments || new Array();
-                    arguments.push(that.run);
-                    
-                    event.callback.apply(this, arguments);
-                }
-            };
-        },
-        
-        Deck = function(target) {
-            var that = this,
-                played,
-                deck;
-                
-            // init piles
-            played = $('<div/>');
-            
-            deck = $('<div/>');
-            
-            for (var i = 1; i <= 3; i++) {
-                var deckCard = cardBuilder(cardBuilder.backside);
-                deckCard.addClass('deck-card-'+i);
-                deck.append(deckCard);
-            }
-            
-            target.append(played).append(deck);
-            
-            this.addToPlayed = function(card, eventCallback) {
-                var domCard = cardBuilder(card);
-                played.html(domCard);
-                
-                if (eventCallback) {
-                    setTimeout(eventCallback, events.baseDelay);
-                }
-            };
-            
-            this.changeColor = function(color) {
-                var colorMap = {
-                    red: "EE0000",
-                    green: "056100",
-                    blue: "0E0A8E",
-                    yellow: "FFCC00"  
-                },
-                newColor = colorMap[color];
-                
-                $(played).find('.card').css('background', '#'+newColor);
-            };
-            
-            // socket events
-            socket.on('card_played', function(event) {
-                events.add(that.addToPlayed, event.played_card);
-            });
-            
-            socket.on('colorpick', function(event) {
-                events.add(function(eventCallback) {
-                    that.changeColor(event.color);
-                    setTimeout(eventCallback, events.baseDelay);    
-                });
-            });
-        },
+        status, //StatusBar instance
+        events, //EventQueue instance
         
         player, //player instance
         Player = function(target, isOpposite, name) {
@@ -103,53 +15,142 @@ var unoTable = (function($) {
                 name = name || '',
                 nameContainer,
                 domName,
-                cardContainer,
+                hand,
                 draw,
                 sayUno,
                 buttonContainer,
                 drawButton,
+                penaltyIndicator,
                 unoButton;
                 
-            this.addCard = function(card) {
-                var domCard = cardBuilder(card);
+            this.addCard = function(card, eventCallback) {
+                var domCard = cardBuilder(card),
+                    offset;
                 
-                if (!opposite) { // bind play out
-                    domCard.bind('click.unoTableGameplay', function() {
-                        socket.emit('play_card', card, function(isValid, message) {
-                            if (isValid === true) {
-                                domCard.remove();
-                            } else {
-                                status.warn(_._('Invalid move') + ': ' + _._(message));
-                            }
-                        });
-                    });
-                }
+                hand.append(domCard);
+                offset = domCard.offset();
+                domCard.remove();
                 
-                cardContainer.append(domCard);
+                deck.dealCard(
+                    domCard,
+                    offset,
+                    this.isRotated(),
+                    function() {
+                        hand.append(domCard);
+                        eventCallback();
+                        that.increaseHandLoad(1);
+                        
+                        if (!opposite) { // bind play out
+                            domCard.bind('click.unoTableGameplay', function() {
+                                that.playCard(card, domCard);
+                            });
+                        }
+                    }
+                );
             }
             
             this.removeCard = function(card) {
-                var toRemove;
+                var toRemove,
+                    offset;
                 
                 if (card) {
-                    toRemove = cardContainer.find(card);
+                    toRemove = card;
                 } else {
-                    toRemove = cardContainer.find('.card').last();
+                    toRemove = hand.find('.card').last();
                 }
                 
+                offset = toRemove.offset();
                 toRemove.remove();
+                this.decreaseHandLoad(1);
+                
+                return offset;
             }
+            
+            this.playCard = function(card, domCard) {
+                pickColor(card, function(card) {
+                    events.lock();
+                    socket.emit('play_card', card, function(isValid, message) {
+                        if (isValid === true) {
+                            var offset;
+                            
+                            offset = that.removeCard(domCard);
+                            
+                            events.addFront(function(eventCallback) {
+                                deck.addToPlayed(
+                                    card,
+                                    offset,
+                                    false,
+                                    function() {
+                                        that.removeCard(domCard);
+                                        eventCallback();
+                                    }
+                                )
+                            });
+                        } else {
+                            status.warn(_._('Invalid move') + ': ' + _._(message));
+                        }
+                        
+                        events.run();
+                    });                            
+                });                
+            };
             
             this.getName = function() {
                 return name;
             }
             
+            this.isRotated = function() {
+                return $(target).parent().hasClass('verticalOppositeContainer');
+            };
+            
             this.highlight = function() {
-                var highlightClass = 'playerHighlight';
+                var highlightClass = config.playerHighlightClass;
                 
                 $('.'+highlightClass).removeClass(highlightClass);
                 target.addClass(highlightClass);
             }
+            
+            this.increaseHandLoad = function(addition) {
+                var currentLoad = hand.data('load'),
+                    newLoad;
+                    
+                newLoad = currentLoad + addition;
+                hand.data('load', newLoad);
+                
+                /*if (newLoad % 3 == 0) {
+                    //put cards tighter
+                    var marginSide,
+                        currentMargin,
+                        newMargin,
+                        cardSizeDimension;
+                        
+                    if (this.isRotated()) {
+                        marginSide = 'margin-top';
+                        cardSizeDimension = 'width';
+                    } else {
+                        marginSide = 'margin-left';
+                        cardSizeDimension = 'height';
+                    }
+                    
+                    currentMargin = parseInt(hand.find('.card').css(marginSide));
+                    cardSize = parseInt(hand.find('.card').css(cardSizeDimension));
+                    newMargin = currentMargin - 2;
+                    
+                    if (cardSize + newMargin < 1) {
+                        newMargin = 1 - cardSize;
+                    }
+                    
+                    hand.find('.card').css(marginSide, newMargin + 'px');
+                }*/
+            };
+            
+            this.decreaseHandLoad = function(reduction) {
+                var currentLoad = hand.data('load'),
+                    newLoad;
+                    
+                newLoad = currentLoad - reduction;
+                hand.data('load', newLoad);
+            };
             
             if (!opposite) {
                 this.draw = function() {
@@ -170,16 +171,47 @@ var unoTable = (function($) {
             nameContainer = $('<div class="nameContainer"/>').append(domName);
             
             // cards
-            cardContainer = $('<div class="hand"/>');
+            hand = $('<div class="hand"/>');
+            hand.data('load', 0);
             
             target
                 .append(nameContainer)
-                .append(cardContainer);
+                .append(hand);
             
             // buttons
             if (!opposite) {
                 drawButton = $('<a>').text('Draw');
                 drawButton.bind('click.unoTableGameplay', this.draw);
+                
+                penaltyIndicator = $('<span/>').data('penalty', 0).hide();
+                drawButton.append(penaltyIndicator);
+                
+                socket.on('card_played', function(event) {
+                    var value = event.played_card.value,
+                        currentPenalty = penaltyIndicator.data('penalty'),
+                        addition = 0;
+                       
+                    if (value == '+2') {
+                        addition = 2;
+                    } else if (value == '+4') {
+                        addition = 4;
+                    }
+                       
+                    if (addition > 0) {
+                        currentPenalty += addition;
+                        penaltyIndicator.data('penalty', currentPenalty);
+                        penaltyIndicator
+                            .text(_._(currentPenalty + ' cards'))
+                            .show();
+                    }
+                });
+                
+                socket.on('draw_card', function() {
+                    if (penaltyIndicator.data('penalty') > 0) {
+                        penaltyIndicator.data('penalty', 0);
+                        penaltyIndicator.hide();
+                    } 
+                });
                 
                 unoButton = $('<a>').text('Uno');
                 unoButton.bind('click.unoTableGameplay', this.sayUno);
@@ -192,13 +224,41 @@ var unoTable = (function($) {
             // socket events
             socket.on('draw_card', function(event) {
                 if (event.player.name == that.getName()) {
-                    events.add(function(eventCallback) {
-                        for (var i = 0; i < event.card_count; i++) {
-                            that.addCard(cardBuilder.backside);
-                        }
-                        setTimeout(eventCallback, events.baseDelay);
-                    });
+                    for (var i = 0; i < event.card_count; i++) {
+                        events.add(function(eventCallback) {
+                            that.addCard(
+                                cardBuilder.backside,
+                                eventCallback
+                            );
+                        });
+                    }
                 } 
+            });
+            
+            socket.on('gets_blocked', function(event) {
+                if (event.gets_blocked.name == that.getName()) {
+                    // display block sign
+                    events.add(function(eventCallback) {
+                        var domSign = $('<div class="playerOverlay playerOverlayBlock"/>');
+                        domSign.text('ø');
+                        
+                        domSign.css('top', ((target.outerHeight()/2) - domSign.outerHeight()) + target.offset().top + "px");
+                        domSign.css('left', ((target.width()/2) - domSign.outerWidth()) + target.offset().left + "px");
+                        
+                        $('body').append(domSign);
+    
+                        domSign.removeClass('playerOverlayBlock');
+                        
+                        setTimeout(function() {
+                            domSign.addClass('playerOverlayBlockZoom');
+                        }, 0);  // let the render engine catch up.
+                        
+                        setTimeout(function() {
+                            eventCallback();
+                            domSign.remove();
+                        }, 1500);
+                    });
+                }
             });
             
             socket.on('players_turn', function(event) {
@@ -213,77 +273,64 @@ var unoTable = (function($) {
             if (opposite) {
                 socket.on('card_played', function(event) {
                     if (event.played_by.name == that.getName()) {
-                        events.add(function(eventCallback) {
+                        /*events.add(function(eventCallback) {
                             that.removeCard();
                             eventCallback();    
+                        })*/
+                        
+                        events.add(function(eventCallback) {
+                            var offset;
+                        
+                            offset = that.removeCard();
+                            deck.addToPlayed(
+                                event.played_card,
+                                offset,
+                                that.isRotated(),
+                                eventCallback
+                            );
                         })
                     }
                 });
             }
         },
         
-        containers = function() {},
-              
-        cardBuilder = function(card) {
-            if (card == this.backside) {
-                var domCard,
-                    inner;
+        pickColor = function(card, callback) {
+            if (card.color == 'black') {    // pick color
+                var pick = function(color) {
+                    card.choosenColor = color;
+                    callback(card);
+                },
+                box,
+                colors = ['red', 'green', 'blue', 'yellow'];
+                
+                //create colorpicker modal
+                box = $('<div id="colorpickBox" class="overlayBox"/>');
+                
+                $.each(colors, function(index, color) {
+                    var button = $('<a class="colorpickOption"/>'),
+                        colorClass;
+                        
+                    //uppercase color, e.g: colorpickOptionRed
+                    colorClass = color.charAt(0).toUpperCase();
+                    colorClass += color.substr(1);
                     
-                inner = $('<div class="card-inner"/>').text('UNO');            
-                domCard = $('<div class="card card-backside"/>').append(inner);
+                    button.addClass('colorpickOption'+colorClass);
+                    button.bind('click.unoTableGameplay', function() {
+                        pick(color);
+                        box.remove();
+                    });
+                    
+                    box.append(button);
+                });
                 
-                return domCard;
+                $('body').append(box);
+            } else {    // no colorpicking needed
+                callback(card);
             }
-            
-            var domCard,
-                sign,
-                inner,
-                value,
-                extraClass;
-                
-            //set value and extraclass if needed
-            switch (card.value) {
-                case 'block':
-                    value = 'ø';
-                    extraClass = 'block';
-                    break;
-                case 'reverse':
-                    value = '⟲';
-                    extraClass = 'reverse';
-                    break;
-                case 'plustwo':
-                    extraClass = 'plustwo';
-                    break;                    
-                case 'colorpick':
-                    value = 'CP';
-                    extraClass = 'colorpick';
-                    break;
-                case 'plusfour':
-                    extraClass = 'plusfour';
-                    break;
-                default:
-                    value = card.value;
-                    break;
-            }
-                
-            domCard = $('<div class="card"/>');
-            domCard.addClass('card-'+card.color);
-            if (extraClass) {
-                domCard.addClass('card-'+extraClass);
-            }
-            
-            sign = $('<span class="card-topleft-sign"/>');
-            sign.text(value);
-            
-            inner = $('<div class="card-inner"/>');
-            inner.text(value);
-            
-            domCard.append(sign).append(inner);
-            
-            return domCard;
         },
         
-        status = function() {},
+        containers = function() {},
+        cardBuilder,        
         
         initStartButton = function(target) {
             var button = $('<a>');
@@ -298,8 +345,6 @@ var unoTable = (function($) {
         setupSocketEvents = function(target) {
             
             socket.on('game_start', function(event) {
-                // init deck
-                deck = new Deck(target.find('#'+config.deckId));
                 deck.addToPlayed(event.first_card);
                 
                 events.add(function(eventCallback) {
@@ -317,7 +362,9 @@ var unoTable = (function($) {
             });
             
             socket.on('action_added', function(card) {
-                player.addCard(card);
+                events.add(function(eventCallback){
+                    player.addCard(card, eventCallback);                    
+                });
             });
             
             socket.on('game_end', function(event) {
@@ -389,35 +436,6 @@ var unoTable = (function($) {
         return oppositeSlot;
     };
     
-    cardBuilder.prototype.backside = {
-        color: 'backside',
-        value: 'backside'
-    };
-    
-    status.init = function(target) {
-        this.target = target;
-    };
-    
-    status.log = function(message, severity) {
-        var severity = severity || 'info',
-            entry;
-        
-        entry = $('<li class="' + severity + '"/>').text(message);
-        this.target.prepend(entry);
-    };
-    
-    status.info = function(message) {
-        status.log(message, 'info');  
-    };
-    
-    status.warn = function(message) {
-        status.log(message, 'warn');
-    };
-    
-    status.error = function(message) {
-        status.log(message, 'error');
-    }
-
     return {
         init : function(target, userConfig) {
             config = {
@@ -428,20 +446,32 @@ var unoTable = (function($) {
                 playerContainerId : 'playerContainer',
                 oppositeContainerClass : 'oppositeContainer',
                 statusBarId : 'statusBar',
+                playerHighlightClass : 'playerHighlight',
+                cardBuilder : cardBuilder,
+                StatusBar : StatusBar,
+                EventQueue : EventQueue
             };
             
             $.extend(config, userConfig);
             
             _ = config._;
-            
             socket = config.socket || socketio.connect();
+            cardBuilder = config.cardBuilder;
+            status = new config.StatusBar(target.find('#'+config.statusBarId));
+            events = new EventQueue();
             
             initStartButton(target.find('#'+config.deckId));
-            status.init(target.find('#'+config.statusBarId));
-            events = new EventQueue();
             // baseDelay is low on the initial deal
             // game_start event overwrites it
-            events.baseDelay = 50;
+            events.baseDelay = 20;
+            
+            // init deck
+            deck = new Deck({
+                target : target.find('#'+config.deckId),
+                socket : socket,
+                events : events,
+                cardBuilder : cardBuilder
+            });
             
             player = new Player(
                 containers.getPlayerSlot(), 
