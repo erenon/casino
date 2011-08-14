@@ -5,6 +5,7 @@
 
 #include "./async_player.h"
 #include "../action/action.h"
+#include "../action/wild_card.h"
 #include "../action/card.h"
 #include "../game/async_game.h"
 #include "../event/event.h"
@@ -15,6 +16,7 @@ using namespace v8;
 using ::Uno::Game::AsyncGame;
 using ::Uno::Player::Player;
 using ::Uno::Action::Action;
+using ::Uno::Action::WildCard;
 // Card, CARD_COLOR/VALUE
 using namespace ::Uno::Action;
 namespace Event = ::Uno::Event;
@@ -84,6 +86,7 @@ void AsyncPlayer::playCard(const Arguments &args) {
 
     Local<String> key_color = String::NewSymbol("color");
     Local<String> key_value = String::NewSymbol("value");
+    Local<String> key_choosen_color = String::NewSymbol("choosenColor");
 
     if (picked_card->Has(key_color) == false) {
         throw std::invalid_argument("Malformed card object, no color property.");
@@ -121,6 +124,32 @@ void AsyncPlayer::playCard(const Arguments &args) {
         throw;
     }
 
+    CARD_COLOR choosen_color = CARD_COLOR_BLACK;
+    if (picked_color == CARD_COLOR_BLACK) {
+
+		if (picked_card->Has(key_choosen_color) == false) {
+			//black card choosed but no color
+			throw std::invalid_argument("Malformed wild card object, no choosenColor property.");
+		}
+
+		Local<Value> property_choosen_color = picked_card->Get(key_choosen_color);
+		if (property_choosen_color->IsString() == false) {
+			throw std::invalid_argument("choosenColor must be string.");
+		}
+
+		try {
+			choosen_color = Card::stringToColor(
+				*String::AsciiValue(property_choosen_color->ToString())
+			);
+		} catch (const std::invalid_argument &e) {
+			throw;
+		}
+
+		if (choosen_color == CARD_COLOR_BLACK) {
+			throw std::invalid_argument("choosenColor must not be black");
+		}
+    }
+
     card_iterator card;
     for (card = hand.begin(); card < hand.end(); card++) {
 
@@ -128,6 +157,12 @@ void AsyncPlayer::playCard(const Arguments &args) {
         if ((*card)->getColor() == picked_color
         &&  (*card)->getValue() == picked_value
         ) {
+        	// if black card, set choosen color
+        	if ((*card)->getColor() == CARD_COLOR_BLACK) {
+        		WildCard* wild_card = static_cast<WildCard*>(*card);
+        		wild_card->setColor(choosen_color);
+        	}
+
             try {
                 game->takeAction(this, *card);
             } catch (const std::invalid_argument &message) {
