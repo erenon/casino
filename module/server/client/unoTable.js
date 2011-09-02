@@ -152,11 +152,20 @@ var unoTable = (function($) {
                 hand.data('load', newLoad);
             };
             
+            this.resetPenaltyIndicator = function() {
+                if (penaltyIndicator.data('penalty') > 0) {
+                    penaltyIndicator.data('penalty', 0);
+                    penaltyIndicator.text(0).hide();
+                }
+            }
+            
             if (!opposite) {
                 this.draw = function() {
                     socket.emit('play_draw', function(isValid, message) {
                         if (!isValid) {
                             status.warn(message);
+                        } else {
+                            that.resetPenaltyIndicator();
                         }
                     });
                 }
@@ -207,10 +216,7 @@ var unoTable = (function($) {
                 });
                 
                 socket.on('draw_card', function() {
-                    if (penaltyIndicator.data('penalty') > 0) {
-                        penaltyIndicator.data('penalty', 0);
-                        penaltyIndicator.hide();
-                    } 
+                    that.resetPenaltyIndicator(); 
                 });
                 
                 unoButton = $('<a class="button">').text('Uno');
