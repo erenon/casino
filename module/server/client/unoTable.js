@@ -338,8 +338,29 @@ var unoTable = (function($) {
             button.bind('click.unoTable', function() {
                 socket.emit('start_game');
                 button.remove();
+                loadTable();
             });
             target.append(button);
+        },
+        
+        loadTable = function() {
+            // init deck
+            deck = new Deck({
+                target : config.tableDomRoot.find('#'+config.deckId),
+                socket : socket,
+                events : events,
+                cardBuilder : cardBuilder
+            });
+            
+            // init player
+            player = new Player(
+                containers.getPlayerSlot(), 
+                false, 
+                'player'
+            );
+            
+            // init status bar
+            status = new config.StatusBar(config.tableDomRoot.find('#'+config.statusBarId));
         },
         
         setupSocketEvents = function(target) {
@@ -442,6 +463,7 @@ var unoTable = (function($) {
                 _ : $.i18n,
                             
                 // table areas
+                tableDomRoot : target,
                 deckId : 'deck',
                 playerContainerId : 'playerContainer',
                 oppositeContainerClass : 'oppositeContainer',
@@ -457,7 +479,6 @@ var unoTable = (function($) {
             _ = config._;
             socket = config.socket || socketio.connect();
             cardBuilder = config.cardBuilder;
-            status = new config.StatusBar(target.find('#'+config.statusBarId));
             events = new EventQueue();
             
             initStartButton(target.find('#'+config.deckId));
@@ -465,20 +486,6 @@ var unoTable = (function($) {
             // game_start event overwrites it
             events.baseDelay = 20;
             
-            // init deck
-            deck = new Deck({
-                target : target.find('#'+config.deckId),
-                socket : socket,
-                events : events,
-                cardBuilder : cardBuilder
-            });
-            
-            player = new Player(
-                containers.getPlayerSlot(), 
-                false, 
-                'player'
-            );
-                        
             setupSocketEvents(target);
         }
     };
