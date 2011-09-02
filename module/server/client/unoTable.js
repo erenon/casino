@@ -16,6 +16,7 @@ var unoTable = (function($) {
                 nameContainer,
                 domName,
                 hand,
+                maxHandSize,
                 draw,
                 sayUno,
                 buttonContainer,
@@ -81,7 +82,7 @@ var unoTable = (function($) {
                                     offset,
                                     false,
                                     function() {
-                                        that.removeCard(domCard);
+                                        //that.removeCard(domCard);
                                         eventCallback();
                                     }
                                 )
@@ -112,36 +113,65 @@ var unoTable = (function($) {
             
             this.increaseHandLoad = function(addition) {
                 var currentLoad = hand.data('load'),
-                    newLoad;
+                    newLoad,
+                    maxHandSize,
+                    firstCard,
+                    fullCardSize,
+                    marginSide,
+                    cardMargin,
+                    coveredCardSize,
+                    cardsSize,
+                    handMargin,
+                    overflowSize,
+                    reduction,
+                    newHandMargin,
+                    newCardMargin;
                     
                 newLoad = currentLoad + addition;
                 hand.data('load', newLoad);
                 
-                /*if (newLoad % 3 == 0) {
-                    //put cards tighter
-                    var marginSide,
-                        currentMargin,
-                        newMargin,
-                        cardSizeDimension;
-                        
+                maxHandSize = hand.data('maxSize');
+                firstCard = hand.find('.card').first();
+                
+                // tweak margin only on limited sized,
+                // not empty hands
+                // unlimited hand has 0 as max size
+                if (maxHandSize > 0 && firstCard) {
+                    
                     if (this.isRotated()) {
+                        fullCardSize = firstCard.outerHeight();
                         marginSide = 'margin-top';
-                        cardSizeDimension = 'width';
                     } else {
                         marginSide = 'margin-left';
-                        cardSizeDimension = 'height';
+                        fullCardSize = firstCard.outerWidth();
                     }
                     
-                    currentMargin = parseInt(hand.find('.card').css(marginSide));
-                    cardSize = parseInt(hand.find('.card').css(cardSizeDimension));
-                    newMargin = currentMargin - 2;
+                    // margin is originally negative to make overlapping cards
+                    // e.g: -105px
+                    cardMargin = parseInt(firstCard.css(marginSide)) * -1;
+                    coveredCardSize = fullCardSize - cardMargin;
                     
-                    if (cardSize + newMargin < 1) {
-                        newMargin = 1 - cardSize;
+                    // covered cards * covered size + fully visible card's size
+                    cardsSize = (newLoad - 1) * coveredCardSize + fullCardSize;
+                    handMargin = parseInt(hand.css(marginSide));
+                    
+                    overflowSize = cardsSize - maxHandSize - handMargin;
+                    
+                    if (overflowSize > 0) {
+                        // too many cards in the hand
+                        // increase overlap (decrease margin)
+                        // +1 : avoid rounding errors
+                        reduction = Math.round(overflowSize / newLoad + 1);
+                        newCardMargin = (cardMargin + reduction) * -1;
+                        
+                        hand.find('.card').css(marginSide, newCardMargin + 'px');
+                        
+                        //reduce hand margin
+                        newHandMargin = handMargin + reduction;
+                        hand.css(marginSide, newHandMargin);
                     }
                     
-                    hand.find('.card').css(marginSide, newMargin + 'px');
-                }*/
+                }
             };
             
             this.decreaseHandLoad = function(reduction) {
@@ -182,6 +212,14 @@ var unoTable = (function($) {
             // cards
             hand = $('<div class="hand"/>');
             hand.data('load', 0);
+            
+            // set max size
+            if (isOpposite) {
+                maxHandSize = 300;
+            } else {
+                maxHandSize = 0;
+            }
+            hand.data('maxSize', maxHandSize);
             
             target
                 .append(nameContainer)
@@ -389,6 +427,18 @@ var unoTable = (function($) {
                    
                target = containers.getFreeOppositeSlot();
                opposite = new Player(target, true, event.player.name);
+               
+               // @todo remove this
+               if (!unoTable.deal) {
+                   unoTable.deal = function(count) {
+                       for (var i = 0; i < count; i++) {
+                           opposite.addCard(
+                               cardBuilder.backside,
+                               function() {}
+                           );
+                       }
+                   };
+               }
             });
             
             socket.on('action_added', function(card) {

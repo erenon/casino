@@ -19,6 +19,7 @@ body {
 
 .horizontalOppositeContainer .hand {
     margin: 0 0 0 105px;
+    width: 300px;
 }
 
 .horizontalOppositeContainer .card {
@@ -33,6 +34,7 @@ body {
 .verticalOppositeContainer .hand {
     margin: 130px 0 0 0;
     width: 208px;
+    height: 300px;
     clear: left;
 }
 
