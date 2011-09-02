@@ -32,6 +32,11 @@ Deck = function(config) {
         domNode.css('left', position.left + 'px');
     };
     
+    this.clearPosition = function(domNode) {
+        domNode.css('top', '');
+        domNode.css('left', '');
+    };
+    
     this.addToPlayed = function(card, initialPosition, isRotated, eventCallback) {
         var domCard = cardBuilder(card);
         
@@ -88,6 +93,7 @@ Deck = function(config) {
         setTimeout(function(){
             domCard.removeClass('cardFloating');
             domCard.removeClass('cardMoving');
+            that.clearPosition(domCard);
             
             if (eventCallback) {
                 eventCallback();

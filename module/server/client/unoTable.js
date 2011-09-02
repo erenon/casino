@@ -180,7 +180,7 @@ var unoTable = (function($) {
             
             // buttons
             if (!opposite) {
-                drawButton = $('<a>').text('Draw');
+                drawButton = $('<a id="drawButton" class="button">').text('Draw');
                 drawButton.bind('click.unoTableGameplay', this.draw);
                 
                 penaltyIndicator = $('<span/>').data('penalty', 0).hide();
@@ -201,7 +201,7 @@ var unoTable = (function($) {
                         currentPenalty += addition;
                         penaltyIndicator.data('penalty', currentPenalty);
                         penaltyIndicator
-                            .text(_._(currentPenalty + ' cards'))
+                            .text(currentPenalty)
                             .show();
                     }
                 });
@@ -213,12 +213,15 @@ var unoTable = (function($) {
                     } 
                 });
                 
-                unoButton = $('<a>').text('Uno');
+                unoButton = $('<a class="button">').text('Uno');
                 unoButton.bind('click.unoTableGameplay', this.sayUno);
                 
-                target
+                buttonContainer = $('<div class="buttonContainer">');
+                buttonContainer
                     .append(drawButton)
                     .append(unoButton);
+                
+                target.append(buttonContainer);
             }
             
             // socket events
@@ -333,13 +336,14 @@ var unoTable = (function($) {
         cardBuilder,        
         
         initStartButton = function(target) {
-            var button = $('<a>');
+            var button = $('<a id="startButton" class="button">');
             button.html(_._('Start Game'));
             button.bind('click.unoTable', function() {
                 socket.emit('start_game');
                 button.remove();
                 loadTable();
             });
+            
             target.append(button);
         },
         
@@ -366,9 +370,8 @@ var unoTable = (function($) {
         setupSocketEvents = function(target) {
             
             socket.on('game_start', function(event) {
-                deck.addToPlayed(event.first_card);
-                
                 events.add(function(eventCallback) {
+                    deck.addToPlayed(event.first_card);
                     events.baseDelay = 1000;
                     eventCallback();                    
                 });

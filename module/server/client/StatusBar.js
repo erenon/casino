@@ -7,6 +7,12 @@ var StatusBar = function(target) {
         
         entry = $('<li class="' + severity + '"/>').text(message);
         target.prepend(entry);
+        
+        target.show();
+        setTimeout(function(){
+            target.hide();
+            entry.remove();
+        }, 2000);
     };
 };
 
