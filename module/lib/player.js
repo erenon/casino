@@ -16,6 +16,15 @@ var Player = function(session_id) {
         var type = event.event_type;
         delete event.event_type;
         socket.emit(type, event);
+
+        if (type == 'card_played') {
+            console.log(
+                event.played_by.name,
+                ' : ',
+                event.played_card.value, 
+                ' / ', 
+                event.played_card.color);
+        }
     };
     
     this.addAction = function(action) {
@@ -26,6 +35,9 @@ var Player = function(session_id) {
     this.takeAction = function(nativePlayerCallback, nativePlayerArguments, clientCallback) {
         var isValid = true,
             message;
+            
+    console.log('-------8<--------');
+    console.log('player : ', nativePlayerArguments);
     
         try {
             this.nativePlayer[nativePlayerCallback](nativePlayerArguments);
@@ -43,6 +55,10 @@ var Player = function(session_id) {
     
     socket.on('play_draw', function(statusCallback) {
         that.takeAction('draw', null, statusCallback);  
+    });
+    
+    socket.on('say_uno', function() {
+        that.nativePlayer.sayUno();
     });
     
     /**

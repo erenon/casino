@@ -201,7 +201,7 @@ var unoTable = (function($) {
                 }
                 
                 this.sayUno = function () {
-                    console.log('Player.this.sayUno not implemented');
+                    socket.emit('say_uno');
                 }
             }
             
@@ -258,7 +258,14 @@ var unoTable = (function($) {
                 });
                 
                 unoButton = $('<a class="button">').text('Uno');
-                unoButton.bind('click.unoTableGameplay', this.sayUno);
+                unoButton.bind('click.unoTableGameplay', function() {
+                    that.sayUno();
+                    
+                    unoButton.addClass('buttonPressed');
+                    setTimeout(function() {
+                        unoButton.removeClass('buttonPressed');
+                    }, 2500);
+                });
                 
                 buttonContainer = $('<div class="buttonContainer">');
                 buttonContainer

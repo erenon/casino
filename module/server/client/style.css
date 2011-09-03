@@ -484,6 +484,15 @@ body {
     
     text-shadow: 2px 2px 0px #000;
     filter: dropshadow(color=#000, offx=2, offy=2);
+    
+    -webkit-transition: background 1s ease;
+    -moz-transition: background 1s ease;
+    -o-transition: background 1s ease;
+    transition: background 1s ease;
+}
+
+.buttonPressed {
+    background: #AA0000;
 }
 
 #startButton {
