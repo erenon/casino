@@ -203,6 +203,7 @@ void AsyncGame::takeAction(Player* player, Action* action) {
         }
     }
 
+    // win or next player
     if (next_player->getCardCount() == 0 && !isPenalty()) {
         // this player wins
         Event::game_end event;
@@ -211,9 +212,8 @@ void AsyncGame::takeAction(Player* player, Action* action) {
             Event::EVENT_GAME_END,
             reinterpret_cast<void*>(&event)
         );
-    }
-
-    {   // notify about the next player
+    } else {
+    	// notify about the next player
         Event::players_turn event;
         event.player = players.getCurrentPlayer();
         players.notifyAll(

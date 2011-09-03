@@ -14,7 +14,9 @@ namespace Uno { namespace Player {
 // Card, CARD_VALUE, WildCard
 using namespace ::Uno::Action;
 
-AsyncRobotEasyPlayer::AsyncRobotEasyPlayer() {}
+AsyncRobotEasyPlayer::AsyncRobotEasyPlayer()
+	:game_runs(false)
+{}
 
 void AsyncRobotEasyPlayer::notify(Event::EVENT event_type, void* event) {
     switch (event_type) {
@@ -22,19 +24,33 @@ void AsyncRobotEasyPlayer::notify(Event::EVENT event_type, void* event) {
     {
         Event::players_turn* players_turn = reinterpret_cast<Event::players_turn*>(event);
 
-        if (players_turn->player == this) {
+        if (players_turn->player == this && game_runs) {
             takeAction();
         }
     }
         break;
-    case Event::EVENT_CARD_PLAYED:
-    case Event::EVENT_DRAW_CARD:
-    case Event::EVENT_COLORPICK:
     case Event::EVENT_GAME_START:
+    {
+    	game_runs = true;
+    }
+    	break;
     case Event::EVENT_GAME_END:
+    {
+    	game_runs = false;
+    }
+    	break;
+    case Event::EVENT_CARD_PLAYED:
+    	break;
+    case Event::EVENT_DRAW_CARD:
+    	break;
+    case Event::EVENT_COLORPICK:
+    	break;
     case Event::EVENT_UNO_SAID:
+    	break;
     case Event::EVENT_GETS_BLOCKED:
+    	break;
     case Event::EVENT_PLAYER_JOINED:
+    	break;
     default:
         break;
     }
