@@ -70,6 +70,7 @@ void AsyncRobotEasyPlayer::takeAction() {
 
         if (hand.size() == 2) {
             setUnoFlag(true);
+            game->sayUno(this);
         }
 
         game->takeAction(this, picked);

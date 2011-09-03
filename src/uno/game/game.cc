@@ -6,6 +6,7 @@ namespace Uno { namespace Game {
 
 Game::Game(int max_player_count)
     :max_player_count(max_player_count),
+     last_played_player(NULL),
      current_penalty(0) {}
 
 //
@@ -58,6 +59,18 @@ void Game::dealPenality(Player* player) {
 void Game::dealCard(Player* player) {
     Card* top_card = deck.drawCard();
     player->addCard(top_card);
+}
+
+//
+// LAST PLAYED PLAYER
+//
+
+void Game::registerLastPlayedPlayer(Player* player) {
+	last_played_player = player;
+}
+
+Player* Game::getLastPlayedPlayer() {
+	return last_played_player;
 }
 
 //

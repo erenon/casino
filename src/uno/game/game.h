@@ -21,6 +21,8 @@ class Game {
     PlayerList players;
     Deck deck;
 
+    Player* last_played_player;
+
     int current_penalty;
     Draw draw_action;
 
@@ -35,6 +37,9 @@ class Game {
     virtual void increasePenality(int addition);
     virtual void dealPenality(Player* player);
     virtual void dealCard(Player* player);
+
+    virtual void registerLastPlayedPlayer(Player* player);
+    virtual Player* getLastPlayedPlayer();
 
     virtual void blockNextPlayer();
     virtual void reverseTurn();

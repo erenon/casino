@@ -5,9 +5,11 @@ namespace Uno { namespace Game {
 
 struct GameConfig {
     int initial_hand_size;
+    int wrong_uno_penalty;
 
     GameConfig()
-        :initial_hand_size(7)
+        :initial_hand_size(7),
+         wrong_uno_penalty(2)
     {}
 };
 

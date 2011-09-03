@@ -31,6 +31,7 @@ class AsyncPlayer :public Player {
     virtual void addCard(Card *action);
     void playCard(const Arguments &args);
     void draw();
+    void sayUno();
     virtual Local<Object> createCardObject(Card* card);
     virtual Local<Object> createPlayerObject(Player* player);
     virtual void notify(Event::EVENT event_type, void* event);

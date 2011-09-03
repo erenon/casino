@@ -22,8 +22,10 @@ class AsyncGame :public ::Uno::Game::Game {
     explicit AsyncGame(int max_player_count);
     void start();
     bool isValidMove(Player* player, Action* action, std::string &message);
+    void checkUno();
     void takeAction(Player* player, Action* action);
     void takeDraw(Player* player);
+    void sayUno(Player* player);
 };
 
 }}  // namespace

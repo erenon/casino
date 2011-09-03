@@ -180,6 +180,11 @@ void AsyncPlayer::draw() {
     }
 }
 
+void AsyncPlayer::sayUno() {
+	setUnoFlag(true);
+	game->sayUno(this);
+}
+
 Local<Object> AsyncPlayer::createCardObject(Card* card) {
     HandleScope scope;
     Local<Object> jscard = Object::New();

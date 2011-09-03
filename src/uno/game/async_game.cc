@@ -73,6 +73,7 @@ bool AsyncGame::isValidMove(Player* player, Action* action, std::string &message
         return true;
     }
 
+    /** @todo add disposeable check here */
     Card *card = static_cast<Card*>(action);
 
     // current player or same card
@@ -123,6 +124,29 @@ bool AsyncGame::isValidMove(Player* player, Action* action, std::string &message
     }
 }
 
+void AsyncGame::checkUno() {
+	Player* player = getLastPlayedPlayer();
+
+	if (player != NULL) {
+		bool uno = player->getUnoFlag();
+
+		if ((player->getCardCount() == 1 && uno == false)
+		||  (player->getCardCount() != 1 && uno != false)) {
+			// no uno said or not needed uno said
+			int penalty = config.wrong_uno_penalty;
+
+			for (int i = 0; i < penalty; i++) {
+				player->addCard(deck.drawCard());
+			}
+		}
+
+		//reset uno flag
+		if (uno) {
+			player->setUnoFlag(false);
+		}
+	}
+}
+
 void AsyncGame::takeAction(Player* player, Action* action) {
     std::string message;
     bool is_valid = false;
@@ -160,9 +184,10 @@ void AsyncGame::takeAction(Player* player, Action* action) {
     // call actions action
     action->takeAction(this);
 
+    registerLastPlayedPlayer(player);
+
     // check for forgotten uno
-    /** @todo implement this */
-    // checkUno();
+    checkUno();
 
     // determine next player
     Player* next_player;
@@ -178,7 +203,7 @@ void AsyncGame::takeAction(Player* player, Action* action) {
         }
     }
 
-    if (next_player->getCardCount() == 0) {
+    if (next_player->getCardCount() == 0 && !isPenalty()) {
         // this player wins
         Event::game_end event;
         event.winner = players.getCurrentPlayer();
@@ -200,6 +225,19 @@ void AsyncGame::takeAction(Player* player, Action* action) {
 
 void AsyncGame::takeDraw(Player* player) {
     takeAction(player, &draw_action);
+}
+
+void AsyncGame::sayUno(Player* player) {
+	Event::uno_said event;
+	event.said_by = player;
+
+	//event.type
+
+	players.notifyOthers(
+		Event::EVENT_UNO_SAID,
+		reinterpret_cast<void*>(&event),
+		player
+	);
 }
 
 }}  // namespace

@@ -24,6 +24,7 @@ void JavascriptPlayerWrapper::Initialize(Handle<Object> target) {
 
     NODE_SET_PROTOTYPE_METHOD(t, "playCard", PlayCard);
     NODE_SET_PROTOTYPE_METHOD(t, "draw", Draw);
+    NODE_SET_PROTOTYPE_METHOD(t, "sayUno", SayUno);
     NODE_SET_PROTOTYPE_METHOD(t, "dispose", Dispose);
 
     target->Set(String::NewSymbol("Player"), t->GetFunction());
@@ -78,6 +79,15 @@ Handle<Value> JavascriptPlayerWrapper::Draw(const Arguments &args) {
     }
 
     return scope.Close(Undefined());
+}
+
+Handle<Value> JavascriptPlayerWrapper::SayUno(const Arguments &args) {
+	HandleScope scope;
+
+	JavascriptPlayerWrapper* wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(args.This());
+	wrapper->player->sayUno();
+
+	return scope.Close(Undefined());
 }
 
 Handle<Value> JavascriptPlayerWrapper::Dispose(const Arguments &args) {
