@@ -4,6 +4,7 @@
  *  - socket
  *  - events
  *  - cardBuilder
+ *  - onClickEvent
  */
 var
 Deck = function(config) {
@@ -18,6 +19,9 @@ Deck = function(config) {
     played = $('<div/>');
     
     deck = $('<div/>');
+    if (config.onClickEvent) {
+        deck.bind('click.unoTableGameplay', config.onClickEvent);
+    }
     
     for (var i = 1; i <= 3; i++) {
         var deckCard = cardBuilder(cardBuilder.backside);

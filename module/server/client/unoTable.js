@@ -38,8 +38,8 @@ var unoTable = (function($) {
                     this.isRotated(),
                     function() {
                         hand.append(domCard);
-                        eventCallback();
                         that.increaseHandLoad(1);
+                        eventCallback();
                         
                         if (!opposite) { // bind play out
                             domCard.bind('click.unoTableGameplay', function() {
@@ -157,7 +157,9 @@ var unoTable = (function($) {
                     
                     overflowSize = cardsSize - maxHandSize - handMargin;
                     
-                    if (overflowSize > 0) {
+                    // tweak margin if the cards overflow
+                    // >= : chrome puts the last card into a new line if == 0
+                    if (overflowSize >= 0) {
                         // too many cards in the hand
                         // increase overlap (decrease margin)
                         // +1 : avoid rounding errors
@@ -215,7 +217,11 @@ var unoTable = (function($) {
             
             // set max size
             if (isOpposite) {
-                maxHandSize = 300;
+                if (this.isRotated()) {
+                    maxHandSize = 300;
+                } else {
+                    maxHandSize = 600;
+                }
             } else {
                 maxHandSize = 0;
             }
@@ -274,6 +280,8 @@ var unoTable = (function($) {
                 
                 target.append(buttonContainer);
             }
+            
+            //containers.centerHorizontalContainer(target);
             
             // socket events
             socket.on('draw_card', function(event) {
@@ -399,20 +407,21 @@ var unoTable = (function($) {
         },
         
         loadTable = function() {
-            // init deck
-            deck = new Deck({
-                target : config.tableDomRoot.find('#'+config.deckId),
-                socket : socket,
-                events : events,
-                cardBuilder : cardBuilder
-            });
-            
             // init player
             player = new Player(
                 containers.getPlayerSlot(), 
                 false, 
                 'player'
             );
+            
+            // init deck
+            deck = new Deck({
+                target : config.tableDomRoot.find('#'+config.deckId),
+                socket : socket,
+                events : events,
+                cardBuilder : cardBuilder,
+                onClickEvent : player.draw
+            });
             
             // init status bar
             status = new config.StatusBar(config.tableDomRoot.find('#'+config.statusBarId));
@@ -436,16 +445,24 @@ var unoTable = (function($) {
                opposite = new Player(target, true, event.player.name);
                
                // @todo remove this
+               if (!unoTable.opposites) {
+                   unoTable.opposites = new Array();   
+               }
+               
+               unoTable.opposites.push(opposite);
+               
                if (!unoTable.deal) {
-                   unoTable.deal = function(count) {
-                       for (var i = 0; i < count; i++) {
-                           opposite.addCard(
+                   unoTable.deal = function(cardCount, oppositeIndex) {
+                       oppositeIndex = oppositeIndex || 0;
+                       for (var i = 0; i < cardCount; i++) {
+                           unoTable.opposites[oppositeIndex].addCard(
                                cardBuilder.backside,
                                function() {}
                            );
                        }
                    };
                }
+               // end debug code
             });
             
             socket.on('action_added', function(card) {
@@ -522,6 +539,13 @@ var unoTable = (function($) {
         
         return oppositeSlot;
     };
+    
+    /*containers.centerHorizontalContainer = function(container) {
+        var containerWidth;
+        
+        containerWidth = container.innerWidth();
+        container.css('width', containerWidth);        
+    };*/
     
     return {
         init : function(target, userConfig) {
