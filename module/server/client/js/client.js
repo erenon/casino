@@ -28,8 +28,9 @@ $(document).ready(function() {
     unoTable.init(
         $('#unoTable'),
         {
-            socket: socket,
-            cardBuilder: cardBuilder
+            socket : socket,
+            cardBuilder : cardBuilder,
+            Player : Player
         }
     );
 });
