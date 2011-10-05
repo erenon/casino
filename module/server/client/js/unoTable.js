@@ -26,6 +26,9 @@ var unoTable = (function($) {
         },
         
         loadTable = function() {
+            // init status bar
+            status = new config.StatusBar(config.tableDomRoot.find('#'+config.statusBarId));
+            
             // init deck
             deck = new Deck({
                 target : config.tableDomRoot.find('#'+config.deckId),
@@ -43,11 +46,10 @@ var unoTable = (function($) {
                 'player',
                 socket,
                 deck,
-                events
+                events,
+                _,
+                status
             );
-            
-            // init status bar
-            status = new config.StatusBar(config.tableDomRoot.find('#'+config.statusBarId));
         },
         
         setupSocketEvents = function(target) {
@@ -65,7 +67,7 @@ var unoTable = (function($) {
                    opposite;
                    
                target = containers.getFreeOppositeSlot();
-               opposite = new config.Player(target, true, event.player.name, socket, deck, events);
+               opposite = new config.Player(target, true, event.player.name, socket, deck, events, _, status);
                
                // @TODO remove this
                if (!unoTable.opposites) {

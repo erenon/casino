@@ -1,5 +1,5 @@
 var
-Player = function(target, isOpposite, name, socket, deck, events) {
+Player = function(target, isOpposite, name, socket, deck, events, _, status) {
     var that = this,
         opposite = isOpposite || false,
         name = name || '',
