@@ -34,7 +34,7 @@ body {
 .verticalOppositeContainer .hand {
     margin: 130px 0 0 0;
     width: 208px;
-    min-height: 300px;
+    height: 300px;
     clear: left;
 }
 

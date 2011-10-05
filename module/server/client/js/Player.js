@@ -145,6 +145,9 @@ Player = function(target, isOpposite, name, socket, deck, events) {
             firstCard,
             fullCardSize,
             marginSide,
+            handSizeProperty,
+            handSize,
+            newHandSize,
             cardMargin,
             coveredCardSize,
             cardsSize,
@@ -168,9 +171,11 @@ Player = function(target, isOpposite, name, socket, deck, events) {
             if (this.isRotated()) {
                 fullCardSize = firstCard.outerHeight();
                 marginSide = 'margin-top';
+                handSizeProperty = 'height';
             } else {
-                marginSide = 'margin-left';
                 fullCardSize = firstCard.outerWidth();
+                marginSide = 'margin-left';
+                handSizeProperty = 'width';
             }
             
             // margin is originally negative to make overlapping cards
@@ -190,14 +195,18 @@ Player = function(target, isOpposite, name, socket, deck, events) {
                 // too many cards in the hand
                 // increase overlap (decrease margin)
                 // +1 : avoid rounding errors
-                reduction = Math.round(overflowSize / newLoad + 1);
+                reduction = Math.round(overflowSize / newLoad) + 1;
                 newCardMargin = (cardMargin + reduction) * -1;
                 
                 hand.find('.card').css(marginSide, newCardMargin + 'px');
                 
-                //reduce hand margin
+                //increase hand margin, decrease size
                 newHandMargin = handMargin + reduction;
                 hand.css(marginSide, newHandMargin);
+                
+                handSize = parseInt(hand.css(handSizeProperty));
+                newHandSize = handSize - reduction;
+                hand.css(handSizeProperty, newHandSize + 'px');
             }
             
         }
@@ -209,6 +218,8 @@ Player = function(target, isOpposite, name, socket, deck, events) {
             
         newLoad = currentLoad - reduction;
         hand.data('load', newLoad);
+        
+        /** @TODO increase margins */
     };
     
     this.resetPenaltyIndicator = function() {
