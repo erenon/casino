@@ -1,0 +1,19 @@
+body {
+
+}
+
+/*layout*/
+#container {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.column {
+    width: 30%;
+    float: left;
+}
+
+h2 {
+    font-family: sans-serif;
+    text-decoration: underline;
+}

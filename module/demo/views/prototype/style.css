@@ -67,9 +67,9 @@ body {
 }
 
 #tableCenter {
-    /*width: 400px;*/
-    margin: 20px auto;
-    width: 400px;
+    /*margin: 20px auto;
+    width: 400px;*/
+    float: left;
     display: block;
 }
 
@@ -103,6 +103,15 @@ body {
     transition: margin 0.2s ease-in;    
 }
 
+.player {
+    float: left;
+    margin: 10px;
+}
+
+.playerHighlight {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 .hand {
     /*width: 80%;*/
     float: left;
@@ -111,6 +120,32 @@ body {
 .nameContainer {
     /*width: 20%;*/
     float: left;
+}
+
+.playerOverlay {
+    /*width: 100px;
+    height: 100px;*/
+    position: absolute;
+    top: 50px;
+    left: 100px;
+}
+
+.playerOverlayBlock {
+    font-size: 4em;
+    color: #ee0000;
+    
+    text-shadow: 0px 0px 4px #b80000;
+    filter: dropshadow(color=#b80000, offx=0, offy=0);
+}
+
+.playerOverlayBlockZoom {
+    font-size: 6em;
+    opacity: 0; 
+    
+    -webkit-transition: all 0.5s ease-in;
+    -moz-transition: all 0.5s ease-in;
+    -o-transition: all 0.5s ease-in;
+    transition: all 0.5s ease-in;    
 }
 
 /* deck */
@@ -143,6 +178,16 @@ body {
 
 #deck .deck-card-3 {
     margin: 0 0 0 -140px;
+}
+
+/* statusBar */
+#statusBar {
+    clear: both;
+    margin: 0;
+    list-style: none;
+    padding: 5px;
+    color: #ddd;
+    background: #444;
 }
 
 /* card */
@@ -284,4 +329,66 @@ body {
     
     text-shadow: 2px 2px 0px #fff;
     filter: dropshadow(color=#fff, offx=2, offy=2);
+}
+
+/* colorpickBox */
+.overlayBox {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    
+    -webkit-box-shadow: 0px 0px 3px 3px #000;
+    -moz-box-shadow: 0px 0px 3px 3px #000;
+    box-shadow: 0px 0px 3px 3px #000;
+}
+
+#colorpickBox {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    
+    width: 200px;
+}
+
+.colorpickOption {
+    margin: 10px;
+    width: 80px;
+    height: 80px;
+    display: block;
+    float: left;
+}
+
+.colorpickOptionRed {
+    background: #EE0000;
+    
+    -moz-border-radius: 10px 0 0 0;
+    -webkit-border-radius: 10px 0 0 0;
+    border-radius: 10px 0 0 0;
+}
+
+.colorpickOptionGreen {
+    background: #056100;
+    
+    -moz-border-radius: 0 10px 0 0;
+    -webkit-border-radius: 0 10px 0 0;
+    border-radius: 0 10px 0 0;
+}
+
+.colorpickOptionBlue {
+    background: #0E0A8E;
+    
+    -moz-border-radius: 0 0 0 10px;
+    -webkit-border-radius: 0 0 0 10px;
+    border-radius: 0 0 0 10px;
+}
+
+.colorpickOptionYellow {
+    background: #FFCC00;
+    
+    -moz-border-radius: 0 0 10px 0;
+    -webkit-border-radius: 0 0 10px 0;
+    border-radius: 0 0 10px 0;
 }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+ <title>Blocktest prototype</title>
+ 
+ <meta charset="utf-8" />
+ <meta name="description" content="" />
+ <meta name="keywords" content="" />
+ <meta name="author" content="erenon" />
+
+ <meta name="robots" content="index, follow" />
+ <meta name="revisit-after" content="14 days" />
+ 
+ <!--<link href="style.css" type="text/css" rel="stylesheet" />-->
+ 
+    <script src="../../client/jquery.js" ></script>
+
+<script>
+    $(document).ready(function() {
+        var func = function(target) {
+            var domSign = $('<div class="playerOverlay playerOverlayBlock"/>');
+            domSign.text('ø');
+            
+            domSign.css('top', ((target.outerHeight() - domSign.outerHeight()) / 2) + target.offset().top + "px");
+            domSign.css('left', ((target.width() - domSign.outerWidth()) / 2) + target.offset().left + "px");
+            
+            $('body').append(domSign);
+
+            domSign.removeClass('playerOverlayBlock');
+            setTimeout(function() {
+                domSign.addClass('playerOverlayBlockZoom');            
+            }, 0);
+            
+        }($('body'));
+    }); 
+</script>
+<style>
+.playerOverlay {
+    position: absolute;
+}
+
+.playerOverlayBlock {
+    font-size: 4em;
+    color: #ee0000;
+    
+    text-shadow: 0px 0px 4px #b80000;
+    filter: dropshadow(color=#b80000, offx=0, offy=0);
+}
+
+.playerOverlayBlockZoom {
+    color: #ee0000;
+    opacity: 0; 
+    
+    -webkit-transform: scale(10);
+    
+    -webkit-transition: all 2s ease-in;
+    -moz-transition: all 2s ease-in;
+    -o-transition: all 2s ease-in;
+    transition: all 2s ease-in; 
+    
+    text-shadow: 0px 0px 4px #b80000;
+    filter: dropshadow(color=#b80000, offx=0, offy=0);   
+}
+</style>
+</head>
+<body>
+
+</body>
+</html>
+

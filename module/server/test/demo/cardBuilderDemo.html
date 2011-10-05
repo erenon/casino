@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+ <title>cardBuilder testdemo</title>
+ 
+ <meta charset="utf-8" />
+ <meta name="description" content="" />
+ <meta name="keywords" content="" />
+ <meta name="author" content="erenon" />
+
+ <meta name="robots" content="index, follow" />
+ <meta name="revisit-after" content="14 days" />
+ 
+ <link href="../../client/style.css" type="text/css" rel="stylesheet" />
+ 
+ <script type="text/javascript" src="../../client/jquery.js"></script>
+ <script type="text/javascript" src="../../client/cardBuilder.js"></script>
+ 
+ <style>
+    .card {
+        margin: 0;
+    }
+ </style> 
+
+ <script>
+ $(document).ready(function() {
+    var add = function(card) {
+        $('body').append(cardBuilder(card));
+    },
+    colors = ['red', 'green', 'blue', 'yellow'];
+    
+    $.each(colors, function(index, color) {
+        for (var i = 0; i < 10; i++) {
+            add({
+                color: color,
+                value: i
+            });
+        }
+        
+        var extraValues = ['block', 'reverse', '+2'];
+        
+        $.each(extraValues, function(index, value) {
+            add({
+                color: color,
+                value: value
+            });
+        });
+    });
+    
+    add({
+        color: 'black',
+        value: 'colorpick'
+    });
+    
+    add({
+        color: 'black',
+        value: '+4'
+    });
+    
+    add(cardBuilder.backside);
+
+ });
+ </script>
+</head>
+<body>
+</body>
+</html>
+

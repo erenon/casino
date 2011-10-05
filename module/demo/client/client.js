@@ -113,7 +113,9 @@ var table = function() {
             var drawButton = $('<a></a>');
             drawButton.html('Draw');
             drawButton.click(function(){
-                socket.emit('play_draw');
+                socket.emit('play_draw', function(isValid, message) {
+                    
+                });
             });
             areas.buttons.append(drawButton);
         },

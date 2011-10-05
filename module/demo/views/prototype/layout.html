@@ -32,6 +32,7 @@
                         <div class="card-inner">UNO</div>
                     </div>
                 </div>
+                <div class="playerOverlay playerOverlayBlock">ø</div> 
             </div>
             
             <div class="player">
@@ -58,7 +59,7 @@
             </div>
         </div>
         <div class="oppositeContainer verticalOppositeContainer" id="oppositeContainerLeft">
-            <div class="player">
+            <div class="player playerHighlight">
                 <div class="nameContainer">
                     <span class="playerName">Robot 1</span>
                 </div>
@@ -96,7 +97,11 @@
                     </div> 
                 </div>
             </div>
-            <div id="statusBar"></div>
+            <ol id="statusBar">
+                <li>Invalid move: The color or the figure must match</li>
+                <li>Invalid move: The color or the figure must match</li>
+                <li>Invalid move: The color or the figure must match</li>
+            </ol>
         </div>
         
         <div class="oppositeContainer verticalOppositeContainer" id="oppositeContainerRight">
@@ -115,6 +120,7 @@
                         <div class="card-inner">UNO</div>
                     </div>
                 </div>
+                <div class="playerOverlay playerOverlayBlock">ø</div> 
             </div>         
         </div>
         
@@ -160,9 +166,15 @@
                         <div class="card-inner">ø</div>
                     </div>
                 
-                </div>  
+                </div>
             </div>      
         </div>
+    </div>
+    <div id="colorpickBox" class="overlayBox">
+        <a class="colorpickOption colorpickOptionRed"/>
+        <a class="colorpickOption colorpickOptionGreen"/>
+        <a class="colorpickOption colorpickOptionBlue"/>
+        <a class="colorpickOption colorpickOptionYellow"/>
     </div>
 </body>
 </html>
