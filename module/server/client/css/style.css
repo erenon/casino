@@ -1,7 +1,8 @@
 body {
-    background: #056100;
+    background: url('body-background.png') #056100;
     padding: 0;
     margin: 0;
+    font-family: sans-serif;
 }
 
 /*layout*/

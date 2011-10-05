@@ -4,7 +4,8 @@ var express = require('express'),
     assert = require('assert'),
     casino = require('../lib/casino'),
     Player = require('../lib/player').Player,
-    players = require('../lib/player').players
+    playerFactory = require('../lib/player'),
+    gameFactory = require('../lib/game')
     ;
 
 
@@ -30,32 +31,38 @@ app.get('/', function(req, res) {
     res.render('index', {});
 });
 
-/* serve client javascript */
-app.get('/client/*.js', function(req, res) {
-    var filename = './client/' + req.params[0] + '.js';
-    
-    res.header("Content-Type", "text/javascript");
-    
-    fs.readFile(filename, function(err, data) {
-        if (err) {
-            throw err;
+/* serve client resources */
+{
+    var serveFile = function(res, file, contentType) {
+        if (contentType) {       
+            res.header("Content-Type", contentType);
         }
-        res.end(data);
+        
+        fs.readFile(file, function(err, data) {
+            if (err) {
+                /** @todo remove this throw, log instead in prod */
+                throw err;
+            }
+            res.end(data);
+        });
+    };
+    
+    app.get('/client/*.js', function(req, res) {
+        var filename = './client/js/' + req.params[0] + '.js';        
+        serveFile(res, filename, "text/javascript");
     });
-});
+    
+    app.get('/client/*.css', function(req, res) {
+        var filename = './client/css/' + req.params[0] + '.css';
+        serveFile(res, filename, "text/css");
+    });
+    
+    app.get('/client/*.png', function(req, res) {
+        var filename = './client/png/' + req.params[0] + '.png';
+        serveFile(res, filename, "image/png");
+    });
 
-app.get('/client/*.css', function(req, res) {
-    var filename = './client/' + req.params[0] + '.css';
-    
-    res.header("Content-Type", "text/css");
-    
-    fs.readFile(filename, function(err, data) {
-        if (err) {
-            throw err;
-        }
-        res.end(data);
-    });
-});
+}
 
 console.log("Server is now listening on port 3000");
 app.listen(3000);
@@ -67,30 +74,54 @@ app.listen(3000);
 
 var io = require('socket.io').listen(app);
 
-io.set('log level', 2);
+//io.set('log level', 2);
 
 io.sockets.on('connection', function(socket) {
+    var player;
+    
     socket.on('register_sid', function(data) {
         assert.ok(data.sid);
-        // register socket id <-> session id
-        players.sessionToSocket[data.sid] = socket;
-        players.socketToSession[socket.id] = data.sid;
+       
+        // create player if not yet created
+        if (player == undefined) {
+            try {
+                player = 
+                    playerFactory.playerList.getPlayerBySessionId(data.sid)
+                    || playerFactory.createPlayer(socket);
+            } catch (e) {
+                console.log('player: ', player);
+                console.log(e);
+            }
+        }
     });    
     
-    socket.on('start_game', function(data) {
-        var game = new casino.Game(4),
-            session_id = players.socketToSession[socket.id],
-            p;
+    socket.on('create_game', function(options) {
+        var maxPlayerCount;
             
-        try {
-            p = new Player(session_id);
-        } catch (e) {
-            console.log(e);
-            return;
+        options = options || {};
+        
+        if (typeof options.maxPlayerCount == 'number') {
+            maxPlayerCount = options.maxPlayerCount;
+        } else {
+            maxPlayerCount = 4;
         }
         
-        game.joinPlayer(p);
-        game.addBot(3);
-        game.start();
+        gameFactory.createGame(maxPlayerCount);
+    });
+    
+    socket.on('list_games', function(callback) {
+        callback(gameFactory.getNotStartedGames());
+    });
+    
+    socket.on('start_instant_game', function(data) {
+        var game = gameFactory.createGame(4);
+        
+        assert.ok(player);
+        
+        if (player) {
+            game.joinPlayer(player);
+            game.addBot(3);
+            game.start();
+        }
     });
 });

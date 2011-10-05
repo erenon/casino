@@ -398,7 +398,7 @@ var unoTable = (function($) {
             var button = $('<a id="startButton" class="button">');
             button.html(_._('Start Game'));
             button.bind('click.unoTable', function() {
-                socket.emit('start_game');
+                socket.emit('start_instant_game');
                 button.remove();
                 loadTable();
             });
@@ -577,6 +577,16 @@ var unoTable = (function($) {
             events.baseDelay = 20;
             
             setupSocketEvents(target);
+        },
+        
+        create : function() {
+            socket.emit('create_game');  
+        },
+        
+        list : function() {
+            socket.emit('list_games', function(games) {
+                console.log(games);
+            });    
         }
     };
 

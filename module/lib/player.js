@@ -1,46 +1,64 @@
-var NativePlayer = require('./casino').Player;
+var 
+NativePlayer = require('./casino').Player,
 
-var Player = function(session_id) {
-    this.session_id = session_id;
-    var that = this,
-        socket = players.sessionToSocket[session_id];
+createPlayer = function(socket) {
+    var player = {},
+        nativePlayer = new NativePlayer(player);
         
+    /** @todo get rid of bind methods to player.nativePlayer */
+    /**
+     * the NativePlayer will bind native methods
+     * to the returned object that uses 
+     * the callbacks of the given object (this).
+     */
+    player.nativePlayer = nativePlayer;
+    
     if (!socket) {
         throw {
-            name: 'OutOfBounds',
-            message: 'Given session id is not found in session to socket map'
+            name: 'InvalidArgument',
+            message: 'Must provide a socket to create a player'
         };
     }
     
-    this.notify = function(event) {
+    player.notify = function(event) {
         var type = event.event_type;
         delete event.event_type;
         socket.emit(type, event);
-
+        
+        /** @todo remove debug messages */
         if (type == 'card_played') {
             console.log(
                 event.played_by.name,
                 ' : ',
                 event.played_card.value, 
                 ' / ', 
-                event.played_card.color);
+                event.played_card.color
+            );
+        } else if (type == 'draw_card') {
+            console.log(
+                event.player.name,
+                ' : draws ',
+                event.card_count,
+                ' card(s)'
+            );
         }
     };
     
-    this.addAction = function(action) {
+    player.addAction = function(action) {
         //console.log('action added: ', action);
         socket.emit('action_added', action);
     };
     
-    this.takeAction = function(nativePlayerCallback, nativePlayerArguments, clientCallback) {
+    player.takeAction = function(nativePlayerCallback, nativePlayerArguments, clientCallback) {
         var isValid = true,
             message;
-            
-    console.log('-------8<--------');
-    console.log('player : ', nativePlayerArguments);
+        
+        /** @todo remove debug messages */ 
+        console.log('-------8<--------');
+        console.log('player : ', nativePlayerArguments);
     
         try {
-            this.nativePlayer[nativePlayerCallback](nativePlayerArguments);
+            nativePlayer[nativePlayerCallback](nativePlayerArguments);
         } catch (e) {
             isValid = false;
             message = e.message;
@@ -50,28 +68,33 @@ var Player = function(session_id) {
     };
     
     socket.on('play_card', function(card, statusCallback) {
-        that.takeAction('playCard', card, statusCallback);
+        player.takeAction('playCard', card, statusCallback);
     });
     
     socket.on('play_draw', function(statusCallback) {
-        that.takeAction('draw', null, statusCallback);  
+        player.takeAction('draw', null, statusCallback);  
     });
     
     socket.on('say_uno', function() {
-        that.nativePlayer.sayUno();
+        nativePlayer.sayUno();
     });
     
-    /**
-     * the NativePlayer will bind native methods
-     * to the returned object that uses 
-     * the callbacks of the given object (this).
-     */
-    this.nativePlayer = new NativePlayer(this);
-};
+    return player;
+},
 
-var players = {};
-players.sessionToSocket = [];
-players.socketToSession = [];
+playerList = (function() {
+    var players = {};
     
-module.exports.Player = Player;
-module.exports.players = players;
+    return {
+        addPlayer : function(player, sessionId) {
+            players[sessionId] = player;   
+        },
+        
+        getPlayerBySessionId : function(sessionId) {
+            return players[sessionId];   
+        }
+    };
+}());
+
+module.exports.createPlayer = createPlayer;
+module.exports.playerList = playerList;
