@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <title>Css Hook Test</title>
+ 
+ <meta charset="utf-8" />
+ <meta name="author" content="erenon" />
+
+ <link href="../client/css/style.css" type="text/css" rel="stylesheet" />
+ 
+ <script type="text/javascript" src="../client/js/jquery.js"></script>
+ <script type="text/javascript" src="../client/js/jquery.csshooks.js"></script>
+  <script>
+$(document).ready(function() {
+    var properties = ['border-radius', 'transition'],
+        values = ['5px', 'all 0.5s ease-in'],
+        toQuery = ['border-top-left-radius'],
+        target = $('#testItem'),
+        queryListing = target.append($('<ul>'))
+        ;
+    
+    for (var i = properties.length - 1; i >= 0; i--) {
+      target.css(properties[i], values[i]);
+    }
+    
+    for (var i = toQuery.length - 1; i >= 0; i--) {
+        queryListing.append($('<li>').text(
+            toQuery[i] + ': ' + target.css(toQuery[i])
+        ));
+    }
+  
+});
+ </script>
+ <style>
+body {
+    background: #056100;
+}
+
+#testItem {
+    width: 300px;
+    height: 300px;
+    margin: 100px;
+    background-color: rgba(256, 256, 256, 0.5);
+}     
+ </style>
+</head>
+<body>
+<div id="testItem"></div>
+</body>
+</html>
