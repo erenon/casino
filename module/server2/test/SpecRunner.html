@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jasmine Spec Runner</title>
+
+  <link rel="shortcut icon" type="image/png" href="jasmine/jasmine-1.1.0/jasmine_favicon.png">
+
+  <link rel="stylesheet" type="text/css" href="jasmine/jasmine-1.1.0/jasmine.css">
+  <script type="text/javascript" src="jasmine/jasmine-1.1.0/jasmine.js"></script>
+  <script type="text/javascript" src="jasmine/jasmine-1.1.0/jasmine-html.js"></script>
+
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="../client/js/jquery.js"></script>
+  <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+  
+  <script type="text/javascript" src="../client/js/PubSub.js"></script>
+  <script type="text/javascript" src="../client/js/SocketioGateway.js"></script>
+  <script type="text/javascript" src="../client/js/PenaltyIndicator.js"></script>
+  <script type="text/javascript" src="../client/js/StatusBar.js"></script>
+  
+  
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="spec/testPubSub.js"></script>
+  <script type="text/javascript" src="spec/testSocketioGateway.js"></script>
+  <script type="text/javascript" src="spec/testPenaltyIndicator.js"></script>
+  <script type="text/javascript" src="spec/testStatusBar.js"></script>
+
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var trivialReporter = new jasmine.TrivialReporter();
+
+      jasmineEnv.addReporter(trivialReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return trivialReporter.specFilter(spec);
+      };
+
+      var currentWindowOnload = window.onload;
+
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+
+      function execJasmine() {
+        jasmineEnv.execute();
+        $('.jasmine_reporter').addClass('show-passed');
+      }
+
+    })();
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>
