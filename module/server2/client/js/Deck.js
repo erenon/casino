@@ -28,7 +28,7 @@ var $ = options.$,
     ;
     
     if (pubsub) {
-        pubsub.subscribe('changeGameSpeed', function(data) {
+        pubsub.on('changeGameSpeed', function(data) {
             speed = data.speed;
         });
     }

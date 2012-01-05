@@ -48,33 +48,33 @@ var options = options || {},
         version: '0.2-erenon',
         
         /**
-         *  PubSub.publish(event[, data]) -> Boolean
-         *  - event (String): The event to publish
+         *  PubSub.emit(event[, data]) -> Boolean
+         *  - event (String): The event to emit
          *  - data: The data to pass to subscribers
          *  Publishes the the event, passing the data to it's subscribers
         **/
-        publish: function(event, data) {
+        emit: function(event, data) {
             return publish(event, data, false);
         },
         
         /**
-         *  PubSub.publishSync(event[, data]) -> Boolean
+         *  PubSub.emitSync(event[, data]) -> Boolean
          *  - event (String): The event to publish
          *  - data: The data to pass to subscribers
          *  Publishes the the event synchronously, passing the data to it's subscribers
         **/
-        publishSync: function(event, data) {
+        emitSync: function(event, data) {
             return publish(event, data, true);
         },
         
         /**
-         *  PubSub.subscribe(event, func) -> String
+         *  PubSub.on(event, func) -> String
          *  - event (String): The event to subscribe to
          *  - func (Function): The function to call when a new event is published
          *  Subscribes the passed function to the passed event. 
          * Every returned token is unique and should be stored if you need to unsubscribe
         **/
-        subscribe: function(event, func) {
+        on: function(event, func) {
             // event is not registered yet
             if (!events.hasOwnProperty(event) ){
                 events[event] = [];

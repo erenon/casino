@@ -14,7 +14,7 @@ var pubsub = options.pubsub,
     currentPenalty = 0
     ;
     
-    pubsub.subscribe('card_played', function(data) {
+    pubsub.on('card_played', function(data) {
         var value = data.played_card.value,
             addition = 0;
             ;
@@ -31,7 +31,7 @@ var pubsub = options.pubsub,
         }
     });
     
-    pubsub.subscribe('draw_card', function() {
+    pubsub.on('draw_card', function() {
         currentPenalty = 0;
         target.text('');
     });

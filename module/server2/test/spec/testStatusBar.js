@@ -16,7 +16,7 @@ var target = $('<div/>'),
         var message = 'invalid_move_message',
             found = false;
             
-        pubsub.publishSync('invalid_move', {
+        pubsub.emitSync('invalid_move', {
             message: message
         });
         
@@ -30,7 +30,7 @@ var target = $('<div/>'),
     });
     
     it('uses i18n', function() {
-        pubsub.publishSync('invalid_move', {
+        pubsub.emitSync('invalid_move', {
             message: 'message'
         });
         

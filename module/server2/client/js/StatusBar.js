@@ -27,7 +27,7 @@ var pubsub = options.pubsub,
     list = $('<ul/>');
     target.append(list);
     
-    pubsub.subscribe('invalid_move', function(data) {
+    pubsub.on('invalid_move', function(data) {
         displayItem(_(data.message));
     });
 };

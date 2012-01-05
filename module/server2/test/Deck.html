@@ -71,7 +71,7 @@ var pubsub = PubSub(),
     });
     
     $('#speedInput').change(function() {
-        pubsub.publish('changeGameSpeed', {
+        pubsub.emit('changeGameSpeed', {
             speed: $('#speedInput').val()
         });
     });

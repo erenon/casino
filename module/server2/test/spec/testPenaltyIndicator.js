@@ -8,7 +8,7 @@ var target = $('<div/>').first(),
     });
 
     it("displays 2 on +2", function() {
-        pubsub.publishSync('card_played', {
+        pubsub.emitSync('card_played', {
             played_card: {
                 value: '+2'
             }
@@ -18,7 +18,7 @@ var target = $('<div/>').first(),
     });
     
     it("increments from 2 to 6", function() {
-        pubsub.publishSync('card_played', {
+        pubsub.emitSync('card_played', {
             played_card: {
                 value: '+4'
             }
@@ -28,7 +28,7 @@ var target = $('<div/>').first(),
     });
     
     it("resets to 0", function() {
-        pubsub.publishSync('draw_card');
+        pubsub.emitSync('draw_card');
         expect(target.text()).toEqual('');            
     });
 });
