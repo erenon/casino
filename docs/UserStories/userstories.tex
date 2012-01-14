@@ -1,0 +1,49 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc} % < and > signs
+\usepackage[normalem]{ulem} %strikethrough
+%\usepackage{listings}
+%\usepackage{wrapfig}
+%\usepackage{graphicx}
+%\usepackage{multirow}
+
+\title{User Stories \\ of the online UNO card game}
+\author{erenon}
+\date{2012. January}
+\begin{document}
+
+	\maketitle
+	
+	\tableofcontents
+
+    \section{Game Start}
+
+	\subsection{Quick Game}
+The User visits the game site and arrives to the landing page. He is a new player and wants to try out the game immediatly to get a quick overview or a returned user who just want a play, no matter what. Key point is: speed.
+After the User selects Quick Game, the game table appears and the game starts against 3 computer controlled robots. A small tooltip might show up about GUI, game rules and other gaming modes.
+
+	\subsection{Game with other online players}
+User1 visits the game site and creates a new game. The game create options enables to set maximum player count, additional robots, uno penalty, initial hand size and so on. After create, User1 becomes game owener. The game table shows up.
+
+User2 visits the game site and starts browsing available games. Selects arbitrary game and joins to it. The next screen shows the already connected players around the table waiting for the game start.
+
+The game owner can start the game at any time if there are at least two players in the game. After the game has been started, it'll be locked and no more players are allowed to join.
+	
+	\subsection{Game with specified players}
+User1 visits the game site and creates a new game. He wants to play with his friends. While creating the game, he invites his friends by \{typing in their names | selecting them from online players | selecting them from a firendlist\} (\emph{This method is unspecified because currently no technique is available to identify users, their names are not reserved}).
+
+User2 is one of the invited players. He gets notified about the invite and the game will show in the gamelist emphasized.
+
+After one or more players joined the game, User1, the game owner can start the game any time.
+	
+	\section{Gameplay}
+After the game starts the players play in the order of they joined the game. One can play a card from his hand according to the rules\footnote{These rules are shown on isvc.png} or draw a card from the stock. After playing out a card the card with the same color and value can be played out of turn by any player. After that, the player after the player act last time will be on turn. A player must \emph{say} UNO when  plays his last but one card by pressing a button says UNO. If he forgets it, some cards will be dealed out to him. The exact amount of cards (uno penalty) can be specified while game creation.
+In the game players may change their displayed names. The selected name must be unique in the game. If it's not, a warning appears and the name remains.
+A player wins if he plays his last card, or if he is on turn with empty hand. This condition is depends on game settings. After a player wins, the scoreboard appears. The losing players got penalty points by their remaining cards. On the scoreboard the current score of the game is shown emphasized, summing up the penalty points collected by each player and displaying the rank and win count. Then every user has two choices: Either leave the game or continue. If one wants to continue, the system notifies him about the number of players to be waiting for. The leaving users gets removed from the table but not from the scoreboard. After every player made his decision, a new round starts if more than one player wanted to continue. If only one player wanted to continue, a message appears telling him the sad truth \sout{decorated with a forever alone icon}.
+	\subsection{Continue gameplay after interrupt}
+User1 is playing. Becouse of connection failure	or accidentally closed browser window he gets replaced by a computer controlled robot. The robot gets the same cards he had but changes his name. If User1 visits the gae site and the game is still on, he gets an emphasized notification about the possibility of rejoining the game. He joins again, he gets his current cards and his name gets restored automatically.
+
+\end{document}
