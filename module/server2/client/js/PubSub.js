@@ -26,12 +26,8 @@ var options = options || {},
                     throw e;
                 };
             }; 
-            for (var i = 0, j = subscribers.length; i < j; i++){
-                try {
-                    subscribers[i].func(data);
-                } catch( e ){
-                    setTimeout(throwException(e), 0);
-                }
+            for (var i = subscribers.length - 1; i >= 0; i--){
+                subscribers[i].func(data);
             }
         };
         
