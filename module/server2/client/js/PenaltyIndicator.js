@@ -7,8 +7,8 @@
 
 var
 PenaltyIndicator = function(options) {
-var pubsub = options.pubsub,
-    $ = options.$,
+var $ = options.$ || $,
+    pubsub = options.pubsub,
     target = options.target,
     
     currentPenalty = 0
