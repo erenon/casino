@@ -5,7 +5,9 @@
 
 var
 CardBuilder = function(options) {
-var $ = options.$
+var $ = options.$,
+    cardWidth = 148;
+    cardHeight = 208;
     ;
     
     return {
@@ -66,6 +68,14 @@ var $ = options.$
             return $('<div class="card card-backside"/>').append(
                 $('<div class="card-inner"/>').text('UNO')
             );
+        },
+        
+        getCardWidth: function() {
+            return cardWidth;
+        },
+        
+        getCardHeight: function () {
+            return cardHeight;
         }
     };
 };
