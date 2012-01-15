@@ -71,7 +71,7 @@ var $ = options.$,
             domCard.offset(deck.offset());
             
             setTimeout(function(){
-                //TODO remove previous if any
+                //TODO remove previous card if any
                 deck.append(domCard);
                 
                 domCard.disableMove();
