@@ -3,13 +3,17 @@
  *  - $: jQuery object
  *  - target: DOM element to place the cards into
  *  - pubsub: (optional) PubSub object, listens to game speed changes
+ *  - events: eventQueue object, synchronizes moving cards
  */
 var
 Deck = function(options) {
 var $ = options.$,
     deck = options.target,
     pubsub = options.pubsub || false,
-    speed = 200,
+    events = options.events || {add: function(eventCallback) {
+        eventCallback(function(){});    
+    }},
+    speed = 400,
     movable = function(domObject) {
         
         if (!domObject.movable) {
@@ -40,24 +44,25 @@ var $ = options.$,
             
             domCard = domCard.detach();
             domCard.offset(deck.offset());
-            $('body').append(domCard);
-            
-            movable(domCard).enableMove();
-            
-            domCard.offset(finalOffset);
-            
-            setTimeout(function(){
-                cardTarget.append(domCard);
                 
-                domCard.disableMove();
+            events.add(function(endCallback) {
+                $('body').append(domCard);
                 
-                domCard.css('top', '');
-                domCard.css('left', '');
+                movable(domCard).enableMove();
                 
-                /*if (eventCallback) {
-                    eventCallback();
-                }*/
-            }, speed);
+                domCard.offset(finalOffset);
+                
+                setTimeout(function() {
+                    cardTarget.append(domCard);
+                    
+                    domCard.disableMove();
+                    
+                    domCard.css('top', '');
+                    domCard.css('left', '');
+                    
+                    endCallback();
+                }, speed);                
+            });
         },
         
         pushCard: function(domCard) {
@@ -65,24 +70,25 @@ var $ = options.$,
             
             domCard.detach();
             domCard.offset(initialOffset);
-            $('body').append(domCard);
             
-            movable(domCard).enableMove();
-            domCard.offset(deck.offset());
-            
-            setTimeout(function(){
-                //TODO remove previous card if any
-                deck.append(domCard);
+            events.add(function(endCallback) {
+                $('body').append(domCard);
                 
-                domCard.disableMove();
+                movable(domCard).enableMove();
+                domCard.offset(deck.offset());
                 
-                domCard.css('top', '');
-                domCard.css('left', '');
-                
-                /*if (eventCallback) {
-                    eventCallback();
-                }*/
-            }, speed);
+                setTimeout(function() {
+                    //TODO remove previous card if any
+                    deck.append(domCard);
+                    
+                    domCard.disableMove();
+                    
+                    domCard.css('top', '');
+                    domCard.css('left', '');
+                    
+                    endCallback();
+                }, speed);
+            });
         }
     };
 };
