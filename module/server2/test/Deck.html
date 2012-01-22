@@ -40,11 +40,12 @@ body {
  <script>
 $(document).ready(function() {
 var pubsub = PubSub(),
-    deck = Deck({
+    options = {
         $: $,
         target: $('#deckTarget'),
         pubsub: pubsub
-    }),
+    },
+    deck = Stock(options, Pile(options)),
     cb = CardBuilder({
         $: $
     }),
