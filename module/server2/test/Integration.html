@@ -33,19 +33,22 @@ $(document).ready(function() {
         }),
         eventQueue = EventQueue(),
         cardBuilder = CardBuilder({
-            $: $
+            $: $,
+            pubsub: pubsub
         }),
-        stock = Deck({
+        stock = Stock({
             $: $,
             target: $('#stock'),
             pubsub: pubsub,
             events: eventQueue
         }),
-        pile = Deck({
+        pile = Pile({
             $: $,
             target: $('#pile'),
+            events: eventQueue,
             pubsub: pubsub,
-            events: eventQueue
+            stock: stock,
+            cardBuilder: cardBuilder
         }),
         //statusBar
         player = ControlledPlayer({
@@ -55,7 +58,8 @@ $(document).ready(function() {
             cardBuilder: cardBuilder,
             stock: stock,
             pile: pile,
-            name: 'player'
+            name: 'player',
+            events: eventQueue
         }),
         oppositeTop = OppositePlayer({
             $: $,
@@ -65,7 +69,8 @@ $(document).ready(function() {
             stock: stock,
             pile: pile,
             name: 'oppositeTop',
-            orientation: 180           
+            orientation: 180,
+            events: eventQueue           
         }),
         oppositeLeft = OppositePlayer({
             $: $,
@@ -75,7 +80,8 @@ $(document).ready(function() {
             stock: stock,
             pile: pile,
             name: 'oppositeLeft',
-            orientation: 270           
+            orientation: 270,
+            events: eventQueue           
         }),
         oppositeRight = OppositePlayer({
             $: $,
@@ -85,9 +91,22 @@ $(document).ready(function() {
             stock: stock,
             pile: pile,
             name: 'oppositeRight',
-            orientation: 90           
+            orientation: 90,
+            events: eventQueue           
         })
         ;
+        
+    pubsub.emitSync('changeViewportSize', {
+        height: $(window).height(),
+        width: $(window).width()
+    });
+    
+    $(window).resize(function() {
+        pubsub.emitSync('changeViewportSize', {
+            height: $(window).height(),
+            width: $(window).width()
+        });        
+    });   
         
     PenaltyIndicator({
         pubsub: pubsub,
@@ -98,14 +117,14 @@ $(document).ready(function() {
         player: {
             name: 'oppositeTop'
         },
-        card_count: 3
+        card_count: 2
     });  
     
     pubsub.emitSync('draw_card', {
         player: {
             name: 'oppositeLeft'
         },
-        card_count: 3
+        card_count: 6
     });
     
     pubsub.emitSync('draw_card', {
@@ -120,10 +139,27 @@ $(document).ready(function() {
            name: 'player'
        },
        card: {
+           color: 'blue',
+           value: 'block'
+       }
+    });
+        
+    pubsub.emitSync('get_card', {
+       player: {
+           name: 'player'
+       },
+       card: {
            color: 'red',
            value: 3
        }
     });
+    
+    pubsub.emitSync('game_start', {
+        first_card: {
+            color: 'red',
+            value: 7
+        }
+    });  
 });    
 </script>
 </head>
@@ -147,8 +183,13 @@ $(document).ready(function() {
         </td>
         <td><!-- middle -->
             <div class="deckContainer">
-                <div class="deck" id="pile"></div>
-                <div class="deck" id="stock"></div>
+                <div class="deck" id="pile">
+                </div>
+                <div class="deck" id="stock">
+                    <div class="card card-backside" data-card='{"color": "backside", "value": "backside"}'><div class="card-inner">UNO</div></div>
+                    <div class="card card-backside" data-card='{"color": "backside", "value": "backside"}'><div class="card-inner">UNO</div></div>
+                    <div class="card card-backside" data-card='{"color": "backside", "value": "backside"}'><div class="card-inner">UNO</div></div> 
+                </div>
             </div>
         </td>
         <td class="playerContainer verticalPlayerContainer rightPlayerContainer">
