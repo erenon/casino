@@ -12,6 +12,6 @@ NODELINT = $(if $(shell test -f /usr/bin/jslint && echo "true"),nodelint,~/node_
 #	$(NODEUNIT) test
 
 lint:
-	$(NODELINT) --config nodelint.cfg ./lib/*.js ../test/module/*.js #./index.js
+	$(NODELINT) --config nodelint.cfg `find ./server2 -name "*.js" | grep -v jquery | grep -v jasmine`
 
 .PHONY: test lint
