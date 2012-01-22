@@ -21,7 +21,7 @@ var target = $('<div/>'),
         });
         
         target.find('li').each(function(index, item){
-            if ($(item).text() == message+'_translated') {
+            if ($(item).text() === message+'_translated') {
                 found = true;
             }
         });

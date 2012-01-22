@@ -8,8 +8,7 @@ var
 PubSub = function(options) {
     "use strict";
     
-var options = options || {},
-    socket = options.socket || false,
+var socket,
     events = {},
     lastUid = -1,
     
@@ -20,13 +19,10 @@ var options = options || {},
         }
         
         var emitEvent = function(){
-            var subscribers = events[event];
-            var throwException = function(e){
-                return function(){
-                    throw e;
-                };
-            }; 
-            for (var i = subscribers.length - 1; i >= 0; i--){
+            var subscribers = events[event],
+                i
+                ; 
+            for (i = subscribers.length - 1; i >= 0; i--){
                 subscribers[i].func(data);
             }
         };
@@ -39,6 +35,9 @@ var options = options || {},
         return true;
     }
     ;
+    
+    options = options || {};
+    socket = options.socket || false;
 
     return {
         version: '0.2-erenon',
@@ -97,11 +96,13 @@ var options = options || {},
          *  - token (String): The token of the function to unsubscribe
          *  Unsubscribes a specific subscriber from a specific event using the unique token
         **/
-        unsubscribe: function(token){
-            for (var e in events){
-                if (events.hasOwnProperty(e)){
-                    for (var i = 0, j = events[e].length; i < j; i++){
-                        if (events[e][i].token === token){
+        unsubscribe: function(token) {
+            var e, i, j;
+            
+            for (e in events) {
+                if (events.hasOwnProperty(e)) {
+                    for (i = 0, j = events[e].length; i < j; i++) {
+                        if (events[e][i].token === token) {
                             events[e].splice( i, 1 );
                             return token;
                         }

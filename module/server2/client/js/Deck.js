@@ -10,10 +10,11 @@
 var
 Deck = function(options, deck) {
 var $ = options.$,
-    target = options.target,    // unused
-    pubsub = options.pubsub || false,
-    deck = deck || {}
+    target = options.target,    // TODO unused option
+    pubsub = options.pubsub || false
     ;
+    
+    deck = deck || {};
     
     deck.movable = function(domObject) {
         var margin = 'originalMargin'
@@ -50,7 +51,7 @@ var $ = options.$,
                 domObject.css('margin-left', domObject.data(margin).left);
                 // unset margin store
                 domObject.data(margin, undefined);
-            }
+            };
         }
         
         return domObject;
@@ -69,10 +70,10 @@ Stock = function(options, deck) {
 var target = options.target,
     events = options.events || {add: function(eventCallback) {
         eventCallback(function(){});    
-    }},     // unused
-    deck = deck || {}
+    }}     // TODO unused option
     ;
     
+    deck = deck || {};
     Deck(options, deck);
     
     deck.pullCard = function(domCard, endCallback) {
@@ -102,7 +103,7 @@ var target = options.target,
                 endCallback();
             }
         }, deck.speed);                
-    }
+    };
     
     return deck;
 },
@@ -114,10 +115,10 @@ var target = options.target,
     }},
     pubsub = options.pubsub,
     stock = options.stock,
-    cardBuilder = options.cardBuilder,
-    deck = deck || {}
+    cardBuilder = options.cardBuilder
     ;
     
+    deck = deck || {};
     Deck(options, deck);
     
     deck.pushCard = function(domCard) {
@@ -144,7 +145,7 @@ var target = options.target,
                 endCallback();
             }, deck.speed);
         });
-    }
+    };
     
     // show first card
     pubsub.on('game_start', function(data) {

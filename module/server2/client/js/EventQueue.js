@@ -3,6 +3,9 @@ var
 EventQueue = function() {
 var events = [],
     running = false,
+    run
+    ;
+    
     run = function() {
         var eventCallback;
 
@@ -13,14 +16,13 @@ var events = [],
             running = true;
             eventCallback(run);
         }
-    }
-    ;
+    };
     
     return {
         add: function(eventCallback) {
             events.push(eventCallback);
             
-            if (events.length == 1 && !running) {
+            if (events.length === 1 && !running) {
                 run();
             }
         }

@@ -23,7 +23,6 @@ var $ = options.$,
     cardBuilder = options.cardBuilder,    // unused
     stock = options.stock,    // unused
     pile = options.pile,    // unused
-    player = player || {},
     name = options.name || "",
     hand = $('<div class="hand"/>'),
     isHorizontal,
@@ -60,18 +59,20 @@ var $ = options.$,
                     + 'px'    
             );
             
-            if (player.orientation == 90) {
+            if (player.orientation === 90) {
                 domCard.css('transform', 'rotate(-90deg)');
-            } else if (player.orientation == 270) {
+            } else if (player.orientation === 270) {
                 domCard.css('transform', 'rotate(90deg)');
             }
         }        
     }
     ;
     
+    player = player || {};
+    
     player.orientation = options.orientation || 0;
-    isHorizontal = (player.orientation == 0 || player.orientation == 180);
-    isVertical = (player.orientation == 90 || player.orientation == 270);
+    isHorizontal = (player.orientation === 0 || player.orientation === 180);
+    isVertical = (player.orientation === 90 || player.orientation === 270);
     
     // init hand
     player.hand = hand;
@@ -116,13 +117,13 @@ var $ = options.$,
 OppositePlayer = function(options, player) {
 var $ = options.$,
     pubsub = options.pubsub,
-    player = player || {},
     cardBuilder = options.cardBuilder, 
     stock = options.stock,
     pile = options.pile,
     events = options.events
     ;
     
+    player = player || {};
     Player(options, player);
     
     
@@ -139,15 +140,18 @@ var $ = options.$,
     
     // draws some cards from the stock
     pubsub.on('draw_card', function(event) {
+        var i,
+            drawCard = function(endCallback) {
+                var domCard = cardBuilder.getBackside();
+                player.hand.addCard(domCard);
+                stock.pullCard(domCard, endCallback);
+            }
+            ;
+        
         if (player.isItMe(event.player)) {
-            for (var i = event.card_count - 1; i >= 0; i--) {
-                events.add(function(endCallback) {
-                    var domCard = cardBuilder.getBackside();
-                    player.hand.addCard(domCard);
-                    //player.hand.append(domCard);
-                    stock.pullCard(domCard, endCallback);
-                });
-            };
+            for (i = event.card_count - 1; i >= 0; i--) {
+                events.add(drawCard);
+            }
         }
     });
     
@@ -168,13 +172,13 @@ var $ = options.$,
 ControlledPlayer = function(options, player) {
 var $ = options.$,
     pubsub = options.pubsub,
-    player = player || {},
     cardBuilder = options.cardBuilder,
     stock = options.stock,
     pile = options.pile,
     events = options.events
     ;
     
+    player = player || {};
     Player(options, player);
     
     pubsub.on('get_card', function(event) {

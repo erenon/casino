@@ -7,7 +7,7 @@
 
 var
 PenaltyIndicator = function(options) {
-var $ = options.$ || $,
+var $ = options.$,  // TODO unused option
     pubsub = options.pubsub,
     target = options.target,
     
@@ -16,12 +16,12 @@ var $ = options.$ || $,
     
     pubsub.on('card_played', function(data) {
         var value = data.played_card.value,
-            addition = 0;
+            addition = 0
             ;
             
-        if (value == '+2') {
+        if (value === '+2') {
             addition = 2;
-        } else if (value == '+4') {
+        } else if (value === '+4') {
             addition = 4;
         }
         

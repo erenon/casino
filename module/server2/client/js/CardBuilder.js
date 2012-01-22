@@ -175,7 +175,7 @@ var $ = options.$,
             sign = $('<span class="card-topleft-sign"/>');
             inner = $('<div class="card-inner"/>');
             
-            if (card.value != 'colorpick') {
+            if (card.value !== 'colorpick') {
                 inner.text(value);
                 sign.text(value);
             }
