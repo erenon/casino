@@ -7,6 +7,7 @@
  * - stock: Deck of unused cards
  * - pile: Deck of used cards
  * - name: players name
+ * - nameContainer: domElement contains players name
  * - orientation: rotation of the player container. 
  *       0: normal horizontal 
  *      90: vertical, topside to the left
@@ -23,7 +24,8 @@ var $ = options.$,
     cardBuilder = options.cardBuilder,    // unused
     stock = options.stock,    // unused
     pile = options.pile,    // unused
-    name = options.name || "",
+    name,
+    nameContainer = options.nameContainer,
     hand = $('<div class="hand"/>'),
     isHorizontal,
     isVertical,
@@ -90,6 +92,7 @@ var $ = options.$,
     player.setName = function(newName) {
         // TODO check name collosion
         name = newName;
+        nameContainer.text(name);
     };
     
     player.isItMe = function(playerObject) {
@@ -100,7 +103,8 @@ var $ = options.$,
         setHandSize();
         setCardPosition(hand.find('.card'));       
     });
-
+    
+    player.setName(options.name || "");
 },
 
 /**
@@ -128,15 +132,18 @@ var $ = options.$,
     
     
     // shows and pulls the recently played card to the pile
-    /*pubsub.on('card_played', function(event) {
+    pubsub.on('card_played', function(event) {
         if (player.isItMe(event.played_by)) {
             var domCard = cardBuilder.get(event.played_card);
-            // TODO remove one card from hand,
-            // use CardBuilder.flip
-            player.hand.addCard(domCard);
-            pile.pushCard(domCard);
+            events.add(function(endCallback) {
+                
+                // TODO use 3D flip effect
+                player.hand.find('.card').last().remove();
+                player.hand.addCard(domCard);
+                pile.pushCard(domCard, endCallback);
+            });
         }
-    });*/
+    });
     
     // draws some cards from the stock
     pubsub.on('draw_card', function(event) {
@@ -166,6 +173,9 @@ var $ = options.$,
  * - cardBuilder: CardBuilder object
  * - stock: Deck of unused cards
  * - pile: Deck of used cards
+ * - events: EventQueue object
+ * - validator: Validator object
+ * - socket. SocketioGateway object
  * 
  * player: (optional) Inherited object to bind methods to it
  */
@@ -175,11 +185,16 @@ var $ = options.$,
     cardBuilder = options.cardBuilder,
     stock = options.stock,
     pile = options.pile,
-    events = options.events
+    events = options.events,
+    validator = options.validator,
+    socket = options.socket,
+    isPlaying = false
     ;
     
     player = player || {};
     Player(options, player);
+    
+    validator.setPlayerName(player.getName());
     
     pubsub.on('get_card', function(event) {
         if (player.isItMe(event.player)) {
@@ -187,9 +202,39 @@ var $ = options.$,
                 var domCard = cardBuilder.get(event.card);
                 player.hand.addCard(domCard);
                 stock.pullCard(domCard, endCallback);
+                
+                domCard.click(function() {
+                    var card,
+                        msg
+                        ;
+                        
+                    if (isPlaying) {
+                        card = domCard.data('card');
+                        msg = validator.isCardValid(card);
+                        
+                        if (msg === true) {
+                            // TODO handle wild card
+                            // on colorpick set choosenColor property
+                            // on card object
+                            socket.emit('play_card', card);
+                        } else {
+                            pubsub.emit('invalid_move', {message: msg});
+                        }
+                    }
+                });
             });
         }
     });
+    
+    pubsub.on('game_start', function(event) {
+        player.hand.addClass('handOpen');
+        isPlaying = true;
+    });
+    
+    pubsub.on('game_end', function(event) {
+        player.hand.removeClass('handOpen');
+        isPlaying = false;
+    });    
     
     return player; 
 }
