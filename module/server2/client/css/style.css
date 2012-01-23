@@ -11,7 +11,8 @@ body {
 
 /* table */
 #gameTableContainer {
-    width: 1004px;
+    /* TODO remove width*/
+    /*width: 1004px;*/
     margin: 0 auto;
     display: block;
 }
@@ -24,7 +25,131 @@ body {
     border-spacing: 0;
 }
 
-/* player */
+.cornerContainer {
+    position: relative;
+}
+
+/* status bar */
+#statusBar {
+    background: rgba(0, 0, 0, 0.8);
+    list-style: none;
+    font-family: serif;
+    color: #fff;
+    
+    padding: 0.5em;
+    margin: 0 1em 0 1em;
+    
+    max-height: 4em;
+    overflow: hidden;
+    
+    text-shadow: 2px 2px 0px #000000;
+    filter: dropshadow(color=#000000, offx=2, offy=2);
+    
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#statusBar li {
+    padding: 0.1em 0;    
+}
+
+/* 
+ * player 
+ */
+
+/* name */
+.name {
+    font-weight: 700;
+    font-family: sans-serif;
+    
+    position: absolute;
+    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    text-shadow: -1px -1px 0px rgba(256, 256, 256, 0.2);
+    filter: dropshadow(color=#ffffff, offx=-1, offy=-1);     
+}
+
+#nameLeft {
+    left: 0;
+    bottom: 0;
+}
+
+#nameTop {
+    right: 0.2em;
+    top: 0;
+}
+
+#nameRight {
+    right: 0;
+    bottom: 0;
+}
+
+/* hand */
+.hand .card {
+    -webkit-transition: margin 0.1s ease-in;
+    -moz-transition: margin 0.1s ease-in;
+    -o-transition: margin 0.1s ease-in;
+    transition: margin 0.1s ease-in;    
+}
+
+.handOpen .card:hover {
+    cursor: pointer;
+    margin-top: -20px;
+}
+
+
+/* buttons */
+.buttonContainer {
+    padding: 2em 0 0 0; 
+    list-style: none; 
+    width: 60%;
+    margin: 0 auto;  
+}
+
+.buttonContainer .button {
+    display: block;
+    margin: 0 0 10px 0;    
+}
+
+.button {
+    color: #FFFFFF;
+    font-weight: 700;
+    font-family: sans-serif;
+    background: #202020;
+    padding: 6px 8px;
+    text-align: center;
+    cursor: pointer;
+    
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+
+    -webkit-box-shadow: 1px 1px 2px 0px #000000;
+    -moz-box-shadow: 1px 1px 2px 0px #000000;
+    box-shadow: 1px 1px 2px 0px #000000;
+    
+    text-shadow: 2px 2px 0px #000;
+    filter: dropshadow(color=#000, offx=2, offy=2);
+    
+    -webkit-transition: background 1s ease;
+    -moz-transition: background 1s ease;
+    -o-transition: background 1s ease;
+    transition: background 1s ease;
+}
+
+.buttonPressed {
+    background: #AA0000;
+}
+
+#buttonDraw span {
+    font-weight: 400;
+    font-size: 0.8em;
+    margin: 0 0 0 0.2em;
+}
 
 /*
  * card
@@ -153,9 +278,8 @@ body {
 }
 
 .deckContainer {
-    margin: 0 auto;   
-    width: 321px;
-    height: 202px;
+    margin: 0 auto;
+    padding: 0 0 1em 0;   
 }
 
 /* deck - stock */
@@ -168,8 +292,6 @@ body {
 }
 
 #stock > div:nth-child(2) {
-    margin: 0 0 0 -140px;
-    
     -moz-transform: rotate(2deg);
     -webkit-transform: rotate(2deg);
     -o-transform: rotate(2deg);
@@ -179,7 +301,6 @@ body {
 }
 
 #stock > div:nth-child(3) {
-    margin: 0 0 0 -140px;
 }
 
 /*
