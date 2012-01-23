@@ -1,16 +1,13 @@
 /**
  * options:
  *  - $: jQuery object
- *  - target: DOM element to place the cards into
- *  - pubsub: (optional) PubSub object, listens to game speed changes
- *  - events: eventQueue object, synchronizes moving cards
+ *  - pubsub: (optional) PubSub object, listens to changeGameSpeed
  * 
- * deck: 
+ * deck: (Optional) Inherited object to bind methods to 
  */
 var
 Deck = function(options, deck) {
 var $ = options.$,
-    target = options.target,    // TODO unused option
     pubsub = options.pubsub || false
     ;
     
@@ -66,11 +63,18 @@ var $ = options.$,
     }
 },
 
+/**
+ * options:
+ *  - target: DOM element to place the cards into
+ *  - pubsub: (optional) PubSub object, listens to changeCardSize
+ *  - cardBuilder: CardBuilder object
+ * 
+ * deck: (Optional) Inherited object to bind methods to 
+ */
 Stock = function(options, deck) {
 var target = options.target,
-    events = options.events || {add: function(eventCallback) {
-        eventCallback(function(){});    
-    }}     // TODO unused option
+    pubsub = options.pubsub,
+    cardBuilder = options.cardBuilder
     ;
     
     deck = deck || {};
@@ -96,18 +100,44 @@ var target = options.target,
             
             domCard.disableMove();
             
-            domCard.css('top', '');
-            domCard.css('left', '');
-            
             if (endCallback) {
                 endCallback();
             }
         }, deck.speed);                
     };
     
+    // taloon cards - decoration purpose only
+    (function() {
+        var taloonCards = [],
+            taloonCard,
+            i
+            ;
+             
+        for (i = 2; i >= 0; i--) {
+            taloonCard = cardBuilder.getBackside();
+            taloonCards.push(taloonCard);
+            target.append(taloonCard);
+        }
+        pubsub.on('changeCardSize', function(cardSize) {
+            for (i = 2; i >= 1; i--) {
+                taloonCards[i].css('margin-left', -1*cardSize.width);
+            }
+        })
+    }());
+    
     return deck;
 },
 
+/**
+ * options:
+ *  - target: DOM element to place the cards into
+ *  - events: EventQueue object, enques deal of first card
+ *  - pubsub: (optional) PubSub object, listens to game_start
+ *  - stock: Stock object, pulls the first card from it
+ *  - cardBuilder: CardBuilder object, used to build the first card
+ * 
+ * deck: (Optional) Inherited object to bind methods to 
+ */
 Pile = function(options, deck) {
 var target = options.target,
     events = options.events || {add: function(eventCallback) {
@@ -121,30 +151,30 @@ var target = options.target,
     deck = deck || {};
     Deck(options, deck);
     
-    deck.pushCard = function(domCard) {
-        var initialOffset = domCard.offset();
+    deck.pushCard = function(domCard, endCallback) {
+        var startingOffset = domCard.offset();
         
-        domCard.detach();
-        domCard.offset(initialOffset);
+        deck.movable(domCard).enableMove();
         
-        events.add(function(endCallback) {
-            $('body').append(domCard);
+        domCard = domCard.detach();
+        domCard.offset(startingOffset);
+        $('body').append(domCard);
+
+        domCard.offset(target.offset());
+        domCard.css('transform', 'none');
             
-            deck.movable(domCard).enableMove();
-            domCard.offset(target.offset());
+        
+        setTimeout(function() {
+            target.append(domCard);
+            domCard.disableMove();
             
-            setTimeout(function() {
-                //TODO remove previous card if any
-                target.append(domCard);
-                
-                domCard.disableMove();
-                
-                domCard.css('top', '');
-                domCard.css('left', '');
-                
+            target.find('.card').first().remove();
+            domCard.css('margin', 0);
+            
+            if (endCallback) {
                 endCallback();
-            }, deck.speed);
-        });
+            }
+        }, deck.speed);
     };
     
     // show first card
