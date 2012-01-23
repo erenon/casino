@@ -85,7 +85,7 @@ var socket,
             // forcing token as String, to allow for future expansions without breaking usage
             // and allow for easy use as key names for the 'events' object
             var token = (++lastUid).toString();
-            events[event].push( { token: token, func: func } );
+            events[event].unshift( { token: token, func: func } );
             
             // return token for unsubscribing
             return token;
