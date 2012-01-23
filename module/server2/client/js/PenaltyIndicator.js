@@ -1,7 +1,7 @@
 /**
  * options:
- *  - pubsub: PubSub object
- *  - $: jQuery
+ *  - $: jQuery object
+ *  - pubsub: PubSub object, listens to card_played, draw_card
  *  - target: DOM element to write into
  */
 
@@ -27,12 +27,23 @@ var $ = options.$,  // TODO unused option
         
         if (addition > 0) {
             currentPenalty += addition;
-            target.text(currentPenalty);
+            target.text('(' + currentPenalty + ')');
+            target.show();
         }
     });
     
     pubsub.on('draw_card', function() {
         currentPenalty = 0;
         target.text('');
+        target.show();
     });
+    
+    // hide initially
+    target.hide();
+    
+    return {
+        isPenalty: function() {
+            return (currentPenalty > 0);
+        }
+    }
 };
