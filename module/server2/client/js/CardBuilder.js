@@ -92,7 +92,7 @@ var $ = options.$,
     ;
     
     if (pubsub) {
-        pubsub.on('changeViewportSize', function(data) {
+        pubsub.on('changeViewportSize', function(viewport) {
             var baseCardHeight = 200,
                 baseCardWidth = 140,
                 fullTableHeight = 5,  // expressed in card height
@@ -106,8 +106,8 @@ var $ = options.$,
                 maxCardHeight = baseCardHeight * multi;
                 maxCardWidth = baseCardWidth * multi;
                 
-                if (maxCardHeight < data.height / fullTableHeight
-                &&  maxCardWidth  < data.width  / fullTableWidth)
+                if (maxCardHeight < viewport.height / fullTableHeight
+                &&  maxCardWidth  < viewport.width  / fullTableWidth)
                 {
                     break;
                 } 
