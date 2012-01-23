@@ -21,6 +21,9 @@
  <script type="text/javascript" src="../client/js/PenaltyIndicator.js"></script>
  <script type="text/javascript" src="../client/js/StatusBar.js"></script>
  <script type="text/javascript" src="../client/js/Player.js"></script>
+ <script type="text/javascript" src="../client/js/GameTable.js"></script>
+ <script type="text/javascript" src="../client/js/Validator.js"></script> 
+ <script type="text/javascript" src="../client/js/Control.js"></script> 
  <!--<script type="text/javascript" src="../client/js/main.js"></script>-->
 
 <script>
@@ -28,6 +31,10 @@ $(document).ready(function() {
     var /*socket = SocketioGateway({
             io: io
         }),*/
+        socket = {
+            on: function(event, callback) { console.log(callback, ' listens to event ', event); },
+            emit: function(event, data) { console.log(event, ' emitted with data: ', data); }
+        },
         pubsub = PubSub({
             //socket: socket
         }),
@@ -39,8 +46,9 @@ $(document).ready(function() {
         stock = Stock({
             $: $,
             target: $('#stock'),
+            events: eventQueue,
             pubsub: pubsub,
-            events: eventQueue
+            cardBuilder: cardBuilder
         }),
         pile = Pile({
             $: $,
@@ -50,7 +58,20 @@ $(document).ready(function() {
             stock: stock,
             cardBuilder: cardBuilder
         }),
-        //statusBar
+        penaltyIndicator = PenaltyIndicator({
+            $: $,
+            pubsub: pubsub,
+            target: $('#buttonDraw span')
+        }),
+        validator = Validator({
+            pubsub: pubsub,
+            penaltyIndicator: penaltyIndicator
+        }),
+        statusBar = StatusBar({
+            $: $,
+            pubsub: pubsub,
+            target: $('#statusBar')
+        }),
         player = ControlledPlayer({
             $: $,
             pubsub: pubsub,
@@ -59,7 +80,10 @@ $(document).ready(function() {
             stock: stock,
             pile: pile,
             name: 'player',
-            events: eventQueue
+            nameContainer: $('#nameBottom'),
+            events: eventQueue,
+            validator: validator,
+            socket: socket
         }),
         oppositeTop = OppositePlayer({
             $: $,
@@ -69,6 +93,7 @@ $(document).ready(function() {
             stock: stock,
             pile: pile,
             name: 'oppositeTop',
+            nameContainer: $('#nameTop'),
             orientation: 180,
             events: eventQueue           
         }),
@@ -80,6 +105,7 @@ $(document).ready(function() {
             stock: stock,
             pile: pile,
             name: 'oppositeLeft',
+            nameContainer: $('#nameLeft'),
             orientation: 270,
             events: eventQueue           
         }),
@@ -91,50 +117,54 @@ $(document).ready(function() {
             stock: stock,
             pile: pile,
             name: 'oppositeRight',
+            nameContainer: $('#nameRight'),
             orientation: 90,
             events: eventQueue           
+        }),
+        gameTable = GameTable({
+            $: $,
+            pubsub: pubsub,
+            tableContainer: $('#gameTableContainer'),
+            table: $('#gameTable'),
+            corners: $('.cornerContainer'),
+            deckContainer: $('.deckContainer'),
+            names: $('.name')
+        }),
+        drawButton = DrawButton({
+            validator: validator,
+            socket: socket,
+            target: $('#buttonDraw'),
+            pubsub: pubsub
+        }),
+        unoButton = UnoButton({
+            validator: validator,
+            socket: socket,
+            target: $('#buttonUno')
         })
         ;
         
-    pubsub.emitSync('changeViewportSize', {
-        height: $(window).height(),
-        width: $(window).width()
-    });
-    
-    $(window).resize(function() {
-        pubsub.emitSync('changeViewportSize', {
-            height: $(window).height(),
-            width: $(window).width()
-        });        
-    });   
-        
-    PenaltyIndicator({
-        pubsub: pubsub,
-        target: $('#penaltyIndicator')
-    });  
-    
-    pubsub.emitSync('draw_card', {
+    /*pubsub.emitSync('draw_card', {
         player: {
             name: 'oppositeTop'
         },
         card_count: 2
-    });  
+    });  */
     
-    pubsub.emitSync('draw_card', {
+    /*pubsub.emitSync('draw_card', {
         player: {
             name: 'oppositeLeft'
         },
-        card_count: 6
-    });
+        card_count: 2
+    });*/
     
-    pubsub.emitSync('draw_card', {
+    /*pubsub.emitSync('draw_card', {
         player: {
             name: 'oppositeRight'
         },
         card_count: 3
-    });
+    });*/
     
-    pubsub.emitSync('get_card', {
+    /*pubsub.emitSync('get_card', {
        player: {
            name: 'player'
        },
@@ -142,7 +172,7 @@ $(document).ready(function() {
            color: 'blue',
            value: 'block'
        }
-    });
+    });*/
         
     pubsub.emitSync('get_card', {
        player: {
@@ -159,7 +189,23 @@ $(document).ready(function() {
             color: 'red',
             value: 7
         }
-    });  
+    });
+    
+    pubsub.emitSync('card_played', {
+        played_by: {
+            name: 'oppositeLeft'    
+        },
+        played_card: {
+            color: 'red',
+            value: '+2'
+        }
+    });
+    
+    pubsub.emitSync('players_turn', {
+        player: {
+            name: 'player'
+        }
+    });
 });    
 </script>
 </head>
@@ -167,13 +213,22 @@ $(document).ready(function() {
 <div id="gameTableContainer">
 <table id="gameTable">
     <tr>
-        <td><!-- empty cell --></td>
+        <td><!-- topleft corner cell -->
+            <div class="cornerContainer">
+                <div class="name" id="nameTop">Player 2</div>
+                <div class="name" id="nameLeft">Player 1</div>
+            </div>
+        </td>
         <td class="playerContainer horizontalPlayerContainer topPlayerContainer">
             <!-- top player -->
             <div class="horizontalPlayer">
             </div>
         </td>
-        <td><!-- empty cell --></td>
+        <td><!-- topright corner cell -->
+            <div class="cornerContainer">
+                <div class="name" id="nameRight">Player 3</div>
+            </div>
+        </td>
     </tr>
     <tr>
         <td class="playerContainer verticalPlayerContainer leftPlayerContainer">
@@ -186,11 +241,9 @@ $(document).ready(function() {
                 <div class="deck" id="pile">
                 </div>
                 <div class="deck" id="stock">
-                    <div class="card card-backside" data-card='{"color": "backside", "value": "backside"}'><div class="card-inner">UNO</div></div>
-                    <div class="card card-backside" data-card='{"color": "backside", "value": "backside"}'><div class="card-inner">UNO</div></div>
-                    <div class="card card-backside" data-card='{"color": "backside", "value": "backside"}'><div class="card-inner">UNO</div></div> 
                 </div>
             </div>
+            <ul id="statusBar"></ul>
         </td>
         <td class="playerContainer verticalPlayerContainer rightPlayerContainer">
             <!-- right cell -->
@@ -199,14 +252,23 @@ $(document).ready(function() {
         </td>
     </tr>
     <tr>
-        <td><!-- empty cell --></td>
+        <td><!-- bottomleft corner cell -->
+            <div class="name" id="nameBottom">Controlled Player</div>
+        </td>
         <td class="playerContainer horizontalPlayerContainer bottomPlayerContainer">
             <!-- controlled player -->
             <div class="horizontalPlayer">
             </div>
-            <div id="penaltyIndicator"></div>
         </td>
-        <td><!-- empty cell --></td>
+        <td><!-- controls -->
+            <div class="cornerContainer">
+                <ul class="buttonContainer">
+                    <li><a id="buttonDraw" class="button">Draw<span>4</span></a></li>
+                    <li><a id="buttonUno" class="button">Uno</a></li>
+                    <!--<li><input type="text" size="5" value="200" id="speedInput"/></li>-->
+                </ul>            
+            </div>
+        </td>
     </tr>
 </table>
 </div>
