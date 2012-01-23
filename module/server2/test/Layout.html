@@ -95,6 +95,117 @@ body {
     display: inline-block;
 }
 
+.cornerContainer {
+    position: relative;
+    width: 248px;
+    height: 202px;
+}
+
+
+/* name */
+.name {
+    font-weight: 700;
+    font-family: sans-serif;
+    
+    position: absolute;
+    
+    text-shadow: -1px -1px 0px rgba(256, 256, 256, 0.2);
+    filter: dropshadow(color=#ffffff, offx=-1, offy=-1);     
+}
+
+#nameLeft {
+    left: 0;
+    bottom: 0;
+}
+
+#nameTop {
+    right: 0.2em;
+    top: 0;
+}
+
+#nameRight {
+    right: 0;
+    bottom: 0;
+}
+
+/* buttons */
+.buttonContainer {
+    padding: 10px; 
+    list-style: none; 
+    width: 40%;
+    margin: 0 0 0 2em;  
+}
+
+.buttonContainer .button {
+    display: block;
+    margin: 0 0 10px 0;    
+}
+
+.button {
+    color: #FFFFFF;
+    font-weight: 700;
+    font-family: sans-serif;
+    background: #202020;
+    padding: 6px 8px;
+    text-align: center;
+    cursor: pointer;
+    
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+
+    -webkit-box-shadow: 1px 1px 2px 0px #000000;
+    -moz-box-shadow: 1px 1px 2px 0px #000000;
+    box-shadow: 1px 1px 2px 0px #000000;
+    
+    text-shadow: 2px 2px 0px #000;
+    filter: dropshadow(color=#000, offx=2, offy=2);
+    
+    -webkit-transition: background 1s ease;
+    -moz-transition: background 1s ease;
+    -o-transition: background 1s ease;
+    transition: background 1s ease;
+}
+
+.buttonPressed {
+    background: #AA0000;
+}
+
+#buttonDraw span {
+    font-weight: 400;
+    font-size: 0.8em;
+}
+
+#buttonDraw span:before {
+    content: " (";    
+}
+
+#buttonDraw span:after {
+    content: ")";    
+}
+
+/* status bar */
+#statusBar {
+    background: #111;
+    list-style: none;
+    font-family: serif;
+    color: #fff;
+    
+    padding: 0.5em;
+    margin: 1em 1em -2em 1em;
+    
+    text-shadow: 2px 2px 0px #000000;
+    filter: dropshadow(color=#000000, offx=2, offy=2);
+    
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#statusBar li {
+    padding: 0.1em 0;    
+}
+
  </style>
  <script>
 
@@ -104,14 +215,23 @@ body {
 <div id="gameTableContainer">
 <table id="gameTable">
     <tr>
-        <td><!-- empty cell --></td>
+        <td><!-- topleft corner cell -->
+            <div class="cornerContainer">
+                <div class="name" id="nameTop">Player 2</div>
+                <div class="name" id="nameLeft">Player 1</div>
+            </div>
+        </td>
         <td class="playerContainer horizontalPlayerContainer topPlayerContainer">
             <!-- top player -->
             <div class="horizontalPlayer">
                 TOP PLAYER
             </div>
         </td>
-        <td><!-- empty cell --></td>
+        <td><!-- topright corner cell -->
+            <div class="cornerContainer">
+                <div class="name" id="nameRight">Player 3</div>
+            </div>
+        </td>
     </tr>
     <tr>
         <td class="playerContainer verticalPlayerContainer leftPlayerContainer">
@@ -125,6 +245,10 @@ body {
                 <div class="deck" id="pile">used cards</div>
                 <div class="deck" id="stock">unused cards</div>
             </div>
+            <ul id="statusBar">
+                <li>Not your turn</li>
+                <li>You must play +2 or +4 card, or draw</li>
+            </ul>
         </td>
         <td class="playerContainer verticalPlayerContainer rightPlayerContainer">
             <!-- right cell -->
@@ -134,14 +258,22 @@ body {
         </td>
     </tr>
     <tr>
-        <td><!-- empty cell --></td>
+        <td><!-- bottomleft corner cell -->
+                <div class="name" id="nameBottom">Controlled Player</div>
+        </td>
         <td class="playerContainer horizontalPlayerContainer bottomPlayerContainer">
             <!-- controlled player -->
             <div class="horizontalPlayer">
                 CONTROLLED PLAYER
             </div>
         </td>
-        <td><!-- empty cell --></td>
+        <td><!-- controls -->
+            <ul class="buttonContainer">
+                <li><a id="buttonDraw" class="button">Draw<span>4</span></a></li>
+                <li><a class="button">Uno</a></li>
+                <!--<li><input type="text" size="5" value="200" id="speedInput"/></li>-->
+            </ul>            
+        </td>
     </tr>
 </table>
 </div>
