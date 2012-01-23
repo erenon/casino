@@ -1,33 +1,46 @@
 /**
  * options:
+ *  - $: jQuery object
  *  - pubsub: PubSub object
- *  - $: jQuery
  *  - target: DOM element to write into
- *  - _: i18n module
+ *  - _: i18n module | TODO out of use
  * 
  * TODO subscribe to all statusbar related events
+ * TODO use changeGameSpeed
  */
 
 var 
 StatusBar = function(options) {
-var pubsub = options.pubsub,
-    $ = options.$,
+var $ = options.$,
+    pubsub = options.pubsub,
     target = options.target,
-    _ = options._,
-    list,
+    //_ = options._,
+    setMargin = function() {
+        target.css('margin-bottom', target.outerHeight() * -1);    
+    },
     displayItem = function(text) {
         var item = $('<li/>').text(text);
-        list.append(item);
+        
+        target.append(item);
+        setMargin();
+        
+        target.show();
+        
         setTimeout(function() {
             item.remove();
+            if (target.children().length == 0) {
+                target.hide();
+            } else {
+                setMargin();
+            }
         }, 3000);
     } 
     ;
     
-    list = $('<ul/>');
-    target.append(list);
+    target.hide();
     
     pubsub.on('invalid_move', function(data) {
-        displayItem(_(data.message));
+        //displayItem(_(data.message));
+        displayItem(data.message);
     });
 };
