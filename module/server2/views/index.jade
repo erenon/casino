@@ -1,0 +1,35 @@
+#gameTableContainer
+    table#gameTable
+        tr
+            td
+                .cornerContainer
+                    #nameTop.name
+                    #nameLeft.name
+            td
+                .horizontalPlayer
+            td
+                .cornerContainer
+                    #nameRight.name
+        tr
+            td
+                .verticalPlayer
+            td
+                .deckContainer
+                    #pile.deck
+                    #stock.deck
+                ul#statusBar
+            td
+                .verticalPlayer
+        tr
+            td
+                #nameBottom.name
+            td
+                .horizontalPlayer
+            td
+                .cornerContainer
+                    ul.buttonContainer
+                        li
+                            a#buttonDraw.button Draw
+                                span
+                        li
+                            a#buttonUno.button Uno
