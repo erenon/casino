@@ -36,11 +36,19 @@ GameTable = function(options) {
             $(name).css('max-width', cardSize.height);
         });
         
-        tableContainer.css('width', table.innerWidth());
-        
         deckContainer.css('width', cardSize.width * 2.1);
     });
-      
+    
+    pubsub.on('changeTableSize', function(tableSize) {
+        // center table
+        tableContainer.css('width', table.innerWidth());
+        tableContainer.css(
+            'margin-top',
+            ($(window).height() - table.outerHeight()) /2
+        );        
+    });
+    
+    // adjust sizes to viewport  
     $(window).resize(function() {
         viewportChanged();
     });
