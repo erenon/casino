@@ -11,8 +11,6 @@ body {
 
 /* table */
 #gameTableContainer {
-    /* TODO remove width*/
-    /*width: 1004px;*/
     margin: 0 auto;
     display: block;
 }
@@ -89,6 +87,12 @@ body {
 }
 
 /* hand */
+.hand {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
 .hand .card {
     -webkit-transition: margin 0.1s ease-in;
     -moz-transition: margin 0.1s ease-in;
@@ -99,6 +103,10 @@ body {
 .handOpen .card:hover {
     cursor: pointer;
     margin-top: -20px;
+}
+
+.handActive {
+    background: rgba(256, 256, 256, 0.2);
 }
 
 
@@ -307,6 +315,6 @@ body {
  * DEBUG
  * TODO remove this.
  */
-.hand, .deck {
+/*.hand, .deck {
     border: 1px dashed #202020;
-}
+}*/

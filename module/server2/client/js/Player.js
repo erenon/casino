@@ -4,8 +4,7 @@
  * - pubusb: PubSub object
  * - target: domElement contains player
  * - cardBuilder: CardBuilder object
- * - stock: Deck of unused cards
- * - pile: Deck of used cards
+ * - events: EventQueue object, enques active hand higlight
  * - name: players name
  * - nameContainer: domElement contains players name
  * - orientation: rotation of the player container. 
@@ -21,14 +20,18 @@ Player = function(options, player) {
 var $ = options.$,
     pubsub = options.pubsub,
     target = $(options.target),    
-    cardBuilder = options.cardBuilder,    // unused
-    stock = options.stock,    // unused
-    pile = options.pile,    // unused
+    cardBuilder = options.cardBuilder, 
+    events = options.events,
     name,
     nameContainer = options.nameContainer,
     hand = $('<div class="hand"/>'),
     isHorizontal,
     isVertical,
+    adjustDimensions = function() {
+        setHandSize();
+        setCardPosition(hand.find('.card'));
+        pubsub.emitSync('changeTableSize', {});       
+    },
     setHandSize = function() {
         // set width/height
         if (isHorizontal) {
@@ -99,11 +102,22 @@ var $ = options.$,
         return (playerObject.name === name);
     };
     
-    pubsub.on('changeCardSize', function(data) {
-        setHandSize();
-        setCardPosition(hand.find('.card'));       
+    pubsub.on('changeCardSize', adjustDimensions);
+    pubsub.on('players_turn', function(event) {
+        if (player.isItMe(event.player)) {
+            events.add(function(endCallback) {
+                player.hand.addClass('handActive');
+                endCallback();            
+            });
+        } else {
+            events.add(function(endCallback) {
+                player.hand.removeClass('handActive');
+                endCallback();            
+            });
+        }
     });
     
+    adjustDimensions();
     player.setName(options.name || "");
 },
 
@@ -188,7 +202,8 @@ var $ = options.$,
     events = options.events,
     validator = options.validator,
     socket = options.socket,
-    isPlaying = false
+    isPlaying = false,
+    choosenCard
     ;
     
     player = player || {};
@@ -196,7 +211,7 @@ var $ = options.$,
     
     validator.setPlayerName(player.getName());
     
-    pubsub.on('get_card', function(event) {
+    /*pubsub.on('get_card', function(event) {
         if (player.isItMe(event.player)) {
             events.add(function(endCallback) {
                 var domCard = cardBuilder.get(event.card);
@@ -217,12 +232,58 @@ var $ = options.$,
                             // on colorpick set choosenColor property
                             // on card object
                             socket.emit('play_card', card);
+                            choosenCard = domCard;
                         } else {
                             pubsub.emit('invalid_move', {message: msg});
                         }
                     }
                 });
             });
+        }
+    });*/
+    
+    pubsub.on('action_added', function(card) {
+        events.add(function(endCallback) {
+            var domCard = cardBuilder.get(card);
+            player.hand.addCard(domCard);
+            stock.pullCard(domCard, endCallback);
+            
+            domCard.click(function() {
+                var card,
+                    msg
+                    ;
+                    
+                if (isPlaying) {
+                    card = domCard.data('card');
+                    msg = validator.isCardValid(card);
+                    
+                    if (msg === true) {
+                        // TODO handle wild card
+                        // on colorpick set choosenColor property
+                        // on card object
+                        socket.emit('play_card', card);
+                        choosenCard = domCard;
+                    } else {
+                        pubsub.emit('invalid_move', {message: msg});
+                    }
+                }
+            });
+        });
+    });
+    
+    // pulls the recently choosen card to the pile
+    pubsub.on('card_played', function(event) {
+        if (player.isItMe(event.played_by)) {
+            
+            if (choosenCard.color === event.played_card.color
+            &&  choosenCard.value === event.played_card.value) {
+                
+                events.add(function(endCallback) {
+                    pile.pushCard(choosenCard, endCallback);
+                });
+            } // TODO else: choosenCard was altered since the last
+              // play_card socketio event, 
+              // handle this by searching for same card and play it
         }
     });
     
