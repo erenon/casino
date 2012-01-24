@@ -118,11 +118,12 @@ var target = options.target,
             taloonCards.push(taloonCard);
             target.append(taloonCard);
         }
+        
         pubsub.on('changeCardSize', function(cardSize) {
             for (i = 2; i >= 1; i--) {
                 taloonCards[i].css('margin-left', -1*cardSize.width);
             }
-        })
+        });
     }());
     
     return deck;

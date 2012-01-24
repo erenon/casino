@@ -45,5 +45,5 @@ var $ = options.$,  // TODO unused option
         isPenalty: function() {
             return (currentPenalty > 0);
         }
-    }
+    };
 };
