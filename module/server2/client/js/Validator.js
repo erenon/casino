@@ -19,6 +19,7 @@ var pubsub = options.pubsub,
     
     pubsub.on('card_played', function(event) {
         isMyTurn = false;
+        lastCard = event.played_card;
     });
     
     pubsub.on('players_turn', function(event) {
@@ -78,6 +79,6 @@ var pubsub = options.pubsub,
             // draw is valid only if it's my turn
             return isMyTurn;
         }
-    }
+    };
 }
 ;
