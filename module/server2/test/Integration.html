@@ -23,7 +23,8 @@
  <script type="text/javascript" src="../client/js/Player.js"></script>
  <script type="text/javascript" src="../client/js/GameTable.js"></script>
  <script type="text/javascript" src="../client/js/Validator.js"></script> 
- <script type="text/javascript" src="../client/js/Control.js"></script> 
+ <script type="text/javascript" src="../client/js/Control.js"></script>
+ <script type="text/javascript" src="../client/js/SeatManager.js"></script> 
  <!--<script type="text/javascript" src="../client/js/main.js"></script>-->
 
 <script>
@@ -85,41 +86,35 @@ $(document).ready(function() {
             validator: validator,
             socket: socket
         }),
-        oppositeTop = OppositePlayer({
+        seatManager = SeatManager({
             $: $,
             pubsub: pubsub,
-            target: $('.horizontalPlayer')[0],
-            cardBuilder: cardBuilder,
-            stock: stock,
-            pile: pile,
-            name: 'oppositeTop',
-            nameContainer: $('#nameTop'),
-            orientation: 180,
-            events: eventQueue           
-        }),
-        oppositeLeft = OppositePlayer({
-            $: $,
-            pubsub: pubsub,
-            target: $('.verticalPlayer')[0],
-            cardBuilder: cardBuilder,
-            stock: stock,
-            pile: pile,
-            name: 'oppositeLeft',
-            nameContainer: $('#nameLeft'),
-            orientation: 270,
-            events: eventQueue           
-        }),
-        oppositeRight = OppositePlayer({
-            $: $,
-            pubsub: pubsub,
-            target: $('.verticalPlayer')[1],
-            cardBuilder: cardBuilder,
-            stock: stock,
-            pile: pile,
-            name: 'oppositeRight',
-            nameContainer: $('#nameRight'),
-            orientation: 90,
-            events: eventQueue           
+            OppositePlayer: OppositePlayer,
+            seats: [
+                { // left
+                  target: $('.verticalPlayer')[0],
+                  nameContainer: $('#nameLeft'),
+                  orientation: 270
+                },
+                { // top
+                  target: $('.horizontalPlayer')[0],  
+                  nameContainer: $('#nameTop'),
+                  orientation: 180  
+                },
+                { // top
+                  target: $('.verticalPlayer')[1],  
+                  nameContainer: $('#nameRight'),
+                  orientation: 90  
+                }
+            ],
+            defaultPlayerOptions: {
+                $: $,
+                pubsub: pubsub,
+                cardBuilder: cardBuilder,
+                stock: stock,
+                pile: pile,
+                events: eventQueue
+            }
         }),
         gameTable = GameTable({
             $: $,
@@ -142,29 +137,47 @@ $(document).ready(function() {
             target: $('#buttonUno')
         })
         ;
-        
-    /*pubsub.emitSync('draw_card', {
+    
+    pubsub.emitSync('player_joined', {
+        player: {
+            name: 'oppositeLeft'
+        }
+    });
+    
+    pubsub.emitSync('player_joined', {
         player: {
             name: 'oppositeTop'
-        },
-        card_count: 2
-    });  */
+        }
+    });
     
-    /*pubsub.emitSync('draw_card', {
+    pubsub.emitSync('player_joined', {
+        player: {
+            name: 'oppositeRight'
+        }
+    });
+        
+    pubsub.emitSync('draw_card', {
         player: {
             name: 'oppositeLeft'
         },
         card_count: 2
-    });*/
+    });
     
-    /*pubsub.emitSync('draw_card', {
+    pubsub.emitSync('draw_card', {
+        player: {
+            name: 'oppositeTop'
+        },
+        card_count: 2
+    });
+    
+    pubsub.emitSync('draw_card', {
         player: {
             name: 'oppositeRight'
         },
-        card_count: 3
-    });*/
+        card_count: 2
+    });
     
-    /*pubsub.emitSync('get_card', {
+    pubsub.emitSync('get_card', {
        player: {
            name: 'player'
        },
@@ -172,7 +185,7 @@ $(document).ready(function() {
            color: 'blue',
            value: 'block'
        }
-    });*/
+    });
         
     pubsub.emitSync('get_card', {
        player: {
@@ -191,21 +204,16 @@ $(document).ready(function() {
         }
     });
     
-    pubsub.emitSync('card_played', {
-        played_by: {
-            name: 'oppositeLeft'    
-        },
-        played_card: {
-            color: 'red',
-            value: '+2'
-        }
-    });
+    pubsub.emitSync('players_turn', {player: {name: 'oppositeLeft'}});
+    pubsub.emitSync('card_played', {played_by: {name: 'oppositeLeft'},played_card: {color: 'red',value: '5'}});
     
-    pubsub.emitSync('players_turn', {
-        player: {
-            name: 'player'
-        }
-    });
+    pubsub.emitSync('players_turn', {player: {name: 'oppositeTop'}});
+    pubsub.emitSync('card_played', {played_by: {name: 'oppositeTop'},played_card: {color: 'blue',value: '5'}});
+    
+    pubsub.emitSync('players_turn', {player: {name: 'oppositeRight'}});
+    pubsub.emitSync('card_played', {played_by: {name: 'oppositeRight'},played_card: {color: 'yellow',value: '7'}});
+    
+    pubsub.emitSync('players_turn', {player: {name: 'player'}});
 });    
 </script>
 </head>
@@ -215,23 +223,23 @@ $(document).ready(function() {
     <tr>
         <td><!-- topleft corner cell -->
             <div class="cornerContainer">
-                <div class="name" id="nameTop">Player 2</div>
-                <div class="name" id="nameLeft">Player 1</div>
+                <div class="name" id="nameTop"></div>
+                <div class="name" id="nameLeft"></div>
             </div>
         </td>
-        <td class="playerContainer horizontalPlayerContainer topPlayerContainer">
+        <td>
             <!-- top player -->
             <div class="horizontalPlayer">
             </div>
         </td>
         <td><!-- topright corner cell -->
             <div class="cornerContainer">
-                <div class="name" id="nameRight">Player 3</div>
+                <div class="name" id="nameRight"></div>
             </div>
         </td>
     </tr>
     <tr>
-        <td class="playerContainer verticalPlayerContainer leftPlayerContainer">
+        <td>
             <!-- left player -->
             <div class="verticalPlayer">
             </div>
@@ -245,7 +253,7 @@ $(document).ready(function() {
             </div>
             <ul id="statusBar"></ul>
         </td>
-        <td class="playerContainer verticalPlayerContainer rightPlayerContainer">
+        <td>
             <!-- right cell -->
             <div class="verticalPlayer">
             </div>
@@ -253,9 +261,9 @@ $(document).ready(function() {
     </tr>
     <tr>
         <td><!-- bottomleft corner cell -->
-            <div class="name" id="nameBottom">Controlled Player</div>
+            <div class="name" id="nameBottom"></div>
         </td>
-        <td class="playerContainer horizontalPlayerContainer bottomPlayerContainer">
+        <td>
             <!-- controlled player -->
             <div class="horizontalPlayer">
             </div>
@@ -263,7 +271,7 @@ $(document).ready(function() {
         <td><!-- controls -->
             <div class="cornerContainer">
                 <ul class="buttonContainer">
-                    <li><a id="buttonDraw" class="button">Draw<span>4</span></a></li>
+                    <li><a id="buttonDraw" class="button">Draw<span></span></a></li>
                     <li><a id="buttonUno" class="button">Uno</a></li>
                     <!--<li><input type="text" size="5" value="200" id="speedInput"/></li>-->
                 </ul>            
