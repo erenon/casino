@@ -28,7 +28,7 @@ var $ = options.$,
         
         setTimeout(function() {
             item.remove();
-            if (target.children().length == 0) {
+            if (target.children().length === 0) {
                 target.hide();
             } else {
                 setMargin();
