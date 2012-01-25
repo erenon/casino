@@ -1,11 +1,17 @@
 describe("Player", function() {
     var pubsubSpy,
+        nameContainerSpy,
         player = {}
         ;
     
     beforeEach(function() {
         pubsubSpy = { 
-            on: jasmine.createSpy() 
+            on: jasmine.createSpy(),
+            emitSync: jasmine.createSpy()
+        };
+        
+        nameContainerSpy = {
+            text: jasmine.createSpy()
         };
         
         Player({
@@ -16,7 +22,8 @@ describe("Player", function() {
                 getBackside: jasmine.createSpy().andReturn($('<div>')),
                 getCardWidth: jasmine.createSpy().andReturn(100),
                 getCardHeight: jasmine.createSpy().andReturn(200),    
-            }
+            },
+            nameContainer: nameContainerSpy
         }, player);
     });
         
@@ -28,13 +35,19 @@ describe("Player", function() {
 
 describe("OppositePlayer", function () {
     var pubsubSpy,
+        nameContainerSpy,
         player
         ;
     
     beforeEach(function() {
         pubsubSpy = { 
-            on: jasmine.createSpy() 
+            on: jasmine.createSpy(),
+            emitSync: jasmine.createSpy() 
         };
+        
+        nameContainerSpy = {
+            text: jasmine.createSpy()
+        };        
         
         player = OppositePlayer({
             $: $,
@@ -44,7 +57,8 @@ describe("OppositePlayer", function () {
                 getBackside: jasmine.createSpy().andReturn($('<div>')),
                 getCardWidth: jasmine.createSpy().andReturn(100),
                 getCardHeight: jasmine.createSpy().andReturn(200),    
-            }
+            },
+            nameContainer: nameContainerSpy
         });
     });
     
@@ -56,13 +70,26 @@ describe("OppositePlayer", function () {
 
 describe("ControlledPlayer", function () {
     var pubsubSpy,
+        nameContainer,
+        validatorSpy,
         player
         ;
 
     beforeEach(function() {
         pubsubSpy = { 
-            on: jasmine.createSpy() 
+            on: jasmine.createSpy(),
+            emitSync: jasmine.createSpy() 
         };
+        
+        nameContainerSpy = {
+            text: jasmine.createSpy()
+        };
+        
+        validatorSpy = {
+            setPlayerName: jasmine.createSpy(),
+            isCardValid: jasmine.createSpy(),
+            isDrawValid: jasmine.createSpy()
+        };     
         
         player = ControlledPlayer({
             $: $,
@@ -72,7 +99,9 @@ describe("ControlledPlayer", function () {
                 getBackside: jasmine.createSpy().andReturn($('<div>')),
                 getCardWidth: jasmine.createSpy().andReturn(100),
                 getCardHeight: jasmine.createSpy().andReturn(200),    
-            }
+            },
+            nameContainer: nameContainerSpy,
+            validator: validatorSpy
         });
     });    
     
