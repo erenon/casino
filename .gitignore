@@ -1,9 +1,12 @@
+#eclipse cdt project files
 .cproject
 .project
+.autotools
 
-Default/
-Test/
-Node/
+#eclipse build dirs
+server/addon/Default/
+server/addon/Test/
+server/addon/Node/
 
 TODO
 out
