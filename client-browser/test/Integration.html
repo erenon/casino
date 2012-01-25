@@ -211,7 +211,7 @@ $(document).ready(function() {
     pubsub.emitSync('card_played', {played_by: {name: 'oppositeTop'},played_card: {color: 'blue',value: '5'}});
     
     pubsub.emitSync('players_turn', {player: {name: 'oppositeRight'}});
-    pubsub.emitSync('card_played', {played_by: {name: 'oppositeRight'},played_card: {color: 'yellow',value: '7'}});
+    pubsub.emitSync('card_played', {played_by: {name: 'oppositeRight'},played_card: {color: 'yellow',value: '+2'}});
     
     pubsub.emitSync('players_turn', {player: {name: 'player'}});
 });    
