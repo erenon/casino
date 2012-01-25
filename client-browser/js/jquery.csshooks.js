@@ -4,22 +4,23 @@
 (function($) {
     if(!$.cssHooks) {
         throw ("jQuery 1.4.3+ is needed for this plugin to work");
-        return;
     }
 
     function styleSupport(prop) {
-        var vendorProp, 
+        var div = document.createElement("div"),
             supportedProp, 
+            vendorProp, 
             capProp = prop.charAt(0).toUpperCase() + prop.slice(1), 
-            prefixes = ["Moz", "Webkit", "O", "ms"], 
-            div = document.createElement("div");
-
-        if( prop in div.style) {
+            prefixes = ["Moz", "Webkit", "O", "ms"],
+            i
+            ;
+        
+        if (div.style.hasOwnProperty(prop)) {            
             supportedProp = prop;
         } else {
-            for(var i = 0; i < prefixes.length; i++) {
+            for (i = 0; i < prefixes.length; i++) {
                 vendorProp = prefixes[i] + capProp;
-                if( vendorProp in div.style) {
+                if (div.style.hasOwnProperty(vendorProp)) {
                     supportedProp = vendorProp;
                     break;
                 }
@@ -27,7 +28,7 @@
         }
         
         div = null;
-        $.support[prop] = supportedProp
+        $.support[prop] = supportedProp;
         return supportedProp;
     }
 
@@ -36,7 +37,7 @@
 
         // Set cssHooks only for browsers that
         // support a vendor-prefixed property
-        if(supportedProp && supportedProp !== property) {
+        if (supportedProp && supportedProp !== property) {
             $.cssHooks[property] = {
                 get : function(elem, computed, extra) {
                     return $.css(elem, supportedProp);
@@ -48,11 +49,12 @@
         }
     }
 
-    var properties = ['borderRadius', 'transition', 'transform'];
+    var properties = ['borderRadius', 'transition', 'transform'],
+        i;
 
-    for(var i = properties.length - 1; i >= 0; i--) {
+    for (i = properties.length - 1; i >= 0; i--) {
         setHook(properties[i]);
-    };
+    }
 
-})(jQuery);
+}(jQuery));
 
