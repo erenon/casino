@@ -1,3 +1,7 @@
 #! /bin/bash
-./cpplint.py --filter=-legal/copyright,-whitespace/line_length,-whitespace/blank_line,-whitespace/parens `find ../src/ -not -type d` 2> ../out
+TOOL_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+$TOOL_DIR/cpplint.py \
+--filter=-legal/copyright,-whitespace/line_length,-whitespace/blank_line,-whitespace/parens \
+`find $TOOL_DIR/../src/ -not -type d` 2> ./cpplint_report
 
