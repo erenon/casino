@@ -88,28 +88,20 @@ body {
     height: 202px;
 }
 
-.deck {
-    border: 1px dashed #202020;
-    background: rgba(20,20,20,0.2);
-    width: 140px;
-    height: 200px;
-    /*margin: 0 auto;*/
-    display: inline-block;
-}
-
  </style>
  <script>
 $(document).ready(function() {
 var pubsub = PubSub(),
+    cb = CardBuilder({
+        $: $
+    }),
     options = {
         $: $,
         target: $('#stock'),
-        pubsub: pubsub
+        pubsub: pubsub,
+        cardBuilder: cb
     },
-    deck = Stock(options),
-    cb = CardBuilder({
-        $: $
-    })
+    deck = Stock(options)
     ;
     
     $('#pullButton').click(function() {
@@ -147,7 +139,7 @@ var pubsub = PubSub(),
         <td><!-- middle -->
             <div class="deckContainer">
                 <div class="deck" id="pile">used cards</div>
-                <div class="deck" id="stock">unused cards</div>
+                <div class="deck" id="stock"></div>
             </div>
         </td>
         <td class="playerContainer verticalPlayerContainer rightPlayerContainer">
