@@ -71,7 +71,7 @@ void AsyncPlayer::addCard(Card *card) {
     TryCatch try_catch;
     addaction_cb->Call(Context::GetCurrent()->Global(), 1, &argument);
     if (try_catch.HasCaught()) {
-        node::FatalException(try_catch);
+        //node::FatalException(try_catch);
     }
 }
 
@@ -402,7 +402,7 @@ void AsyncPlayer::notify(Event::EVENT event_type, void* event) {
         TryCatch try_catch;
         notify_cb->Call(Context::GetCurrent()->Global(), 1, &argument);
         if (try_catch.HasCaught()) {
-            node::FatalException(try_catch);
+            //node::FatalException(try_catch);
         }
     }
 }
