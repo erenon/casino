@@ -34,16 +34,7 @@ void Player::removeCard(Card *card) {
 }
 
 int Player::getCardCount() {
-    card_iterator it;
-    int count = 0;
-
-    for (it = hand.begin(); it != hand.end(); it++) {
-        if ((*it)->isDisposeable()) {
-            count++;
-        }
-    }
-
-    return count;
+	return hand.size();
 }
 
 void Player::setUnoFlag(bool value) {
