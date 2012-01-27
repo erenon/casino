@@ -1,5 +1,8 @@
 digraph G {
-    is_draw;
+    is_same -> valid [label="y"];
+    is_same -> is_your_turn [label="n"];
+    is_your_turn -> invalid [label="n"];
+    is_your_turn -> is_draw [label="y"];
     is_draw -> valid [label="y"];
     is_draw -> is_penalty [label="n"];
     is_penalty -> "is_prev_+4" [label="y"];
