@@ -34,7 +34,7 @@ void Player::removeCard(Card *card) {
 }
 
 int Player::getCardCount() {
-	return hand.size();
+    return hand.size();
 }
 
 void Player::setUnoFlag(bool value) {

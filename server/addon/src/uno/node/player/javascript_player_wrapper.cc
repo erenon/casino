@@ -82,12 +82,12 @@ Handle<Value> JavascriptPlayerWrapper::Draw(const Arguments &args) {
 }
 
 Handle<Value> JavascriptPlayerWrapper::SayUno(const Arguments &args) {
-	HandleScope scope;
+    HandleScope scope;
 
-	JavascriptPlayerWrapper* wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(args.This());
-	wrapper->player->sayUno();
+    JavascriptPlayerWrapper* wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(args.This());
+    wrapper->player->sayUno();
 
-	return scope.Close(Undefined());
+    return scope.Close(Undefined());
 }
 
 Handle<Value> JavascriptPlayerWrapper::Dispose(const Arguments &args) {

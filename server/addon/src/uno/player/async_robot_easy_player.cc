@@ -15,7 +15,7 @@ namespace Uno { namespace Player {
 using namespace ::Uno::Action;
 
 AsyncRobotEasyPlayer::AsyncRobotEasyPlayer()
-	:game_runs(false)
+    :game_runs(false)
 {}
 
 void AsyncRobotEasyPlayer::notify(Event::EVENT event_type, void* event) {
@@ -31,26 +31,26 @@ void AsyncRobotEasyPlayer::notify(Event::EVENT event_type, void* event) {
         break;
     case Event::EVENT_GAME_START:
     {
-    	game_runs = true;
+        game_runs = true;
     }
-    	break;
+        break;
     case Event::EVENT_GAME_END:
     {
-    	game_runs = false;
+        game_runs = false;
     }
-    	break;
+        break;
     case Event::EVENT_CARD_PLAYED:
-    	break;
+        break;
     case Event::EVENT_DRAW_CARD:
-    	break;
+        break;
     case Event::EVENT_COLORPICK:
-    	break;
+        break;
     case Event::EVENT_UNO_SAID:
-    	break;
+        break;
     case Event::EVENT_GETS_BLOCKED:
-    	break;
+        break;
     case Event::EVENT_PLAYER_JOINED:
-    	break;
+        break;
     default:
         break;
     }

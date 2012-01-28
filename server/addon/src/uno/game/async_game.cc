@@ -125,26 +125,26 @@ bool AsyncGame::isValidMove(Player* player, Action* action, std::string &message
 }
 
 void AsyncGame::checkUno() {
-	Player* player = getLastPlayedPlayer();
+    Player* player = getLastPlayedPlayer();
 
-	if (player != NULL) {
-		bool uno = player->getUnoFlag();
+    if (player != NULL) {
+        bool uno = player->getUnoFlag();
 
-		if ((player->getCardCount() == 1 && uno == false)
-		||  (player->getCardCount() != 1 && uno != false)) {
-			// no uno said or not needed uno said
-			int penalty = config.wrong_uno_penalty;
+        if ((player->getCardCount() == 1 && uno == false)
+        ||  (player->getCardCount() != 1 && uno != false)) {
+            // no uno said or not needed uno said
+            int penalty = config.wrong_uno_penalty;
 
-			for (int i = 0; i < penalty; i++) {
-				player->addCard(deck.drawCard());
-			}
-		}
+            for (int i = 0; i < penalty; i++) {
+                player->addCard(deck.drawCard());
+            }
+        }
 
-		//reset uno flag
-		if (uno) {
-			player->setUnoFlag(false);
-		}
-	}
+        // reset uno flag
+        if (uno) {
+            player->setUnoFlag(false);
+        }
+    }
 }
 
 void AsyncGame::takeAction(Player* player, Action* action) {
@@ -213,7 +213,7 @@ void AsyncGame::takeAction(Player* player, Action* action) {
             reinterpret_cast<void*>(&event)
         );
     } else {
-    	// notify about the next player
+        // notify about the next player
         Event::players_turn event;
         event.player = players.getCurrentPlayer();
         players.notifyAll(
@@ -228,16 +228,14 @@ void AsyncGame::takeDraw(Player* player) {
 }
 
 void AsyncGame::sayUno(Player* player) {
-	Event::uno_said event;
-	event.said_by = player;
+    Event::uno_said event;
+    event.said_by = player;
 
-	//event.type
-
-	players.notifyOthers(
-		Event::EVENT_UNO_SAID,
-		reinterpret_cast<void*>(&event),
-		player
-	);
+    players.notifyOthers(
+        Event::EVENT_UNO_SAID,
+        reinterpret_cast<void*>(&event),
+        player
+    );
 }
 
 }}  // namespace

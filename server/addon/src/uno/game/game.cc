@@ -66,11 +66,11 @@ void Game::dealCard(Player* player) {
 //
 
 void Game::registerLastPlayedPlayer(Player* player) {
-	last_played_player = player;
+    last_played_player = player;
 }
 
 Player* Game::getLastPlayedPlayer() {
-	return last_played_player;
+    return last_played_player;
 }
 
 //

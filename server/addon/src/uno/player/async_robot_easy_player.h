@@ -26,7 +26,7 @@ class AsyncRobotEasyPlayer :public Player {
 
  protected:
     AsyncGame* game;
-    bool game_runs;	/**< true if game started but not ended */
+    bool game_runs;    /**< true if game started but not ended */
 
     virtual void takeAction();
     virtual CARD_COLOR chooseColor();

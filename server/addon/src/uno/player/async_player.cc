@@ -71,7 +71,7 @@ void AsyncPlayer::addCard(Card *card) {
     TryCatch try_catch;
     addaction_cb->Call(Context::GetCurrent()->Global(), 1, &argument);
     if (try_catch.HasCaught()) {
-        //node::FatalException(try_catch);
+        // node::FatalException(try_catch);
     }
 }
 
@@ -127,27 +127,27 @@ void AsyncPlayer::playCard(const Arguments &args) {
     CARD_COLOR choosen_color = CARD_COLOR_BLACK;
     if (picked_color == CARD_COLOR_BLACK) {
 
-		if (picked_card->Has(key_choosen_color) == false) {
-			//black card choosed but no color
-			throw std::invalid_argument("Malformed wild card object, no choosenColor property.");
-		}
+        if (picked_card->Has(key_choosen_color) == false) {
+            // black card choosed but no color
+            throw std::invalid_argument("Malformed wild card object, no choosenColor property.");
+        }
 
-		Local<Value> property_choosen_color = picked_card->Get(key_choosen_color);
-		if (property_choosen_color->IsString() == false) {
-			throw std::invalid_argument("choosenColor must be string.");
-		}
+        Local<Value> property_choosen_color = picked_card->Get(key_choosen_color);
+        if (property_choosen_color->IsString() == false) {
+            throw std::invalid_argument("choosenColor must be string.");
+        }
 
-		try {
-			choosen_color = Card::stringToColor(
-				*String::AsciiValue(property_choosen_color->ToString())
-			);
-		} catch (const std::invalid_argument &e) {
-			throw;
-		}
+        try {
+            choosen_color = Card::stringToColor(
+                *String::AsciiValue(property_choosen_color->ToString())
+            );
+        } catch (const std::invalid_argument &e) {
+            throw;
+        }
 
-		if (choosen_color == CARD_COLOR_BLACK) {
-			throw std::invalid_argument("choosenColor must not be black");
-		}
+        if (choosen_color == CARD_COLOR_BLACK) {
+            throw std::invalid_argument("choosenColor must not be black");
+        }
     }
 
     card_iterator card;
@@ -157,11 +157,11 @@ void AsyncPlayer::playCard(const Arguments &args) {
         if ((*card)->getColor() == picked_color
         &&  (*card)->getValue() == picked_value
         ) {
-        	// if black card, set choosen color
-        	if ((*card)->getColor() == CARD_COLOR_BLACK) {
-        		WildCard* wild_card = static_cast<WildCard*>(*card);
-        		wild_card->setColor(choosen_color);
-        	}
+            // if black card, set choosen color
+            if ((*card)->getColor() == CARD_COLOR_BLACK) {
+                WildCard* wild_card = static_cast<WildCard*>(*card);
+                wild_card->setColor(choosen_color);
+            }
 
             try {
                 game->takeAction(this, *card);
@@ -181,8 +181,8 @@ void AsyncPlayer::draw() {
 }
 
 void AsyncPlayer::sayUno() {
-	setUnoFlag(true);
-	game->sayUno(this);
+    setUnoFlag(true);
+    game->sayUno(this);
 }
 
 Local<Object> AsyncPlayer::createCardObject(Card* card) {
@@ -402,7 +402,7 @@ void AsyncPlayer::notify(Event::EVENT event_type, void* event) {
         TryCatch try_catch;
         notify_cb->Call(Context::GetCurrent()->Global(), 1, &argument);
         if (try_catch.HasCaught()) {
-            //node::FatalException(try_catch);
+            // node::FatalException(try_catch);
         }
     }
 }

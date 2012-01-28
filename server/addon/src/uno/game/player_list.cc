@@ -19,7 +19,7 @@ void PlayerList::joinPlayer(Player* player) {
 
     // init current player on the first join
     if (current_player == players.end()) {
-    	current_player = players.begin();
+        current_player = players.begin();
     }
 }
 
