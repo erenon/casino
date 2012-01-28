@@ -7,11 +7,21 @@
 namespace Test { namespace Uno { namespace Action {
 
 using ::Uno::Action::Card;
+using ::Uno::Action::CARD_COLOR;
+using ::Uno::Action::CARD_VALUE;
 using ::Uno::Game::Game;
 
 class CardMock :public Card
 {
  public:
+	void setColor(CARD_COLOR c) {
+		color = c;
+	}
+
+	void setValue(CARD_VALUE v) {
+		value = v;
+	}
+
 	MOCK_METHOD0(isDisposeable, bool());
 	MOCK_METHOD1(takeAction, void(Game* game));
 };
