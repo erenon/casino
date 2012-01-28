@@ -11,11 +11,16 @@ using ::Uno::Player::Player;
 PlayerList::PlayerList()
     :turn_direction_normal(true),
      prev_player(NULL) {
-    current_player = players.begin();
+    current_player = players.end();
 }
 
 void PlayerList::joinPlayer(Player* player) {
     players.push_back(player);
+
+    // init current player on the first join
+    if (current_player == players.end()) {
+    	current_player = players.begin();
+    }
 }
 
 int PlayerList::size() {
@@ -47,10 +52,26 @@ PlayerList::player_iterator PlayerList::determineNextPlayer() {
     return next_player;
 }
 
+/**
+ * Returns the next player in turn.
+ *
+ * Doesn't take blocking into account.
+ */
 Player *PlayerList::getNextPlayer() {
     return *determineNextPlayer();
 }
 
+/**
+ * Returns the player previously played.
+ *
+ * Just after the turn direction switch, it returns
+ * the last player played, and NOT the one before
+ * the current player in turn order.
+ * This may be confusing compared to the dynamic nature of
+ * getNextPlayer()
+ *
+ * TODO revise this.
+ */
 Player *PlayerList::getPreviousPlayer() {
     return prev_player;
 }
