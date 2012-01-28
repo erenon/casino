@@ -21,9 +21,9 @@ class Deck {
  public:
     Deck();
     virtual ~Deck();
-    virtual void addCard(Card *card);
+    virtual void addCard(Card *card);	/**< TODO hide this */
     virtual void shuffleDeck();
-    virtual void playOutFirstCard();
+    virtual void playOutFirstCard();	/**< TODO rename: Out doesn't needed*/
     virtual void addCardToPlayed(Card *card);
     virtual Card* drawCard();
 
