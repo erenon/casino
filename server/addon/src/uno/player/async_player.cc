@@ -1,5 +1,5 @@
-#include <node/v8.h>
-#include <node/node.h>
+#include <nodejs/v8.h>
+#include <nodejs/node.h>
 #include <string>
 #include <stdexcept>
 

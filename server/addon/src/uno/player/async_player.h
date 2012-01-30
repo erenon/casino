@@ -1,8 +1,8 @@
 #ifndef SRC_UNO_PLAYER_ASYNC_PLAYER_H_
 #define SRC_UNO_PLAYER_ASYNC_PLAYER_H_
 
-#include <node/v8.h>
-#include <node/node.h>
+#include <nodejs/v8.h>
+#include <nodejs/node.h>
 #include <string>
 
 #include "./player.h"
