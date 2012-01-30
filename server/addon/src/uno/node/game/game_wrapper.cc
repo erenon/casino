@@ -1,153 +1,127 @@
-#include <node/v8.h>
-#include <node/node.h>
-#include <list>
-#include <stdexcept>
-#include <string>
+#include <nodejs/v8.h>
+#include <nodejs/node.h>
 
-#include "./game_wrapper.h"
-#include "../player/javascript_player_wrapper.h"
-#include "../../player/async_player.h"
-#include "../../player/async_robot_easy_player.h"
+#include "game_wrapper.h"
+#include "../../game/async_game.h"
+
+// TODO remove this include and std::cout prints
+#include <iostream>
 
 namespace Uno { namespace Node { namespace Game {
 
 using namespace v8;
 using namespace node;
-using ::Uno::Node::Player::JavascriptPlayerWrapper;
-using ::Uno::Node::Player::AsyncPlayer;
-using ::Uno::Player::AsyncRobotEasyPlayer;
 
-#define REQ_INT_ARG(I)                                                  \
-    if (args.Length() <= (I) || !args[I]->IsInt32()) {                  \
-        return ThrowException(Exception::TypeError(                     \
-            String::New("Argument " #I " must be an integer")));        \
-    }
-
-#define REQ_OBJ_ARG(I)                                                  \
-    if (args.Length() <= (I) || !args[I]->IsObject()) {                 \
-        return ThrowException(Exception::TypeError(                     \
-            String::New("Argument " #I " must be an object")));         \
-    }
-
-GameWrapper::GameWrapper(int max_player_count) :bot_count(0) {
-    game = new AsyncGame(max_player_count);
-}
+using ::Uno::Game::AsyncGame;
 
 void GameWrapper::Initialize(Handle<Object> target) {
     HandleScope scope;
 
-    // t is a container
-    Local<FunctionTemplate> t = FunctionTemplate::New(New);
-    t->InstanceTemplate()->SetInternalFieldCount(1);
+    Local<FunctionTemplate> funcConstructorTemplate = FunctionTemplate::New(New);
+    target->Set(String::NewSymbol("Game"), funcConstructorTemplate->GetFunction());
 
-    NODE_SET_PROTOTYPE_METHOD(t, "joinPlayer", JoinPlayer);
-    NODE_SET_PROTOTYPE_METHOD(t, "addBot", AddBot);
-    NODE_SET_PROTOTYPE_METHOD(t, "start", Start);
-    NODE_SET_PROTOTYPE_METHOD(t, "dispose", Dispose);
+    v8::V8::AddGCEpilogueCallback(GcEpilogue);
 
-    target->Set(String::NewSymbol("Game"), t->GetFunction());
+    scope.Close(Undefined());
 }
 
 Handle<Value> GameWrapper::New(const Arguments &args) {
     HandleScope scope;
 
-    REQ_INT_ARG(0);
+    // TODO add gameconfig here
+    AsyncGame *game = new AsyncGame(4);
 
-    GameWrapper* wrapper = new GameWrapper(args[0]->Int32Value());
-    wrapper->Wrap(args.This());
+    Local<ObjectTemplate> instanceTemplate = ObjectTemplate::New();
+    instanceTemplate->SetInternalFieldCount(1);
 
-    return args.This();
+    Persistent<Object> instance = Persistent<Object>(instanceTemplate->NewInstance());
+    instance->SetInternalField(0, External::New(game));
+    V8::AdjustAmountOfExternalAllocatedMemory(sizeof(*game));
+
+    instance.MakeWeak(game, CleanupGame);
+    instance.MarkIndependent();
+
+    Local<FunctionTemplate> start = FunctionTemplate::New(Start);
+    Local<FunctionTemplate> joinPlayer = FunctionTemplate::New(JoinPlayer);
+    Local<FunctionTemplate> getPlayerCount = FunctionTemplate::New(GetPlayerCount);
+    Local<FunctionTemplate> dispose = FunctionTemplate::New(Dispose);
+
+    instance->Set(
+        String::New("start"),
+        start->GetFunction()
+    );
+
+    instance->Set(
+        String::New("joinPlayer"),
+        joinPlayer->GetFunction()
+    );
+
+    instance->Set(
+        String::New("getPlayerCount"),
+        getPlayerCount->GetFunction()
+    );
+
+    instance->Set(
+        String::New("dispose"),
+        dispose->GetFunction()
+    );
+
+    return scope.Close(instance);
 }
 
-/**
- * @todo disallow non-unique session id
- */
-Handle<Value> GameWrapper::JoinPlayer(const Arguments &args) {
-    HandleScope scope;
-    GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
+void GameWrapper::CleanupGame(Persistent<Value> object, void* parameter) {
+    std::cout << "cleanup start" << std::endl;
 
-    REQ_OBJ_ARG(0);
+    // TODO use UnwrapGame instead
+    AsyncGame *game = static_cast<AsyncGame*>(parameter);
+    delete game;
 
-    /** @todo change the "nativePlayer" explicit get to a getter method */
-    Handle<Object> jsplayer_wrapper = args[0]->ToObject()->Get(String::New("nativePlayer"))->ToObject();
-    JavascriptPlayerWrapper* player_wrapper = ObjectWrap::Unwrap<JavascriptPlayerWrapper>(jsplayer_wrapper);
-    AsyncPlayer* player = player_wrapper->getNativePlayer();
-
-    try {
-        wrapper->game->joinPlayer(player);
-        player->setGame(wrapper->game);
-        wrapper->players.push_back(player);
-    } catch (std::overflow_error e) {
-        delete player;
-
-        return ThrowException(Exception::RangeError(
-            String::New("Game is full")
-        ));
-    }
-
-    return scope.Close(Boolean::New(true));
+    object.Dispose();
+    object.Clear();
 }
 
-Handle<Value> GameWrapper::AddBot(const Arguments &args) {
-    int count;
-    if (args.Length() >= 1 && args[0]->IsInt32()) {
-        count = args[0]->Int32Value();
-    } else {
-        count = 1;
-    }
+AsyncGame* GameWrapper::UnwrapGame(Local<Object> Holder) {
+    // TODO check for internal field count
+    Local<External> gamePointer = Local<External>::Cast(Holder->GetInternalField(0));
+    AsyncGame *game = static_cast<AsyncGame*>(gamePointer->Value());
 
-    HandleScope scope;
-    GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
-    for (int i = 0; i < count; i++) {
-        AsyncRobotEasyPlayer *robot = new AsyncRobotEasyPlayer();
-
-        { // hack ahead. 49: ASCII 0
-            std::string name = "robot ";
-            name.push_back(static_cast<char>(wrapper->bot_count+49));
-            robot->setName(name.c_str());
-        }
-
-        try {
-            wrapper->game->joinPlayer(robot);
-            robot->setGame(wrapper->game);
-            wrapper->players.push_back(robot);
-            wrapper->bot_count++;
-        } catch (std::overflow_error e) {
-            delete robot;
-
-            return ThrowException(Exception::RangeError(
-                String::New("Game is full")
-            ));
-        }
-    }
-
-    return scope.Close(Boolean::New(true));
+    return game;
 }
 
-Handle<Value> GameWrapper::Start(const Arguments &args) {
+Handle<Value> GameWrapper::JoinPlayer(const v8::Arguments &args) {
+    // TODO implement this
     HandleScope scope;
-    GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
-
-    wrapper->game->start();
-
-    return scope.Close(Boolean::New(true));
-}
-
-Handle<Value> GameWrapper::Dispose(const Arguments &args) {
-    HandleScope scope;
-    GameWrapper* wrapper = ObjectWrap::Unwrap<GameWrapper>(args.This());
-
-    delete wrapper->game;
-
-    std::list<Player*>::iterator player;
-    for (player = wrapper->players.begin(); player != wrapper->players.end(); player++) {
-        delete (*player);
-    }
 
     return scope.Close(Undefined());
 }
 
-#undef REQ_INT_ARG
-#undef REQ_OBJ_ARG
+Handle<Value> GameWrapper::GetPlayerCount(const Arguments &args) {
+    HandleScope scope;
+
+    AsyncGame *game = UnwrapGame(args.Holder());
+    return scope.Close(Number::New(game->getPlayerCount()));
+}
+
+Handle<Value> GameWrapper::Start(const Arguments &args) {
+    HandleScope scope;
+
+    AsyncGame *game = UnwrapGame(args.Holder());
+    game->start();
+
+    return scope.Close(Undefined());
+}
+
+Handle<Value> GameWrapper::Dispose(const v8::Arguments &args) {
+    HandleScope scope;
+
+    AsyncGame* game = UnwrapGame(args.Holder());
+    delete game;
+
+    return scope.Close(Undefined());
+}
+
+void GameWrapper::GcEpilogue(GCType type, GCCallbackFlags flags) {
+    std::cout << "GC epilogue ============= " << std::endl;
+}
 
 }}}  // namespace
