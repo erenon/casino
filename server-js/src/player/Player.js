@@ -25,7 +25,7 @@ var blockFlag = false,
         player.hand.push(data.card); 
     });
     
-    player.on('cardPlayer', function(data) {
+    player.on('cardPlayed', function(data) {
         //console.log(data.player.name + ' played ' + data.card);
     });
     
