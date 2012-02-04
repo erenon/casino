@@ -5,12 +5,14 @@ var Game = require('../src/game/Game'),
     game,
     alice,
     bob,
-    charlie
+    charlie,
+    delta
     ;
     
 game = Game({
     config: {
-        initialHandSize: 7
+        initialHandSize: 7,
+        unoPenalty: 2
     }
 });
 
@@ -27,8 +29,14 @@ charlie = RobotEasyPlayer({
     name: nameManager.getAnonName()
 });
 
+delta = RobotEasyPlayer({
+    game: game,
+    name: nameManager.getAnonName()
+});
+
 game.addPlayer(alice);
 game.addPlayer(bob);
 game.addPlayer(charlie);
+game.addPlayer(delta);
 
 game.start();
