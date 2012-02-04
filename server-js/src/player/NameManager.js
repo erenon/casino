@@ -28,14 +28,14 @@ var usedNames = [],
         }        
     },
     getAnonId = function() {
-        var date = new Date,
+        var date = new Date(),
             id = nextAnonId
             ;
             
         nextAnonId++;
         nextAnonId %= 100;
                     
-        return '' + (date.getTime() %100 ) + id;
+        return String((date.getTime() %100 ) + id);
     }
     ;
     

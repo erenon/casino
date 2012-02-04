@@ -20,7 +20,7 @@ var subscriptions = [];
                 subscriptions[event][sub](data);
             }
         }
-    } 
+    }; 
 }
 ;
 

@@ -22,16 +22,16 @@ var colors = ['red', 'green', 'blue', 'yellow'],
                     color: colors[c],
                     value: simpleValues[v],
                     takeAction: actionNone
-                }
+                };
             }
             
-            cards[colors[c]]['block'] = {
+            cards[colors[c]].block = {
                 color: colors[c],
                 value: 'block',
                 takeAction: actionBlock
             };
             
-            cards[colors[c]]['reverse'] = {
+            cards[colors[c]].reverse = {
                 color: colors[c],
                 value: 'reverse',
                 takeAction: actionReverse
@@ -50,23 +50,20 @@ var colors = ['red', 'green', 'blue', 'yellow'],
             };
         }
         
-        cards['black'] = [];
+        cards.black = [];
         
-        cards['black']['colorpick'] = {
+        cards.black.colorpick = {
             color: 'black',
             value: 'colorpick',
             pickedColor: null,
-            takeAction: function(game) { game.actionColorpick(); }
+            takeAction: actionNone
         };
         
-        cards['black']['+4'] = {
+        cards.black['+4'] = {
             color: 'black',
             value: '+4',
             pickedColor: null,
-            takeAction: function(game) { 
-                game.increasePenalty(4);
-                game.actionColorpick(); 
-            }
+            takeAction: function(game) { game.increasePenalty(4); }
         };
     }());
 
@@ -114,7 +111,7 @@ var colors = ['red', 'green', 'blue', 'yellow'],
                 }
             }
         }
-    }
+    };
     
     return cb;
 }
