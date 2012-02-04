@@ -25,6 +25,11 @@ io.sockets.on('connection', function(socket) {
                 unoPenalty: 2
             }
         }),
+        player = SocketPlayer({
+            game: game,
+            socket: socket,
+            name: 'player'    
+        }),
         botA = RobotEasyPlayer({
             game: game,
             name: nameManager.getAnonName()
@@ -36,18 +41,13 @@ io.sockets.on('connection', function(socket) {
         botC = RobotEasyPlayer({
             game: game,
             name: nameManager.getAnonName()
-        }),
-        player = SocketPlayer({
-            game: game,
-            socket: socket,
-            name: 'player'    
         })
         ;
         
+    game.addPlayer(player);   
     game.addPlayer(botA);
     game.addPlayer(botB);
     game.addPlayer(botC);
-    game.addPlayer(player);   
     
     game.start();     
 });
