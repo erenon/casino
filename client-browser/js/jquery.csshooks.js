@@ -15,12 +15,17 @@
             i
             ;
         
-        if (div.style.hasOwnProperty(prop)) {            
+        // jslint doesn't like the "a in b" construct
+        // but the advised hasOwnProperty method
+        // doesn't work in firefox
+        // if (div.style.hasOwnProperty(prop)) {
+        if (prop in div.style) {
             supportedProp = prop;
         } else {
             for (i = 0; i < prefixes.length; i++) {
                 vendorProp = prefixes[i] + capProp;
-                if (div.style.hasOwnProperty(vendorProp)) {
+                // if (div.style.hasOwnProperty(vendorProp)) {
+                if (vendorProp in div.style) {    
                     supportedProp = vendorProp;
                     break;
                 }
