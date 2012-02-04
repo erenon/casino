@@ -26,10 +26,10 @@ var cardValueOrder = function(cardA, cardB) {
             pickedColor,
             i;
         
-        colorCount['red'] = 0;
-        colorCount['green'] = 0;
-        colorCount['blue'] = 0;
-        colorCount['yellow'] = 0;
+        colorCount.red = 0;
+        colorCount.green = 0;
+        colorCount.blue = 0;
+        colorCount.yellow = 0;
         
         for (i = 0; i < player.hand.length; i++) {
             cardColor = player.hand[i].color;
@@ -39,13 +39,13 @@ var cardValueOrder = function(cardA, cardB) {
         }
         
         pickedColor = 'red';
-        if (colorCount['green'] > colorCount[pickedColor]) {
+        if (colorCount.green > colorCount[pickedColor]) {
             pickedColor = 'green';
         }
-        if (colorCount['blue'] > colorCount[pickedColor]) {
+        if (colorCount.blue > colorCount[pickedColor]) {
             pickedColor = 'blue';
         }
-        if (colorCount['yellow'] > colorCount[pickedColor]) {
+        if (colorCount.yellow > colorCount[pickedColor]) {
             pickedColor = 'yellow';
         }
         
@@ -58,7 +58,8 @@ var cardValueOrder = function(cardA, cardB) {
     player.on('playerTurn', function(data) {
         var validMoves = [],
             i,
-            pickedCard
+            pickedCard,
+            successfulPlay = false
             ;
         
         if (data.player === player) {
@@ -68,21 +69,36 @@ var cardValueOrder = function(cardA, cardB) {
                     validMoves.push(player.hand[i]);
                 }
             }    
-        }
         
-        if (validMoves.length > 0) {
-            // sort by value
-            validMoves.sort(cardValueOrder);
-            // pick lowest
-            pickedCard = validMoves[0];
-            // colorpick if black
-            if (pickedCard.color === 'black') {
-                pickedCard.pickedColor = pickColor();
+            if (validMoves.length > 0) {
+                // sort by value
+                validMoves.sort(cardValueOrder);
+                // pick lowest
+                pickedCard = validMoves[0];
+                // colorpick if black
+                if (pickedCard.color === 'black') {
+                    pickedCard.pickedColor = pickColor();
+                }
+                
+                // remove card from hand
+                for (i = 0; i < player.hand.length; i++) {
+                    if (player.hand[i] === pickedCard) {
+                        player.hand.splice(i,1);
+                    }
+                }
+                
+                // uno
+                player.uno((player.hand.length === 1));
+                
+                // play
+                successfulPlay = player.game.playCard(player, pickedCard);
+                if (!successfulPlay) {
+                    player.hand.push(pickedCard);
+                }
+            } else {
+                player.game.playDraw(player);
             }
-            // play
-            player.game.playCard(player, pickedCard);
-        } else {
-            player.game.playDraw(player);
+        
         }
     });  
     
