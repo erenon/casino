@@ -35,7 +35,7 @@ var $ = options.$,  // TODO unused option
     pubsub.on('playerGotCard', function() {
         currentPenalty = 0;
         target.text('');
-        target.show();
+        target.hide();
     });
     
     // hide initially
