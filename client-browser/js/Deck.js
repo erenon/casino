@@ -179,8 +179,8 @@ var target = options.target,
     };
     
     // show first card
-    pubsub.on('game_start', function(data) {
-        var card = data.first_card,
+    pubsub.on('gameStarted', function(data) {
+        var card = data.firstCard,
             domCard = cardBuilder.get(card)
             ;
         

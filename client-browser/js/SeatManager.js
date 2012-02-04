@@ -35,26 +35,11 @@ var $ = options.$,
     }
     ;
     
-    pubsub.on('player_joined', function(event) {
+    pubsub.on('playerJoined', function(event) {
         addPlayer({
             name: event.player.name
         });
     });
     
-    /*return {
-        addPlayer: function(playerOptions) {
-            // merge default, seat, player options.
-            var options = {}
-                ;
-                
-            $.extend(options, 
-                     defaultPlayerOptions, 
-                     getSeat(), 
-                     playerOptions
-            );
-            
-            return OppositePlayer(options);
-        }
-    };*/
 }
 ;

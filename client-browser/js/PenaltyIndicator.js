@@ -14,8 +14,8 @@ var $ = options.$,  // TODO unused option
     currentPenalty = 0
     ;
     
-    pubsub.on('card_played', function(data) {
-        var value = data.played_card.value,
+    pubsub.on('cardPlayed', function(data) {
+        var value = data.card.value,
             addition = 0
             ;
             
@@ -32,7 +32,7 @@ var $ = options.$,  // TODO unused option
         }
     });
     
-    pubsub.on('draw_card', function() {
+    pubsub.on('playerGotCard', function() {
         currentPenalty = 0;
         target.text('');
         target.show();

@@ -138,46 +138,46 @@ $(document).ready(function() {
         })
         ;
     
-    pubsub.emitSync('player_joined', {
+    pubsub.emitSync('playerJoined', {
         player: {
             name: 'oppositeLeft'
         }
     });
     
-    pubsub.emitSync('player_joined', {
+    pubsub.emitSync('playerJoined', {
         player: {
             name: 'oppositeTop'
         }
     });
     
-    pubsub.emitSync('player_joined', {
+    pubsub.emitSync('playerJoined', {
         player: {
             name: 'oppositeRight'
         }
     });
         
-    pubsub.emitSync('draw_card', {
+    pubsub.emitSync('playerGotCard', {
         player: {
             name: 'oppositeLeft'
         },
-        card_count: 2
+        cardCount: 2
     });
     
-    pubsub.emitSync('draw_card', {
+    pubsub.emitSync('playerGotCard', {
         player: {
             name: 'oppositeTop'
         },
-        card_count: 2
+        cardCount: 2
     });
     
-    pubsub.emitSync('draw_card', {
+    pubsub.emitSync('playerGotCard', {
         player: {
             name: 'oppositeRight'
         },
-        card_count: 2
+        cardCount: 2
     });
     
-    pubsub.emitSync('get_card', {
+    pubsub.emitSync('cardAdded', {
        player: {
            name: 'player'
        },
@@ -187,7 +187,7 @@ $(document).ready(function() {
        }
     });
         
-    pubsub.emitSync('get_card', {
+    pubsub.emitSync('cardAdded', {
        player: {
            name: 'player'
        },
@@ -197,23 +197,23 @@ $(document).ready(function() {
        }
     });
     
-    pubsub.emitSync('game_start', {
-        first_card: {
+    pubsub.emitSync('gameStarted', {
+        firstCard: {
             color: 'red',
             value: 7
         }
     });
     
-    pubsub.emitSync('players_turn', {player: {name: 'oppositeLeft'}});
-    pubsub.emitSync('card_played', {played_by: {name: 'oppositeLeft'},played_card: {color: 'red',value: '5'}});
+    pubsub.emitSync('playersTurn', {player: {name: 'oppositeLeft'}});
+    pubsub.emitSync('cardPlayed', {player: {name: 'oppositeLeft'}, card: {color: 'red',value: '5'}});
     
-    pubsub.emitSync('players_turn', {player: {name: 'oppositeTop'}});
-    pubsub.emitSync('card_played', {played_by: {name: 'oppositeTop'},played_card: {color: 'blue',value: '5'}});
+    pubsub.emitSync('playersTurn', {player: {name: 'oppositeTop'}});
+    pubsub.emitSync('cardPlayed', {player: {name: 'oppositeTop'},card: {color: 'blue',value: '5'}});
     
-    pubsub.emitSync('players_turn', {player: {name: 'oppositeRight'}});
-    pubsub.emitSync('card_played', {played_by: {name: 'oppositeRight'},played_card: {color: 'yellow',value: '+2'}});
+    pubsub.emitSync('playersTurn', {player: {name: 'oppositeRight'}});
+    pubsub.emitSync('cardPlayed', {player: {name: 'oppositeRight'},card: {color: 'yellow',value: '+2'}});
     
-    pubsub.emitSync('players_turn', {player: {name: 'player'}});
+    pubsub.emitSync('playersTurn', {player: {name: 'player'}});
 });    
 </script>
 </head>

@@ -103,7 +103,7 @@ var $ = options.$,
     };
     
     pubsub.on('changeCardSize', adjustDimensions);
-    pubsub.on('players_turn', function(event) {
+    pubsub.on('playerTurn', function(event) {
         if (player.isItMe(event.player)) {
             events.add(function(endCallback) {
                 player.hand.addClass('handActive');
@@ -146,9 +146,9 @@ var $ = options.$,
     
     
     // shows and pulls the recently played card to the pile
-    pubsub.on('card_played', function(event) {
-        if (player.isItMe(event.played_by)) {
-            var domCard = cardBuilder.get(event.played_card);
+    pubsub.on('cardPlayed', function(event) {
+        if (player.isItMe(event.player)) {
+            var domCard = cardBuilder.get(event.card);
             events.add(function(endCallback) {
                 
                 // TODO use 3D flip effect
@@ -160,7 +160,7 @@ var $ = options.$,
     });
     
     // draws some cards from the stock
-    pubsub.on('draw_card', function(event) {
+    pubsub.on('playerGotCard', function(event) {
         var i,
             drawCard = function(endCallback) {
                 var domCard = cardBuilder.getBackside();
@@ -170,7 +170,7 @@ var $ = options.$,
             ;
         
         if (player.isItMe(event.player)) {
-            for (i = event.card_count - 1; i >= 0; i--) {
+            for (i = event.cardCount - 1; i >= 0; i--) {
                 events.add(drawCard);
             }
         }
@@ -211,40 +211,9 @@ var $ = options.$,
     
     validator.setPlayerName(player.getName());
     
-    /*pubsub.on('get_card', function(event) {
-        if (player.isItMe(event.player)) {
-            events.add(function(endCallback) {
-                var domCard = cardBuilder.get(event.card);
-                player.hand.addCard(domCard);
-                stock.pullCard(domCard, endCallback);
-                
-                domCard.click(function() {
-                    var card,
-                        msg
-                        ;
-                        
-                    if (isPlaying) {
-                        card = domCard.data('card');
-                        msg = validator.isCardValid(card);
-                        
-                        if (msg === true) {
-                            // TODO handle wild card
-                            // on colorpick set choosenColor property
-                            // on card object
-                            socket.emit('play_card', card);
-                            choosenCard = domCard;
-                        } else {
-                            pubsub.emit('invalid_move', {message: msg});
-                        }
-                    }
-                });
-            });
-        }
-    });*/
-    
-    pubsub.on('action_added', function(card) {
+    pubsub.on('cardAdded', function(event) {
         events.add(function(endCallback) {
-            var domCard = cardBuilder.get(card);
+            var domCard = cardBuilder.get(event.card);
             player.hand.addCard(domCard);
             stock.pullCard(domCard, endCallback);
             
@@ -272,27 +241,27 @@ var $ = options.$,
     });
     
     // pulls the recently choosen card to the pile
-    pubsub.on('card_played', function(event) {
-        if (player.isItMe(event.played_by)) {
+    pubsub.on('cardPlayed', function(event) {
+        if (player.isItMe(event.player)) {
             
-            if (choosenCard.color === event.played_card.color
-            &&  choosenCard.value === event.played_card.value) {
+            if (choosenCard.color === event.card.color
+            &&  choosenCard.value === event.card.value) {
                 
                 events.add(function(endCallback) {
                     pile.pushCard(choosenCard, endCallback);
                 });
             } // TODO else: choosenCard was altered since the last
-              // play_card socketio event, 
+              // playCard socketio event, 
               // handle this by searching for same card and play it
         }
     });
     
-    pubsub.on('game_start', function(event) {
+    pubsub.on('gameStarted', function(event) {
         player.hand.addClass('handOpen');
         isPlaying = true;
     });
     
-    pubsub.on('game_end', function(event) {
+    pubsub.on('gameEnded', function(event) {
         player.hand.removeClass('handOpen');
         isPlaying = false;
     });    

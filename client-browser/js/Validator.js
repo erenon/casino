@@ -5,6 +5,8 @@
  * - penaltyIndicator: PenaltyIndicator object to determine current penalty
  * 
  * TODO add tests
+ * TODO review the following todo, controlled players moves also
+ * come through cardPlayed event
  * TODO does not intercept cards played by controlled player.
  * This causes malfunction, consider 2 players and block card.
  */
@@ -17,12 +19,16 @@ var pubsub = options.pubsub,
     lastCard
     ;
     
-    pubsub.on('card_played', function(event) {
+    pubsub.on('cardPlayed', function(event) {
         isMyTurn = false;
-        lastCard = event.played_card;
+        
+        lastCard = event.card;
+        if (event.card.pickedColor) {
+            lastCard.color = event.card.pickedColor;
+        }
     });
     
-    pubsub.on('players_turn', function(event) {
+    pubsub.on('playerTurn', function(event) {
         if (event.player.name !== controlledPlayerName) {
             isMyTurn = false;
         } else {
@@ -30,8 +36,8 @@ var pubsub = options.pubsub,
         }       
     });
     
-    pubsub.on('game_start', function(event) {
-        lastCard = event.first_card;    
+    pubsub.on('gameStarted', function(event) {
+        lastCard = event.firstCard;    
     });
     
     return {
