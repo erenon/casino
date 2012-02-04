@@ -159,11 +159,11 @@ body {
     margin: 0 0 0 0.2em;
 }
 
-#drawButton span:before {
+#buttonDraw span:before {
     content: " (";    
 }
 
-#drawButton span:after {
+#buttonDraw span:after {
     content: ")";    
 }
 
