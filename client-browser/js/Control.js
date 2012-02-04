@@ -14,7 +14,7 @@ var validator = options.validator,
     target.click(function() {
         var msg = validator.isDrawValid();
         if (msg === true) {
-            socket.emit('draw_card');
+            socket.emit('drawCard');
         } else {
             pubsub.emit('invalid_move', {message: msg});
         }
@@ -31,7 +31,7 @@ var validator = options.validator,
     ;
     
     target.click(function() {
-        socket.emit('say_uno');
+        socket.emit('sayUno');
         target.addClass('buttonPressed');
         setTimeout(function() {
             target.removeClass('buttonPressed');            

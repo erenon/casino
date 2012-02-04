@@ -228,9 +228,9 @@ var $ = options.$,
                     
                     if (msg === true) {
                         // TODO handle wild card
-                        // on colorpick set choosenColor property
+                        // on colorpick set pickedColor property
                         // on card object
-                        socket.emit('play_card', card);
+                        socket.emit('playCard', { card: card });
                         choosenCard = domCard;
                     } else {
                         pubsub.emit('invalid_move', {message: msg});
