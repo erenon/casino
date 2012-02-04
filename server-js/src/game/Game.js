@@ -24,6 +24,38 @@ var config = options.config,
             player: player,
             cardCount: cardCount
         }, player);        
+    },
+    
+    checkUno = function(player) {
+        if ((player.getCardCount() === 1 && player.uno() === false)
+        ||  (player.getCardCount() !== 1 && player.uno() !== false)) {
+            dealCard(player, config.unoPenalty);
+        }
+        
+        player.uno(false);
+    },
+    
+    nextTurn = function() {
+        setTimeout(function() {
+            var nextPlayer,
+                blocked = false;
+            
+            do {
+                nextPlayer = players.next();
+                blocked = nextPlayer.block();
+                if (blocked) {
+                    nextPlayer.block(false);
+                }
+            } while (blocked);
+            
+            if (nextPlayer.getCardCount() === 0) {
+                // nextPlayer win
+                players.notifyAll('gameEnded', { winner: nextPlayer});
+            } else {
+                // next turn
+                players.notifyAll('playerTurn', { player: nextPlayer});
+            }
+        }, 0);
     }
     ;
     
@@ -113,29 +145,60 @@ var config = options.config,
     };
     
     game.playDraw = function(player) {
-        if (game.isValidMove(player, {
-            color: 'draw',
-            value: 'draw'
-        })) {
-            if (game.isPenalty()) {
-                dealPenalty(player);
-            } else {
-                dealCard(player, 1);
-            }
-            
-            // TODO call next player routine
-        } else {
-            return false;
+        var draw = { color: 'draw', value: 'draw' };
+        
+        if (!game.isValidMove(player, draw)) {
+            return false;   
         }
-    }
+        
+        console.log(player.name, ' draws ', currentPenalty||1, ' card(s)');
+        
+        if (game.isPenalty()) {
+            dealPenalty(player);
+        } else {
+            dealCard(player, 1);
+        }
+            
+        nextTurn();
+        
+        return true;
+    };
     
     game.playCard = function(player, card) {
-        if (game.isValidMove(player, card)) {
-            // TODO call next player routine
-        } else {
-            return false;
+        if (!game.isValidMove(player, card)) {
+            return false;    
         }
-    }
+        
+        // move card to pile
+        game.deck.playCard(card);
+        
+        players.notifyAll('cardPlayed', {
+            card: card,
+            player: player
+        });
+        
+        console.log(player.name, ' plays ', card.color, ' / ', card.value);
+        
+        card.takeAction(game);
+        checkUno(player);
+        nextTurn();
+        
+        return true;
+    };
+    
+    game.sayUno = function(player) {
+        players.notifyOthers('playerUno', {
+            player: player
+        }, player);    
+    };
+    
+    game.actionBlock = function() {
+        players.getNextPlayer().block(true);
+    };
+    
+    game.actionReverseTurn = function() {
+        players.reverseTurn();
+    };
     
     return game;
 }
