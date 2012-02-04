@@ -8,7 +8,7 @@ var
 SocketioGateway = function(options) {
 var config = options.config || {
         host: null,
-        connect_options: {port: 3000, rememberTransport: true}
+        connect_options: {port: 3001, rememberTransport: true}
     },
     io = options.io,
     socket

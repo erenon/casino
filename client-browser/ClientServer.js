@@ -1,9 +1,5 @@
 var app = require('express').createServer(),
     fs = require('fs'),
-    casino = require('../../lib/casino'),
-    playerFactory = require('../../lib/player'),
-    gameFactory = require('../../lib/game'),
-    io,
     port = 3000
     ;
 
@@ -14,7 +10,7 @@ var app = require('express').createServer(),
 app.set('view engine', 'jade');
 
 app.listen(port);
-console.log('App listens on port ' + port);
+console.log('ClientServer listens on port ' + port);
 
 /*
  * routes
@@ -41,40 +37,19 @@ app.get('/', function(req, res) {
     };
     
     app.get('/client/*.js', function(req, res) {
-        var filename = './client/js/' + req.params[0] + '.js';        
+        var filename = './js/' + req.params[0] + '.js';        
         serveFile(res, filename, "text/javascript");
     });
     
     app.get('/client/*.css', function(req, res) {
-        var filename = './client/css/' + req.params[0] + '.css';
+        var filename = './css/' + req.params[0] + '.css';
         serveFile(res, filename, "text/css");
     });
     
     app.get('/client/*.png', function(req, res) {
-        var filename = './client/png/' + req.params[0] + '.png';
+        var filename = './png/' + req.params[0] + '.png';
         serveFile(res, filename, "image/png");
     });
 
 }());
 
-
-/*
- * socket.io setup
- */
-
-io = require('socket.io').listen(app);
-//io.set('log level', 2);
-
-io.sockets.on('connection', function(socket) {
-    var player,
-        game;
-        
-    console.log('socket connected');
-    
-    player = playerFactory.createPlayer(socket);
-    game = gameFactory.createGame(4);
-    
-    game.joinPlayer(player);
-    game.addBot(3);
-    game.start();
-});

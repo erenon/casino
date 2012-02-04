@@ -159,6 +159,14 @@ body {
     margin: 0 0 0 0.2em;
 }
 
+#drawButton span:before {
+    content: " (";    
+}
+
+#drawButton span:after {
+    content: ")";    
+}
+
 /*
  * card
  */

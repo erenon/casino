@@ -27,7 +27,7 @@ var $ = options.$,  // TODO unused option
         
         if (addition > 0) {
             currentPenalty += addition;
-            target.text('(' + currentPenalty + ')');
+            target.text(currentPenalty);
             target.show();
         }
     });
