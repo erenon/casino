@@ -1,0 +1,40 @@
+Documentation of Events emitted and received by the GameServer
+===
+
+Special Objects
+---
+
+player:
+    -name: (String) name of the player
+    
+card:
+    -color: (String) color of the card
+    -value: (String) value of the card
+    -pickedColor: (String|undefined) user picked color if the field color === 'black'
+
+
+Events emitted
+---
+
+playerJoined
+    -player: player
+    
+gameStarted
+    -firstCard: card
+    
+gameEnded
+    -winner: player
+
+cardAdded
+    -card: card
+    
+cardPlayed
+    -card: card
+    -player: player
+
+playerGotCard
+    -player: player
+    -cardCount: (Number)
+
+playerTurn
+    -player: player
