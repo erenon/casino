@@ -1,0 +1,25 @@
+changeGameSpeed
+    - speed
+    -> Deck.js
+    
+changeViewportSize
+    - height    
+    - width
+    -> CardBuilder.js
+    
+changeCardSize
+    - height
+    - width
+    <- CardBuilder.js
+    -> Player.js
+    -> GameTable.js
+    -> Deck.js /Stock
+    
+changeTableSize
+    <- Player.js
+    -> GameTable.js
+    
+invalid_move
+    - message
+    <- Control.js /DrawButton
+    <- Player.js /ControlledPlayer        

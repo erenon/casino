@@ -1,0 +1,22 @@
+w: full card width
+h: full card height
+
+width: w-border*2
+height: h-border*2
+border
+
+topleft sign font size
+topleft sign margin (card dependent)
+
+(all inner property is card dependent)
+inner font size
+inner width
+inner height
+inner margin
+inner padding
+
+additional candies:
+    card border radius
+    card shadow
+    topleft sign text shadow
+    inner text shadow
