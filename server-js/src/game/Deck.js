@@ -13,7 +13,7 @@ var stock = cardBuilder.getAll(),
             current;
     
         for (current = 0; current < stock.length; current++) {
-            picked = parseInt(Math.random() * (current + 1));
+            picked = parseInt(Math.random() * (current + 1), 10);
             
             // swap picked and current
             tmp = stock[picked];
@@ -35,13 +35,25 @@ var stock = cardBuilder.getAll(),
     };
     
     deck.drawCard = function() {
+        var lastPlayedCard;
+        
         if (stock.length === 0) {
+            lastPlayedCard = pile.shift();
             stock = pile;
-            pile = [];
             deck.shuffle();    
+
+            pile = [];
+            pile.push(lastPlayedCard);
         }
         
-        return stock.shift();
+        var card = stock.shift(); 
+        
+        if (!card) {
+            // TODO what to do now?
+            console.log('FAILURE', pile.length, stock.length);
+        }
+        
+        return card;
     };
     
     deck.playCard = function(card) {
@@ -49,8 +61,14 @@ var stock = cardBuilder.getAll(),
     };
     
     deck.getLastPlayedCard = function() {
-        return pile[0];
-    }
+        var lastCard = pile[0];
+        
+        if (lastCard.color === 'black') {
+            lastCard.color = lastCard.pickedColor;
+        }
+        
+        return lastCard;
+    };
     
     return deck;
 }
