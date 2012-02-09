@@ -80,6 +80,45 @@ var socket = options.socket,
         socket.emit('playerTurn', event);
     });   
     
+    socket.on('playCard', function(data) {
+        var card = data.card,
+            pickedCard,
+            successfulPlay = false,
+            i
+            ;
+            
+        // remove card from hand
+        for (i = 0; i < player.hand.length; i++) {
+            if (player.hand[i].color === card.color
+            &&  player.hand[i].value === card.value) {
+                // the card object sent through the socket
+                // is only a partial copy of the original card
+                pickedCard = player.hand.splice(i,1)[0];
+                
+                if (card.pickedColor) {
+                    pickedCard.pickedColor = card.pickedColor;
+                }
+                
+                // we want remove one card only
+                // there may be same cards in hand
+                break;
+            }
+        }            
+            
+        successfulPlay = player.game.playCard(player, pickedCard);
+        if (!successfulPlay) {
+            player.hand.push(pickedCard);
+        }
+    });
+    
+    socket.on('playDraw', function() {
+        player.game.playDraw(player);
+    });
+    
+    socket.on('sayUno', function() {
+        player.uno(true);
+    });
+    
     return player; 
 }
 
