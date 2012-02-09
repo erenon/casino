@@ -203,7 +203,7 @@ var $ = options.$,
     validator = options.validator,
     socket = options.socket,
     isPlaying = false,
-    choosenCard
+    choosenDomCard
     ;
     
     player = player || {};
@@ -231,7 +231,7 @@ var $ = options.$,
                         // on colorpick set pickedColor property
                         // on card object
                         socket.emit('playCard', { card: card });
-                        choosenCard = domCard;
+                        choosenDomCard = domCard;
                     } else {
                         pubsub.emit('invalid_move', {message: msg});
                     }
@@ -242,15 +242,17 @@ var $ = options.$,
     
     // pulls the recently choosen card to the pile
     pubsub.on('cardPlayed', function(event) {
+        var choosenCard = choosenDomCard.data('card');
+        
         if (player.isItMe(event.player)) {
             
             if (choosenCard.color === event.card.color
             &&  choosenCard.value === event.card.value) {
                 
                 events.add(function(endCallback) {
-                    pile.pushCard(choosenCard, endCallback);
+                    pile.pushCard(choosenDomCard, endCallback);
                 });
-            } // TODO else: choosenCard was altered since the last
+            } // TODO else: choosenDomCard was altered since the last
               // playCard socketio event, 
               // handle this by searching for same card and play it
         }

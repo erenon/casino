@@ -14,7 +14,7 @@ var validator = options.validator,
     target.click(function() {
         var msg = validator.isDrawValid();
         if (msg === true) {
-            socket.emit('drawCard');
+            socket.emit('playDraw');
         } else {
             pubsub.emit('invalid_move', {message: msg});
         }
